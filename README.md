@@ -1,7 +1,7 @@
 # 리액트 커리큘럼
 
-<!-- ## Wifi
-    xkzm9889 / u21wrbh@ -->
+## Wifi
+    xkzm9889 / u21wrbh@
 
 ## 용어
 **Markup**: 디자인을 HTML, CSS로 변환 하는 과정 또는 HTML 파일을 뜻함. HTML, CSS로 변환 된다. 퍼블리싱이라고도 함.
@@ -328,7 +328,7 @@ src/app/components/contents/CRUD.js
 
     CRUD = inject('crudStore')(observer(CRUD))
 
-### render 함수 설명 하기
+**render 함수 설명 하기**
 
 ## Axios(서버 연동), toastr(메시지 창), spin.js(로딩 스피너), lodash(배열, 오브젝트 유틸리티), moment(시간관련 유틸리티) 설치
     npm install --save axios toastr spin.js nprogress lodash moment
