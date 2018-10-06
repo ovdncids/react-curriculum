@@ -724,6 +724,6 @@ package.json
 http://localhost:3100/api -> /api 모든 파일 수정 하기
 
     npm start
-      // 당황 하지 말고 재실행 하기
+      // 당황 하지 말고 다시 실행 하기
 
 # 수고 하셨습니다.
