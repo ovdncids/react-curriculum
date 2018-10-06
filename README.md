@@ -1,8 +1,5 @@
 # 리액트 커리큘럼
 
-## Wifi
-    xkzm9889 / u21wrbh@
-
 ## 용어
 **Markup**: 디자인을 HTML, CSS로 변환 하는 과정 또는 HTML 파일을 뜻함. HTML, CSS로 변환 된다. 퍼블리싱이라고도 함.
 
@@ -189,17 +186,21 @@ src/app/App.js
 
     <BrowserRouter>
         <Switch>
-            <Route exact={true} path="/search" component={Search}/>
-            <Route component={CRUD}/>
+            <Route exact={true} path="/CRUD" render={props => <CRUD {...props} testProps={true} />} />
+            <Route exact={true} path="/search" component={CRUD} />
+            {/* <Route component={CRUD} /> */}
+            <Redirect to={{pathname: "/CRUD"}} />
         </Switch>
     </BrowserRouter>
+
+**BrowserRouter Only one element 설명**
+
+**BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE11 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
 
 src/app/components/Nav.js
 
     <li><h2><Link to="CRUD">CRUD</Link></h2></li>
     <li><h2><Link to="search">Search</Link></h2></li>
-
-**BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE11 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
 
 ## CRUD Conpenent Markup
 src/app/components/contents/CRUD.js
@@ -240,16 +241,17 @@ src/app/components/contents/CRUD.js
         </div>
       </div>
 
+**props 설명**
+
 ## MobX 설치
 https://github.com/mobxjs/mobx
 
-    npm install --save mobx
-    npm install --save mobx-react
+    npm install --save mobx mobx-react
 
 ## CRUD Store 만들기
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
-    import { observable } from 'mobx';
+    import { observable, decorate } from 'mobx';
 
     export default class CRUDStore {
       member = {
@@ -330,7 +332,7 @@ src/app/components/contents/CRUD.js
 
 **render 함수 설명 하기**
 
-## Axios(서버 연동), toastr(메시지 창), spin.js(로딩 스피너), lodash(배열, 오브젝트 유틸리티), moment(시간관련 유틸리티) 설치
+## Axios(서버 연동), toastr(메시지 창), spin.js(로딩 스피너), nprogress(프로그래스 바), lodash(배열, 오브젝트 유틸리티), moment(시간관련 유틸리티) 설치
     npm install --save axios toastr spin.js nprogress lodash moment
 
 ## debugger 설명
@@ -339,7 +341,7 @@ src/app/components/contents/CRUD.js
 ## Validation with toastr
 https://github.com/CodeSeven/toastr
 
-shared/utils.js
+src/shared/utils.js
 
     import Toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
@@ -351,7 +353,7 @@ shared/utils.js
     Toastr.options.closeButton = true;
     Toastr.options.hideDuration = 200;
 
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
     import * as utils from '../utils';
 
@@ -368,7 +370,7 @@ shared/stores/CRUDStore.js
 ## Spin.js
 https://spin.js.org/
 
-shared/utils.js
+src/shared/utils.js
 
     import { Spinner } from 'spin.js';
     import 'spin.js/spin.css';
@@ -388,7 +390,7 @@ src/app/components/contents/CRUD.js
     <button className="relative pointer" onClick={e => this.create(e.target)}>Create</button>
 
 
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
     create(spinnerTarget) {
       utils.spinner().spin(spinnerTarget);
@@ -402,7 +404,7 @@ shared/stores/CRUDStore.js
 https://github.com/axios/axios
 
 ### Create
-shared/utils.js
+src/shared/utils.js
 
     export const apiCommonError = (error, spinner) => {
       console.log(error);
@@ -414,7 +416,7 @@ shared/utils.js
       }
     };
 
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
     import axios from 'axios';
 
@@ -431,7 +433,7 @@ shared/stores/CRUDStore.js
     read() {}
 
 ### Read
-shared/utils.js
+src/shared/utils.js
 
     import * as NProgress from 'nprogress';
     import 'nprogress/nprogress.css';
@@ -445,7 +447,7 @@ shared/utils.js
       done: () => NProgress.done()
     };
 
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
     import { decorate, observable, action } from 'mobx';
 
@@ -509,7 +511,7 @@ src/app/components/contents/CRUD.js
 
     <button className="relative pointer" onClick={e => this.update(e.target, key)}>Update</button>
 
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
     update(spinnerTarget, key) {
       const member = this.members[key];
@@ -542,7 +544,7 @@ src/app/components/contents/CRUD.js
 
     <button className="relative pointer" onClick={e => this.delete(e.target, key)}>Delete</button>
 
-shared/stores/CRUDStore.js
+src/shared/stores/CRUDStore.js
 
     delete(spinnerTarget, key) {
       if (!window.confirm('Are you sure?')) {
@@ -591,7 +593,7 @@ src/app/components/contents/Search.js
     </div>
 
 ## Search Store 만들기
-shared/stores/SearchStore.js
+src/shared/stores/SearchStore.js
 
     import { decorate, observable, action } from 'mobx';
     import axios from 'axios';
@@ -681,7 +683,7 @@ src/app/components/contents/Search.js
       searchStore.search();
     }
 
-    Search = inject('searchStore')(observer(Search))
+    Search = inject('searchStore')(observer(Search));
 
 ## Search Conpenent 파라미터 변경과 새로고침 적용
 src/app/components/contents/Search.js
@@ -713,10 +715,15 @@ src/app/components/contents/Search.js
     }
 
 ## Proxy 설정
+https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#proxying-api-requests-in-development
+
 package.json
 
     "proxy": "http://localhost:3100"
 
-http://localhost:3100/api -> /api 수정 하기
+http://localhost:3100/api -> /api 모든 파일 수정 하기
+
+    npm start
+      // 당황 하지 말고 재실행 하기
 
 # 수고 하셨습니다.
