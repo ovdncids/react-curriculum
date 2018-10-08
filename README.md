@@ -53,17 +53,29 @@ https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/
     # packege.json
     package-lock.json
     yarn-lock.json
-        // 가끔 이 파일 때문에 클라이언트와 서버 사이에 버전이 안 맞아서 오류가 발생한다.
-        // 용량도 크고 npm install 할때 마다 생성되는 파일이니 .gitignore 목록에 넣는다.
+    # 가끔 이 파일 때문에 클라이언트와 서버 사이에 버전이 안 맞아서 오류가 발생한다.
+    # 용량도 크고 npm install 할때 마다 생성되는 파일이니 .gitignore 목록에 넣는다.
 
     # .idea
     .idea
-        // JetBrains 제품인 IntelliJ, WebStorm 설정 파일
+    # JetBrains 제품인 IntelliJ, WebStorm 설정 파일
 
-## Git push
+**package-lock.json 파일 삭제**
+
+**Git push**
+
     git push
 
-## VSCode 확장 Git History 설치
+**commit 이름 수정**
+
+    git commit --amend -m ""
+
+**이전 commit과 합치기**
+
+    git rebase -i HEAD~2
+      // 2번째 줄 pick을 fixup으로 바꾸고 저장
+
+**VSCode 확장 Git History 설치**
 
 ## Sass 설치
 css를 프로그램화 하여 색상 테마를 변수에 넣을 수 있고, 반복 부분을 저장하고 불러 올 수 있다. 이름은 Sass지만 파일명은 scss이다.
@@ -71,6 +83,8 @@ css를 프로그램화 하여 색상 테마를 변수에 넣을 수 있고, 반�
 https://sass-guidelin.es/ko/
 
     npm install --save node-sass
+
+**필요 없는 파일 지우기**
 
 ## 기본 디렉토리 구조 잡기
     src
@@ -169,7 +183,7 @@ src/index.scss
 ## CSS Flex
 https://opentutorials.org/course/2418/13526
 
-**현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능.
+**현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능. IE10은 Flex 부분 오류가 있어서 사용에 주의 해야 한다.
 
 ## React Component 만들기
 Header, Nav, Footer 이렇게 Component 별로 파일을 나눈다.
@@ -195,6 +209,8 @@ src/app/App.js
 
 **BrowserRouter Only one element 설명**
 
+**props 설명**
+
 **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE11 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
 
 src/app/components/Nav.js
@@ -202,46 +218,46 @@ src/app/components/Nav.js
     <li><h2><Link to="CRUD">CRUD</Link></h2></li>
     <li><h2><Link to="search">Search</Link></h2></li>
 
+**여기 까지가 Markup 개발자 분들이 할일 입니다.**
+
 ## CRUD Conpenent Markup
 src/app/components/contents/CRUD.js
 
+    <div>
+      <h3>CRUD</h3>
+      <hr className="d-block" />
       <div>
-        <h3>CRUD</h3>
-        <hr className="d-block" />
-        <div>
-          <h4>Read</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Created Date</th>
-                <th>Modify</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>횽길동</td>
-                <td>39</td>
-                <td>2018-10-04</td>
-                <td>
-                  <button>Update</button>
-                  <button>Delete</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <hr className="d-block" />
-        <div>
-          <h4>Create</h4>
-          <input type="text" placeholder="Name" />
-          <input type="number" placeholder="Age" />
-          <button>Create</button>
-        </div>
+        <h4>Read</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Created Date</th>
+              <th>Modify</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>횽길동</td>
+              <td>39</td>
+              <td>2018-10-04</td>
+              <td>
+                <button>Update</button>
+                <button>Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-**props 설명**
+      <hr className="d-block" />
+      <div>
+        <h4>Create</h4>
+        <input type="text" placeholder="Name" />
+        <input type="text" placeholder="Age" />
+        <button>Create</button>
+      </div>
+    </div>
 
 ## MobX 설치
 https://github.com/mobxjs/mobx
@@ -249,6 +265,10 @@ https://github.com/mobxjs/mobx
     npm install --save mobx mobx-react
 
 ## CRUD Store 만들기
+**Store 개념 설명**
+
+Component는 상하, 수직, 부모 자식 관계인데 Store는 수평, 평등 관계이다.
+
 src/shared/stores/CRUDStore.js
 
     import { observable, decorate } from 'mobx';
@@ -258,13 +278,6 @@ src/shared/stores/CRUDStore.js
           name: '',
           age: ''
       }
-
-      // setMemberInit() {
-      //  this.member = {
-      //    name: '',
-      //    age: ''
-      //  }
-      // }
 
       // create() {
       //   console.log('create')
@@ -287,7 +300,7 @@ tsconfig.json
       }
     } -->
 
-## CRUD Store 등록하기
+**CRUD Store 등록하기**
 src/index.js
 
     import { Provider } from 'mobx-react';
@@ -317,7 +330,7 @@ src/app/components/contents/CRUD.js
       onChange={e => {member.name = e.target.value}}
     />
     <input
-      type="number" placeholder="Age" value={member.age}
+      type="text" placeholder="Age" value={member.age}
       onChange={e => {member.age = e.target.value}}
     />
     <button onClick={() => this.create()}>Create</button>
@@ -325,18 +338,21 @@ src/app/components/contents/CRUD.js
     // Life cycle
     componentDidMount() {
       const { crudStore } = this.props;
-      crudStore.setMemberInit();
+      const { member } = crudStore;
+      member.name = '';
+      member.age = '';
     }
 
     CRUD = inject('crudStore')(observer(CRUD))
 
 **render 함수 설명 하기**
 
+**debugger 설명**
+
+    debugger;
+
 ## Axios(서버 연동), toastr(메시지 창), spin.js(로딩 스피너), nprogress(프로그래스 바), lodash(배열, 오브젝트 유틸리티), moment(시간관련 유틸리티) 설치
     npm install --save axios toastr spin.js nprogress lodash moment
-
-## debugger 설명
-    debugger;
 
 ## Validation with toastr
 https://github.com/CodeSeven/toastr
@@ -349,7 +365,6 @@ src/shared/utils.js
     export const toastr = () => {
       return Toastr;
     };
-
     Toastr.options.closeButton = true;
     Toastr.options.hideDuration = 200;
 
@@ -382,9 +397,9 @@ src/shared/utils.js
 
 src/app/components/contents/CRUD.js
 
-    create(target) {
+    create(spinnerTarget) {
       const { crudStore } = this.props;
-      crudStore.create(target);
+      crudStore.create(spinnerTarget);
     }
 
     <button className="relative pointer" onClick={e => this.create(e.target)}>Create</button>
@@ -424,8 +439,8 @@ src/shared/stores/CRUDStore.js
     axios.post('http://localhost:3100/api/v1/member', this.member).then(response => {
       console.log(response);
       spinner.stop();
-      this.read();
       utils.toastr().success(response.data.result);
+      this.read();
     }).catch(error => {
       utils.apiCommonError(error, spinner);
     });
@@ -433,6 +448,8 @@ src/shared/stores/CRUDStore.js
     read() {}
 
 ### Read
+**nprogress**: https://github.com/rstacruz/nprogress
+
 src/shared/utils.js
 
     import * as NProgress from 'nprogress';
@@ -455,7 +472,7 @@ src/shared/stores/CRUDStore.js
 
     read() {
       utils.nProgress.start();
-      axios.get('http://localhost:3100/api/v1/member', this.member).then(response => {
+      axios.get('http://localhost:3100/api/v1/member').then(response => {
         console.log(response);
         this.members = response.data.members;
         utils.nProgress.done();
@@ -494,9 +511,9 @@ src/app/components/contents/CRUD.js
 ### Update
 src/app/components/contents/CRUD.js
 
-    update(target, key) {
+    update(spinnerTarget, key) {
       const { crudStore } = this.props;
-      crudStore.update(target, key);
+      crudStore.update(spinnerTarget, key);
     }
 
     <input
@@ -527,19 +544,19 @@ src/shared/stores/CRUDStore.js
       axios.put('http://localhost:3100/api/v1/member', {key, member}).then(response => {
         console.log(response);
         spinner.stop();
-        this.read();
         utils.toastr().success(response.data.result);
+        this.read();
       }).catch(error => {
         utils.apiCommonError(error, spinner);
       });
     }
 
-### delete
+### Delete
 src/app/components/contents/CRUD.js
 
-    delete(target, key) {
+    delete(spinnerTarget, key) {
       const { crudStore } = this.props;
-      crudStore.delete(target, key);
+      crudStore.delete(spinnerTarget, key);
     }
 
     <button className="relative pointer" onClick={e => this.delete(e.target, key)}>Delete</button>
@@ -554,8 +571,8 @@ src/shared/stores/CRUDStore.js
       axios.delete(`http://localhost:3100/api/v1/member/${key}`).then(response => {
         console.log(response);
         spinner.stop();
-        this.read();
         utils.toastr().success(response.data.result);
+        this.read();
       }).catch(error => {
         utils.apiCommonError(error, spinner);
       });
@@ -606,13 +623,7 @@ src/shared/stores/SearchStore.js
 
       members = []
 
-      setSearchInit() {
-        this.member = {
-          name: ''
-        }
-      }
-
-      search() {
+      read() {
         utils.nProgress.start();
         axios.get(`http://localhost:3100/api/v1/search?name=${this.member.name}`, this.member).then(response => {
           console.log(response);
@@ -632,7 +643,7 @@ src/shared/stores/SearchStore.js
 
     export const searchStore = new SearchStore();
 
-## Search Store 등록하기
+**Search Store 등록하기**
 src/index.js
 
     import { searchStore } from './shared/stores/SearchStore';
@@ -646,14 +657,14 @@ src/app/components/contents/Search.js
     import _ from 'lodash';
     import moment from 'moment';
 
-    search() {
+    read() {
       const { searchStore } = this.props;
-      searchStore.search();
+      searchStore.read();
     }
 
     keyPress(e) {
       if (e.charCode === 13) {
-        this.search();
+        this.read();
       }
     }
 
@@ -665,7 +676,7 @@ src/app/components/contents/Search.js
       onChange={e => {member.name = e.target.value}}
       onKeyPress={(e) => this.keyPress(e)}
     />
-    <button className="relative pointer" onClick={e => this.search()}>Search</button>
+    <button className="relative pointer" onClick={e => this.read()}>Search</button>
 
     {_.map(members, (member, key) => (
       <tr key={key}>
@@ -679,8 +690,9 @@ src/app/components/contents/Search.js
     componentDidMount() {
       console.log('componentDidMount');
       const { searchStore } = this.props;
-      searchStore.setSearchInit();
-      searchStore.search();
+      const { member } = searchStore;
+      member.name = '';
+      searchStore.read();
     }
 
     Search = inject('searchStore')(observer(Search));
@@ -688,9 +700,9 @@ src/app/components/contents/Search.js
 ## Search Conpenent 파라미터 변경과 새로고침 적용
 src/app/components/contents/Search.js
 
-    const querystring = require('querystring');
+    import querystring from 'querystring';
 
-    search() {
+    read() {
       const { history, searchStore } = this.props;
       const { member } = searchStore;
       history.push(`/search?name=${member.name}`);
@@ -700,10 +712,11 @@ src/app/components/contents/Search.js
     componentDidMount() {
       console.log('componentDidMount');
       const { location, searchStore } = this.props;
-      // searchStore.setSearchInit();
+      // const { member } = searchStore;
+      // member.name = '';
       const { name } = querystring.parse(location.search.split('?')[1]);
       searchStore.member.name = name || '';
-      searchStore.search();
+      searchStore.read();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -711,7 +724,7 @@ src/app/components/contents/Search.js
       const { searchStore } = this.props;
       const { name } = querystring.parse(nextProps.location.search.split('?')[1]);
       searchStore.member.name = name || '';
-      searchStore.search();
+      searchStore.read();
     }
 
 ## Proxy 설정
