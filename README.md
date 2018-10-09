@@ -5,7 +5,7 @@
 
 **Markdown**: 주로 README.md 파일로 많이 쓰이고, 현재 이 문서도 Markdown으로 만들어짐. 화려한 레이아웃 업이 Text로 정보 전달 할때 많이 사용한다.
 
-## NVM
+## NVM (Node Version Manager)
 Node.js 설치 버전을 관리하는 프로그램. 심볼릭 링크를 이용하여 Node.js 버전을 그때 그때 변경한다.
 Node.js 버전 별로 자유롭게 설치, 이동, 삭제 가능하다. 현재는 Node.js v6, v8이 주류를 이룬다.
 
@@ -22,32 +22,34 @@ Node.js 버전 별로 자유롭게 설치, 이동, 삭제 가능하다. 현재�
 https://nodejs.org
 
     nvm ls
-        // 설치 된 node.js 리스트를 본다.
+      // 설치 된 node.js 리스트를 본다.
     nvm install 8.12.0
-        // 해당 버전을 설치 한다.
+      // 해당 버전을 설치 한다.
     nvm uninstall 8.12.0
-        // 해당 버전을 삭제 한다.
+      // 해당 버전을 삭제 한다.
     nvm use 8.12.0
-        // 해당 버전을 사용 한다.
+      // 해당 버전을 사용 한다.
 
-<!-- v6.14.4 -->
-
-## NPM
+## NPM (Node Package Manager)
     npm install -g npm
-        // 상위 버전으로 업 한다. 현재 v6.4.1
+      // 상위 버전으로 업 한다. 현재 v6.4.1
 
 ## Create React App 설치
 https://github.com/facebook/create-react-app
 https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
 
     npx create-react-app my-app
-        // React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
-        // npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
+      // React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
+      // npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
 
     npm run test
     npm run build
     npm install -g serve
     serve -s build
+
+## 현재 문서 Git clone 하기
+
+git clone https://github.com/ovdncids/react-curriculum-wonmyoung.git
 
 ## Git .gitignore
     # packege.json
