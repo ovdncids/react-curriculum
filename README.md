@@ -34,6 +34,16 @@ https://nodejs.org
     npm install -g npm
       // 상위 버전으로 업 한다. 현재 v6.4.1
 
+## Visual Studio Code
+**Tab 스페이스 2칸으로 설정**: Preferences > 검색 > editor.detectIndent
+
+https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
+
+    "editor.tabSize": 2
+      // 기본 텝 사이즈를 2칸으로 변경한다.
+    "editor.detectIndentation": false
+      // 해당 파일의 텝 사이즈를 무시하고 기본 텝 사이즈로 설정한다.
+
 ## Create React App 설치
 https://github.com/facebook/create-react-app
 https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
