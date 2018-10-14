@@ -151,13 +151,6 @@ src/index.scss
 
     .flex {
       display: flex;
-      align-items: stretch;
-      & .wrap {
-        flex-wrap: wrap;
-      }
-      & .empty, .full {
-        flex-grow: 1;
-      }
     }
 
     // Markup
@@ -194,6 +187,8 @@ src/index.scss
 
 ## CSS Flex
 https://opentutorials.org/course/2418/13526
+
+https://www.youtube.com/watch?v=eprXmC_j9A4
 
 **현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능. IE10은 Flex 부분 오류가 있어서 사용에 주의 해야 한다.
 
