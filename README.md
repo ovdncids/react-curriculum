@@ -446,20 +446,20 @@ export const spinner = () => {
 
 src/components/contents/CRUD.js
 ```js
-    create(spinnerTarget) {
-      const { crudStore } = this.props;
-      crudStore.create(spinnerTarget);
-    }
+create(spinnerTarget) {
+  const { crudStore } = this.props;
+  crudStore.create(spinnerTarget);
+}
 ```
 ```jsx
-    <button className="relative pointer" onClick={e => this.create(e.target)}>Create</button>
+<button className="relative pointer" onClick={e => this.create(e.target)}>Create</button>
 ```
 
 src/shared/stores/CRUDStore.js
 ```js
-    create(spinnerTarget) {
-      utils.spinner().spin(spinnerTarget);
-    }
+create(spinnerTarget) {
+  utils.spinner().spin(spinnerTarget);
+}
 ```
 
 ## node.js 서버 실행
