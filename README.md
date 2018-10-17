@@ -47,11 +47,14 @@ npm install -g npm
 **Tab 스페이스 2칸으로 설정**: Preferences > 검색 > editor.detectIndent
 
 https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
-```json
-# 기본 텝 사이즈를 2칸으로 변경한다.
-"editor.tabSize": 2
 
-# 해당 파일의 텝 사이즈를 무시하고 기본 텝 사이즈로 설정한다.
+기본 텝 사이즈를 2칸으로 변경한다.
+```json
+"editor.tabSize": 2
+```
+
+해당 파일의 텝 사이즈를 무시하고 기본 텝 사이즈로 설정한다.
+```json
 "editor.detectIndentation": false
 ```
 
@@ -127,7 +130,7 @@ src
 
  ## Markup
 src/App.js
-```html
+```jsx
 <div>
   <header><h1>React Study</h1></header>
   <hr />
@@ -247,7 +250,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
 
 src/components/Nav.js
-```html
+```jsx
 <li><h2><Link to="CRUD">CRUD</Link></h2></li>
 <li><h2><Link to="search">Search</Link></h2></li>
 ```
@@ -256,7 +259,7 @@ src/components/Nav.js
 
 ## CRUD Conpenent Markup
 src/components/contents/CRUD.js
-```html
+```jsx
 <div>
   <h3>CRUD</h3>
   <hr className="d-block" />
@@ -641,7 +644,7 @@ delete(spinnerTarget, key) {
 
 ## Search Conpenent Markup
 src/components/contents/Search.js
-```html
+```jsx
 <div>
   <h3>Search</h3>
   <hr className="d-block" />
