@@ -100,11 +100,12 @@ https://sass-guidelin.es/ko/
 
 ## 기본 디렉토리 구조 잡기
     src
-        /app
+        /assets
+        /components
         /shared
 
  ## Markup
-src/app/App.js
+src/App.js
 
       <div>
         <header><h1>React Study</h1></header>
@@ -130,7 +131,7 @@ src/app/App.js
         <footer>Copyright</footer>
       </div>
 
-src/index.scss
+src/assets/styles/index.scss
 
     // common
     .pointer {
@@ -201,7 +202,7 @@ https://reacttraining.com/react-router/
     npm install --save react-router-dom
 
 ## Router 만들기
-src/app/App.js
+src/App.js
 
     import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
@@ -220,7 +221,7 @@ src/app/App.js
 
 **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE11 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
 
-src/app/components/Nav.js
+src/components/components/Nav.js
 
     <li><h2><Link to="CRUD">CRUD</Link></h2></li>
     <li><h2><Link to="search">Search</Link></h2></li>
@@ -228,7 +229,7 @@ src/app/components/Nav.js
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
 ## CRUD Conpenent Markup
-src/app/components/contents/CRUD.js
+src/components/components/contents/CRUD.js
 
     <div>
       <h3>CRUD</h3>
@@ -320,7 +321,7 @@ src/index.js
     </Provider>
 
 ## CRUD Conpenent Store inject & observer
-src/app/components/contents/CRUD.js
+src/components/components/contents/CRUD.js
 
     import { inject, observer } from 'mobx-react';
 
@@ -402,7 +403,7 @@ src/shared/utils.js
     };
 
 
-src/app/components/contents/CRUD.js
+src/components/components/contents/CRUD.js
 
     create(spinnerTarget) {
       const { crudStore } = this.props;
@@ -494,7 +495,7 @@ src/shared/stores/CRUDStore.js
       read: action
     })
 
-src/app/components/contents/CRUD.js
+src/components/components/contents/CRUD.js
 
     import _ from 'lodash';
     import moment from 'moment';
@@ -516,7 +517,7 @@ src/app/components/contents/CRUD.js
     crudStore.read();
 
 ### Update
-src/app/components/contents/CRUD.js
+src/components/components/contents/CRUD.js
 
     update(spinnerTarget, key) {
       const { crudStore } = this.props;
@@ -559,7 +560,7 @@ src/shared/stores/CRUDStore.js
     }
 
 ### Delete
-src/app/components/contents/CRUD.js
+src/components/components/contents/CRUD.js
 
     delete(spinnerTarget, key) {
       const { crudStore } = this.props;
@@ -586,7 +587,7 @@ src/shared/stores/CRUDStore.js
     }
 
 ## Search Conpenent Markup
-src/app/components/contents/Search.js
+src/components/components/contents/Search.js
 
     <div>
       <h3>Search</h3>
@@ -658,7 +659,7 @@ src/index.js
     searchStore={searchStore}
 
 ## Search Conpenent Store inject & observer
-src/app/components/contents/Search.js
+src/components/components/contents/Search.js
 
     import { inject, observer } from 'mobx-react';
     import _ from 'lodash';
@@ -705,7 +706,7 @@ src/app/components/contents/Search.js
     Search = inject('searchStore')(observer(Search));
 
 ## Search Conpenent 파라미터 변경과 새로고침 적용
-src/app/components/contents/Search.js
+src/components/components/contents/Search.js
 
     import querystring from 'querystring';
 
