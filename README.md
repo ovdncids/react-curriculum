@@ -79,18 +79,18 @@ git clone https://github.com/ovdncids/react-curriculum-wonmyoung.git
 
 ## Git .gitignore
 ```sh
-# packege.json
+# npm or yarn
 package-lock.json
-yarn-lock.json
-## 가끔 이 파일 때문에 클라이언트와 서버 사이에 버전이 안 맞아서 오류가 발생한다.
-## 용량도 크고 npm install 할때 마다 생성되는 파일이니 .gitignore 목록에 넣는다.
+yarn.lock
 
 # .idea
 .idea
-## JetBrains 제품인 IntelliJ, WebStorm 설정 파일
 ```
 
-**package-lock.json 파일 삭제**
+**lock 파일**: 가끔 이 파일 때문에 클라이언트와 서버 사이에 버전이 안 맞아서 오류가 발생한다.
+용량도 크고 npm install 할때 마다 생성되는 파일이니 .gitignore 목록에 넣는다.
+
+**package-lock.json, yarn.lock 파일 삭제**
 
 **Git push**
 ```sh
@@ -146,8 +146,10 @@ src/App.js
     <hr />
     <div className="contents">
       <section>
-        <h3>CRUD</h3>
-        <p>Contents</p>
+        <div>
+          <h3>CRUD</h3>
+          <p>Contents</p>
+        </div>
       </section>
     </div>
     <hr />
@@ -235,10 +237,10 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 <BrowserRouter>
     <Switch>
-        <Route exact={true} path="/CRUD" render={props => <CRUD {...props} testProps={true} />} />
+        <Route exact={true} path="/crud" render={props => <CRUD {...props} testProps={true} />} />
         <Route exact={true} path="/search" component={CRUD} />
         {/* <Route component={CRUD} /> */}
-        <Redirect to={{pathname: "/CRUD"}} />
+        <Redirect to={{pathname: "/crud"}} />
     </Switch>
 </BrowserRouter>
 ```
@@ -251,7 +253,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 src/components/Nav.js
 ```jsx
-<li><h2><Link to="CRUD">CRUD</Link></h2></li>
+<li><h2><Link to="crud">CRUD</Link></h2></li>
 <li><h2><Link to="search">Search</Link></h2></li>
 ```
 
