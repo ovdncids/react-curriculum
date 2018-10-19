@@ -102,11 +102,21 @@ git push
 git commit --amend -m ""
 ```
 
-**이전 commit과 합치기**
+**commit 취소**
+```sh
+git reset HEAD~
+```
+
+<!-- **첫 commit 취소**
+```sh
+git update-ref -d HEAD
+``` -->
+
+<!-- **이전 commit과 합치기**
 ```sh
 git rebase -i HEAD~2
 # 2번째 줄 pick을 fixup으로 바꾸고 저장
-```
+``` -->
 
 **VSCode 확장 Git History 설치**
 
