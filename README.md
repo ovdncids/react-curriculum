@@ -18,7 +18,19 @@ Node.js 버전 별로 자유롭게 설치, 이동, 삭제 가능하다. 현재�
 
 **Mac OS**: https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
 ```sh
+# 설치
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+
+# vi 에디터 실행
+vi ~/.bash_profile
+
+# 해당 경로 적용 시키키
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# ~./bash_profile 재 실행 시키기
+source ~/.bash_profile
 ```
 
 **Windows**: https://github.com/coreybutler/nvm-windows/releases
