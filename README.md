@@ -410,7 +410,7 @@ componentDidMount() {
   member.age = '';
 }
 
-CRUD = inject('crudStore')(observer(CRUD))
+CRUD = inject('crudStore')(observer(CRUD));
 ```
 
 **render 함수 설명 하기**
