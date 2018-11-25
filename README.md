@@ -55,7 +55,7 @@ nvm use 8.12.0
 npm install -g npm
 ```
 
-## Visual Studio Code
+<!-- ## Visual Studio Code
 **Tab 스페이스 2칸으로 설정**: Preferences > 검색 > editor.detectIndent
 
 https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
@@ -68,7 +68,7 @@ https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
 해당 파일의 텝 사이즈를 무시하고 기본 텝 사이즈로 설정한다.
 ```json
 "editor.detectIndentation": false
-```
+``` -->
 
 ## Create React App 설치
 https://github.com/facebook/create-react-app
