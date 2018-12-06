@@ -255,12 +255,12 @@ npm install --save react-router-dom
 ## Router 만들기
 src/App.js
 ```jsx
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 <BrowserRouter>
     <Switch>
         <Route exact={true} path="/crud" render={props => <CRUD {...props} testProps={true} />} />
-        <Route exact={true} path="/search" component={CRUD} />
+        <Route exact={true} path="/search" component={Search} />
         {/* <Route component={CRUD} /> */}
         <Redirect to={{pathname: "/crud"}} />
     </Switch>
@@ -272,14 +272,6 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 **props 설명**
 
 **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
-
-src/components/Nav.js
-```jsx
-<li><h2><Link to="crud">CRUD</Link></h2></li>
-<li><h2><Link to="search">Search</Link></h2></li>
-```
-
-**여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
 ## CRUD Conpenent Markup
 src/components/contents/CRUD.js
@@ -320,6 +312,16 @@ src/components/contents/CRUD.js
   </div>
 </div>
 ```
+
+src/components/Nav.js
+```jsx
+import { Link } from 'react-router-dom';
+
+<li><h2><Link to="crud">CRUD</Link></h2></li>
+<li><h2><Link to="search">Search</Link></h2></li>
+```
+
+**여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
 ## MobX 설치
 https://github.com/mobxjs/mobx
