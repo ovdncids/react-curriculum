@@ -14,7 +14,21 @@ Node.js 버전 별로 자유롭게 설치, 이동, 삭제 가능하다. 현재�
 
 <!-- **Mac OS Node 삭제 방법**: https://gomugom.github.io/how-to-remove-node-from-macos/ -->
 
-<!-- **VSCode에서 터미널 호출시 버전을 못 찾을 때**: https://github.com/Microsoft/vscode-docs/blob/master/docs/editor/integrated-terminal.md#why-is-nvm-complaining-about-a-prefix-option-when-the-integrated-terminal-is-launched -->
+<!-- **VSCode에서 터미널 호출시 버전을 못 찾을 때**: https://github.com/Microsoft/vscode-docs/blob/master/docs/editor/integrated-terminal.md#why-is-nvm-complaining-about-a-prefix-option-when-the-integrated-terminal-is-launched
+```sh
+# nvm is not compatible with the npm config "prefix" option: currently set to "/usr/local"
+# Run `npm config delete prefix` or `nvm use --delete-prefix v8.12.0 --silent` to unset it.
+## nvm 설치 전에 npm이 설치되어서 문제가 발생 한다.
+ls -la /usr/local/bin | grep npm
+rm -R /usr/local/bin/npm /usr/local/lib/node_modules/npm/bin/npm-cli.js
+``` -->
+
+<!-- **nvm 삭제 방법**:
+```sh
+rm -rf ~/.nvm
+rm -rf ~/.npm
+rm -rf ~/.bower
+``` -->
 
 **Mac OS**: https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
 ```sh
@@ -47,6 +61,9 @@ nvm uninstall 8.12.0
 
 # 해당 버전을 사용 한다.
 nvm use 8.12.0
+
+# 기본 버전 변경 하기
+nvm alias default 8.12.0
 ```
 
 ## NPM (Node Package Manager)
