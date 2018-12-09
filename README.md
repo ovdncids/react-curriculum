@@ -43,7 +43,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# ~./bash_profile 재 실행 시키기
+# ~/.bash_profile 재 실행 시키기
 source ~/.bash_profile
 ```
 
