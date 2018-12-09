@@ -860,4 +860,10 @@ package.json
 npm start
 ```
 
+<!-- ## Express에 build된 파일 넣기
+package.json
+```json
+"build": "react-scripts build && rm -fr ../express/public && mv build ../express/public",
+``` -->
+
 # 수고 하셨습니다.
