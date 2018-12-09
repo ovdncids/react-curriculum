@@ -143,6 +143,10 @@ router.delete('/:idx', (req, res) => {
 
 ```
 ```diff
+- const moment = require('moment');
+- const members = process.mockData.member
+```
+```diff
 - axios.delete(`/api/v1/member/${key}`).then(response => {
 + axios.delete(`/api/v1/member/${this.members[key].idx}`).then(response => {
 ```
