@@ -149,9 +149,12 @@ git rebase -i HEAD~2
 
 <!-- **이전으로 돌아가 수정 하기**
 ```sh
+# 첫 commit 수정
+git rebase -i --root $tip
+# 이후 commit 수정
 git rebase -i HEAD~2
   pick -> edit 수정
-# 원하는 파일 수정
+원하는 파일 수정
 git add .
 git rebase --continue
 ``` -->
