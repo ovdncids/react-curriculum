@@ -147,6 +147,15 @@ git rebase -i HEAD~2
 # 2번째 줄 pick을 fixup으로 바꾸고 저장
 ``` -->
 
+<!-- **이전으로 돌아가 수정 하기**
+```sh
+git rebase -i HEAD~2
+  pick -> edit 수정
+# 원하는 파일 수정
+git add .
+git rebase --continue
+``` -->
+
 **VSCode 확장 Git History 설치**
 
 ## Sass 설치
