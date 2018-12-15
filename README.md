@@ -733,7 +733,7 @@ class SearchStore {
 
   read() {
     utils.nProgress.start();
-    axios.get(`http://localhost:3100/api/v1/search?name=${this.member.name}`, this.member).then(response => {
+    axios.get(`http://localhost:3100/api/v1/search?name=${this.member.name}`).then(response => {
       console.log(response);
       this.members = response.data.members;
       utils.nProgress.done();
