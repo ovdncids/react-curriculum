@@ -104,7 +104,7 @@ serve -s build
 
 ## 현재 문서 Git clone 하기
 
-git clone https://github.com/ovdncids/react-curriculum-wonmyoung.git
+git clone https://github.com/ovdncids/react-curriculum.git
 
 ## Git .gitignore
 ```sh
