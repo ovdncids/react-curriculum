@@ -14,6 +14,15 @@ https://developers.google.com/drive/api/v3/quickstart/nodejs
 
 ### 파일 CRUD
 ```js
+// 애플리케이션 권한에 맞게 설정 하자.
+const SCOPES = [
+  'https://www.googleapis.com/auth/drive',
+  'https://www.googleapis.com/auth/drive.file',
+  'https://www.googleapis.com/auth/drive.appdata',
+  'https://www.googleapis.com/auth/drive.apps.readonly'
+];
+
+function createFile(auth) {
   drive.files.create({
     resource: {
       name: 'a.txt'
@@ -29,7 +38,9 @@ https://developers.google.com/drive/api/v3/quickstart/nodejs
       console.log('File Id:', file.data.id);
     }
   });
+}
 
+function updateFile(auth) {
   drive.files.update({
     fileId: '1Agdf08QDEJLSo-Zj2Y3DLPAJqWLGkP-2',
     resource: {
@@ -47,6 +58,7 @@ https://developers.google.com/drive/api/v3/quickstart/nodejs
     }
   });
 
+function deleteFile(auth) {
   drive.files.delete({
     fileId: 'fileId'
   }, function (err, file) {
@@ -56,4 +68,6 @@ https://developers.google.com/drive/api/v3/quickstart/nodejs
       console.log('File Id:', file.data);
     }
   });
+}
+
 ```
