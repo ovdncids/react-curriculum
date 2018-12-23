@@ -7,7 +7,7 @@ Database 규칙
   "rules": {
     "member": {
       ".read": true,
-    	".write": true
+      ".write": true
     }
   }
 }
@@ -39,11 +39,11 @@ firebase.initializeApp({
 ### create
 CRUDStore.js
 ```js
+import moment from 'moment';
 import * as firebase from 'firebase/app';
 
 create(spinnerTarget) {
   ...
-
   const spinner = utils.spinner().spin(spinnerTarget);
   firebase.database().ref('member').push({
     name: this.member.name,
@@ -61,6 +61,8 @@ create(spinnerTarget) {
 
 ### read
 ```js
+import _ from 'lodash';
+
 read() {
   this.membersListener = firebase.database().ref('member');
   this.membersListener.on('value', snapshot => {
@@ -116,7 +118,7 @@ update(spinnerTarget, key) {
 
 ### delete
 ```js
-delete() {
+delete(spinnerTarget, key) {
   ...
   const spinner = utils.spinner().spin(spinnerTarget);
   firebase.database().ref(`member/${this.members[key].uid}`).remove().then(response => {
