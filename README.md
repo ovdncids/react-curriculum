@@ -610,7 +610,7 @@ const { member, members } = crudStore;
   <tr key={key}>
     <td>{member.name}</td>
     <td>{member.age}</td>
-    <td>{moment(member.createdDate).format('YYYY-MM-DD')}</td>
+    <td>{moment(member.createdDate).format('YYYY-MM-DD HH:mm')}</td>
     <td>
       <button>Update</button>
       <button>Delete</button>
@@ -805,7 +805,7 @@ const { member, members } = searchStore;
   <tr key={key}>
     <td>{member.name}</td>
     <td>{member.age}</td>
-    <td>{moment(member.createdDate).format('YYYY-MM-DD')}</td>
+    <td>{moment(member.createdDate).format('YYYY-MM-DD HH:mm')}</td>
   </tr>
 ))}
 ```
