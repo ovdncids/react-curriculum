@@ -356,6 +356,19 @@ import { Link } from 'react-router-dom';
 <li><h2><Link to="search">Search</Link></h2></li>
 ```
 
+<!-- history.push 자식으로 넘기기
+```js
+<A1 {...props}></A1>
+
+function A1(props) {
+  return (
+    <button onClick={() => {props.history.push('/b')}}>
+      A1
+    </button>
+  );
+}
+``` -->
+
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
 ## MobX 설치
