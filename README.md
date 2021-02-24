@@ -95,6 +95,8 @@ https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
 # npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
 npx create-react-app my-app
+# redux 사용
+npx create-react-app my-app --template redux
 
 npm run test
 npm run build
