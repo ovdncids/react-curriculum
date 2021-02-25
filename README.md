@@ -185,6 +185,37 @@ npm install sass sass-loader
 ```
 
 ## Markup
+src/App.js
+```diff
+- import logo from './logo.svg';
+- import './App.css';
+```
+```js
+<div>
+  <header>
+    <h1>React study</h1>
+  </header>
+  <hr />
+  <div className="container">
+    <nav className="nav">
+      <ul>
+        <li><h2>Members</h2></li>
+        <li><h2>Search</h2></li>
+      </ul>
+    </nav>
+    <hr />
+    <section className="contents">
+      <div>
+        <h3>Members</h3>
+        <p>Contents</p>
+      </div>
+    </section>
+    <hr />
+  </div>
+  <footer>Copyright</footer>
+</div>
+```
+
 src/index.scss
 ```scss
 body {
@@ -245,37 +276,6 @@ h1, footer {
 }
 ```
 
-src/App.js
-```diff
-- import logo from './logo.svg';
-- import './App.css';
-```
-```js
-<div>
-  <header>
-    <h1>React study</h1>
-  </header>
-  <hr />
-  <div class="container">
-    <nav class="nav">
-      <ul>
-        <li><h2>Members</h2></li>
-        <li><h2>Search</h2></li>
-      </ul>
-    </nav>
-    <hr />
-    <section class="contents">
-      <div>
-        <h3>Members</h3>
-        <p>Contents</p>
-      </div>
-    </section>
-    <hr />
-  </div>
-  <footer>Copyright</footer>
-</div>
-```
-
 src/index.js
 ```diff
 - import './index.css';
@@ -292,10 +292,49 @@ https://www.youtube.com/watch?v=eprXmC_j9A4
 ## React Component 만들기
 Header, Nav, Footer 이렇게 Component 별로 파일을 나눈다.
 
+src/App.js
+```js
+import Header from './component/Header.js';
+import Nav from './component/Nav.js';
+import Footer from './component/Footer.js';
+```
+
+src/component/Header.js
+```js
+function Header() {
+  return (
+    <header>
+      <h1>React study</h1>
+    </header>
+  )
+}
+
+export default Header;
+```
+
+src/App.js
+```diff
+- <header>
+-  <h1>React study</h1>
+- </header>
++ <Header></Header>
+
+- <nav className="nav">
+-   <ul>
+-     <li><h2>Members</h2></li>
+-     <li><h2>Search</h2></li>
+-   </ul>
+- </nav>
++ <Nav></Nav>
+
+- <footer>Copyright</footer>
++ <Footer></Footer>
+```
+
 ## React Router DOM 설치
-https://reacttraining.com/react-router/
+https://reacttraining.com/react-router
 ```sh
-npm install --save react-router-dom
+npm install react-router-dom
 ```
 
 ## Router 만들기
