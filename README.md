@@ -66,7 +66,7 @@ nvm uninstall 14.15.5
 # 해당 버전을 사용 한다.
 nvm use 14.15.5
 
-# 기본 버전 변경
+# 기본 버전 변경 한다.
 nvm alias default 14.15.5
 ```
 
@@ -410,7 +410,7 @@ function A1(props) {
 
 Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽다, store 값이 변하면 해당 값을 바라 보는 모든 Component가 수정 된다.
 
-## MobX 설치
+### MobX 설치
 https://github.com/mobxjs/mobx
 ```sh
 npm install --save mobx mobx-react
@@ -435,8 +435,8 @@ export default class MembersStore {
     this.members.push({
       name: this.member.name,
       age: this.member.age
-    })
-    console.log('Done membersCreate', this.members)
+    });
+    console.log('Done membersCreate', this.members);
   }
 }
 
@@ -455,6 +455,7 @@ tsconfig.json
 ``` -->
 
 **Members Store 등록**
+
 src/index.js
 ```js
 import { configure } from 'mobx';
@@ -467,7 +468,7 @@ configure({
 ```diff
 - <App />
 <Provider
-  crudStore={membersStore}
+  membersStore={membersStore}
 >
   <App />
 </Provider>
@@ -534,182 +535,56 @@ export default inject('membersStore')(observer(Members));
 debugger;
 ```
 
-## Axios(서버 연동), toastr(메시지 창), spin.js(로딩 스피너), nprogress(프로그래스 바), lodash(배열, 오브젝트 유틸리티), moment(시간관련 유틸리티) 설치
-```sh
-npm install --save axios toastr spin.js nprogress lodash moment
-```
-
-## Validation with toastr
-https://github.com/CodeSeven/toastr
-
-src/shared/utils.js
-```js
-import Toastr from 'toastr';
-import 'toastr/build/toastr.min.css';
-
-export const toastr = () => {
-  return Toastr;
-};
-Toastr.options.closeButton = true;
-Toastr.options.hideDuration = 200;
-```
-
-src/shared/stores/CRUDStore.js
-```js
-import * as utils from '../utils';
-
-// validation
-if (!this.member.name) {
-  utils.toastr().warning('Please text your name.');
-  return;
-}
-if (!Number(this.member.age) || Number(this.member.age) <= 0) {
-  utils.toastr().warning('Please text your age and upper than 0.');
-  return;
-}
-```
-
-## Spin.js
-https://spin.js.org/
-
-src/shared/utils.js
-```js
-import { Spinner } from 'spin.js';
-import 'spin.js/spin.css';
-
-export const spinner = () => {
-  return new Spinner({scale: 0.5});
-};
-```
-
-src/components/contents/CRUD.js
-```js
-create(spinnerTarget) {
-  const { crudStore } = this.props;
-  crudStore.create(spinnerTarget);
-}
-```
-```js
-<button className="relative pointer" onClick={e => this.create(e.target)}>Create</button>
-```
-
-src/shared/stores/CRUDStore.js
-```js
-create(spinnerTarget) {
-  utils.spinner().spin(spinnerTarget);
-}
-```
-
-## node.js 서버 실행
-```sh
-npm install -g nodemon
-nodemon index.js
-```
-
-## Axios 서버 연동
-https://github.com/axios/axios
-
-### Create
-src/shared/utils.js
-```js
-export const apiCommonError = (error, spinner) => {
-  console.log(error);
-  console.log(error.response);
-  const errMessage = (error.response && error.response.data && (error.response.data.message || error.response.data.errMessage || error.response.data.sqlMessage)) || error;
-  toastr().error(errMessage);
-  if (spinner) {
-    spinner.stop();
-  }
-};
-```
-
-src/shared/stores/CRUDStore.js
-```js
-import axios from 'axios';
-
-const spinner = utils.spinner().spin(spinnerTarget);
-axios.post('http://localhost:3100/api/v1/member', this.member).then(response => {
-  console.log(response);
-  spinner.stop();
-  utils.toastr().success(response.data.result);
-  this.read();
-}).catch(error => {
-  utils.apiCommonError(error, spinner);
-});
-
-read() {}
-```
-
+## Members Store CRUD
 ### Read
-**nprogress**: https://github.com/rstacruz/nprogress
-
-src/shared/utils.js
+src/shared/stores/MembersStore.js
 ```js
-import * as NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-
-export const apiCommonError = (error, spinner) => {
-  nProgress.done();
+membersRead() {
+  this.members = [{
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  }];
+  console.log('Done membersRead', this.members);
 }
-
-export const nProgress = {
-  start: () => NProgress.start(),
-  done: () => NProgress.done()
-};
 ```
 
-src/shared/stores/CRUDStore.js
+src/components/contents/Members.js
 ```js
-import { decorate, observable, action } from 'mobx';
-
-members = []
-
-read() {
-  utils.nProgress.start();
-  axios.get('http://localhost:3100/api/v1/member').then(response => {
-    console.log(response);
-    this.members = response.data.members;
-    utils.nProgress.done();
-  }).catch(error => {
-    utils.apiCommonError(error);
-  });
-}
-
-decorate(CRUDStore, {
-  member: observable,
-  members: observable,
-  read: action
-})
+import { useEffect } from 'react';
 ```
-
-src/components/contents/CRUD.js
+```diff
+- const { member } = membersStore;
+```
 ```js
-import _ from 'lodash';
-import moment from 'moment';
-
-const { member, members } = crudStore;
-
-{_.map(members, (member, key) => (
-  <tr key={key}>
+const { members, member } = membersStore;
+useEffect(() => {
+  membersStore.membersRead();
+}, [membersStore]);
+```
+```diff
+- <tr>
+-   <td>홍길동</td>
+-   <td>20</td>
+```
+```js
+{members.map((member, index) => (
+  <tr key={index}>
     <td>{member.name}</td>
     <td>{member.age}</td>
-    <td>{moment(member.createdDate).format('YYYY-MM-DD HH:mm')}</td>
-    <td>
-      <button>Update</button>
-      <button>Delete</button>
-    </td>
+    ...
   </tr>
 ))}
-
-crudStore.read();
 ```
 
 ### Update
 src/components/contents/CRUD.js
 ```js
 update(spinnerTarget, key) {
-  const { crudStore } = this.props;
-  crudStore.update(spinnerTarget, key);
+  const { membersStore } = this.props;
+  membersStore.update(spinnerTarget, key);
 }
 ```
 ```js
@@ -726,7 +601,7 @@ update(spinnerTarget, key) {
 <button className="relative pointer" onClick={e => this.update(e.target, key)}>Update</button>
 ```
 
-src/shared/stores/CRUDStore.js
+src/shared/stores/MembersStore.js
 ```js
 update(spinnerTarget, key) {
   const member = this.members[key];
@@ -754,15 +629,15 @@ update(spinnerTarget, key) {
 src/components/contents/CRUD.js
 ```js
 delete(spinnerTarget, key) {
-  const { crudStore } = this.props;
-  crudStore.delete(spinnerTarget, key);
+  const { membersStore } = this.props;
+  membersStore.delete(spinnerTarget, key);
 }
 ```
 ```js
 <button className="relative pointer" onClick={e => this.delete(e.target, key)}>Delete</button>
 ```
 
-src/shared/stores/CRUDStore.js
+src/shared/stores/MembersStore.js
 ```js
 delete(spinnerTarget, key) {
   if (!window.confirm('Are you sure?')) {
