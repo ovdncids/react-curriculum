@@ -90,9 +90,9 @@ https://github.com/facebook/create-react-app
 ```sh
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
 # npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
-npx create-react-app my-app
+npx create-react-app react-study
 
-npm run test
+# VSCode로 해당 디렉토리 열기
 npm run build
 npm install -g serve
 serve -s build
@@ -177,47 +177,20 @@ npm install sass sass-loader
 ```
 
 ## 필요 없는 파일 지우기
-
-## 기본 디렉토리 구조 잡기
-```
-src
-    /assets
-    /components
-    /shared
+```diff
+- src/App.css
+- src/App.test.js
+- src/index.css
+- src/logo.svg
 ```
 
- ## Markup
-src/App.js
-```jsx
-<div>
-  <header><h1>React Study</h1></header>
-  <hr />
-  <div className="container">
-    <div className="nav">
-      <nav>
-        <ul>
-          <li><h2>CRUD</h2></li>
-          <li><h2>Search</h2></li>
-        </ul>
-      </nav>
-    </div>
-    <hr />
-    <div className="contents">
-      <section>
-        <div>
-          <h3>CRUD</h3>
-          <p>Contents</p>
-        </div>
-      </section>
-    </div>
-    <hr />
-  </div>
-  <footer>Copyright</footer>
-</div>
-```
-
-src/assets/styles/index.scss
+## Markup
+src/index.scss
 ```scss
+body {
+  margin: 0;
+}
+
 // common
 .pointer {
   cursor: pointer;
@@ -272,12 +245,49 @@ h1, footer {
 }
 ```
 
-## CSS Flex
+src/App.js
+```diff
+- import logo from './logo.svg';
+- import './App.css';
+```
+```js
+<div>
+  <header>
+    <h1>React study</h1>
+  </header>
+  <hr />
+  <div class="container">
+    <nav class="nav">
+      <ul>
+        <li><h2>Members</h2></li>
+        <li><h2>Search</h2></li>
+      </ul>
+    </nav>
+    <hr />
+    <section class="contents">
+      <div>
+        <h3>Members</h3>
+        <p>Contents</p>
+      </div>
+    </section>
+    <hr />
+  </div>
+  <footer>Copyright</footer>
+</div>
+```
+
+src/index.js
+```diff
+- import './index.css';
++ import './index.scss';
+```
+
+<!-- ## CSS Flex
 https://opentutorials.org/course/2418/13526
 
 https://www.youtube.com/watch?v=eprXmC_j9A4
 
-**현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능. IE10은 Flex 부분 오류가 있어서 사용에 주의 해야 한다.
+**현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능. -->
 
 ## React Component 만들기
 Header, Nav, Footer 이렇게 Component 별로 파일을 나눈다.
@@ -290,7 +300,7 @@ npm install --save react-router-dom
 
 ## Router 만들기
 src/App.js
-```jsx
+```js
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 <BrowserRouter>
@@ -311,7 +321,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 ## CRUD Conpenent Markup
 src/components/contents/CRUD.js
-```jsx
+```js
 class CRUD extends React.Component {
   render() {
     return (
@@ -356,7 +366,7 @@ class CRUD extends React.Component {
 ```
 
 src/components/Nav.js
-```jsx
+```js
 import { Link } from 'react-router-dom';
 
 <li><h2><Link to="crud">CRUD</Link></h2></li>
@@ -425,7 +435,7 @@ tsconfig.json
 
 **CRUD Store 등록하기**
 src/index.js
-```jsx
+```js
 import { Provider } from 'mobx-react';
 import { crudStore } from './shared/stores/CRUDStore';
 
@@ -438,7 +448,7 @@ import { crudStore } from './shared/stores/CRUDStore';
 
 ## CRUD Conpenent Store inject & observer
 src/components/contents/CRUD.js
-```jsx
+```js
 import { inject, observer } from 'mobx-react';
 
 create() {
@@ -532,7 +542,7 @@ create(spinnerTarget) {
   crudStore.create(spinnerTarget);
 }
 ```
-```jsx
+```js
 <button className="relative pointer" onClick={e => this.create(e.target)}>Create</button>
 ```
 
@@ -655,7 +665,7 @@ update(spinnerTarget, key) {
   crudStore.update(spinnerTarget, key);
 }
 ```
-```jsx
+```js
 <input
   type="text" placeholder="Name" value={member.name}
   onChange={e => {member.name = e.target.value}}
@@ -701,7 +711,7 @@ delete(spinnerTarget, key) {
   crudStore.delete(spinnerTarget, key);
 }
 ```
-```jsx
+```js
 <button className="relative pointer" onClick={e => this.delete(e.target, key)}>Delete</button>
 ```
 
@@ -725,7 +735,7 @@ delete(spinnerTarget, key) {
 
 ## Search Conpenent Markup
 src/components/contents/Search.js
-```jsx
+```js
 <div>
   <h3>Search</h3>
   <hr className="d-block" />
@@ -819,7 +829,7 @@ keyPress(e) {
 const { searchStore } = this.props;
 const { member, members } = searchStore;
 ```
-```jsx
+```js
 <input
   type="text" value={member.name}
   onChange={e => {member.name = e.target.value}}
