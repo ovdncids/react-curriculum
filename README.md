@@ -1,16 +1,15 @@
-# 리액트 커리큘럼
+# React
 
-## 용어
+<!-- ## 용어
 **Markup**: 디자인을 HTML, CSS로 변환 하는 과정 또는 HTML 파일을 뜻함. HTML, CSS로 변환 된다. 퍼블리싱이라고도 함.
 
-**Markdown**: 주로 README.md 파일로 많이 쓰이고, 현재 이 문서도 Markdown으로 만들어짐. 화려한 레이아웃 업이 Text로 정보 전달 할때 많이 사용한다.
+**Markdown**: 주로 README.md 파일로 많이 쓰이고, 현재 이 문서도 Markdown으로 만들어짐. 화려한 레이아웃 업이 Text로 정보 전달 할때 많이 사용한다. -->
 
 ## Node.js
 https://nodejs.org
 
 ## NVM (Node Version Manager)
-Node.js 설치 버전을 관리하는 프로그램. 심볼릭 링크를 이용하여 Node.js 버전을 그때 그때 변경한다.
-Node.js 버전 별로 자유롭게 설치, 이동, 삭제 가능하다. 현재는 Node.js v6, v8이 주류를 이룬다.
+Node.js 버전을 관리하는 프로그램, 어느 버전이든 설치, 변경, 삭제 가능하다.
 
 <!-- **Mac OS Node 삭제 방법**: https://gomugom.github.io/how-to-remove-node-from-macos/ -->
 
@@ -30,46 +29,45 @@ rm -rf ~/.npm
 rm -rf ~/.bower
 ``` -->
 
-**Mac OS**: https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
+<details><summary>Mac OS</summary>
+https://github.com/nvm-sh/nvm
+
+https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
 ```sh
 # 설치
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 
 # vi 에디터 실행
 vi ~/.bash_profile
 
 # 해당 경로 적용 시키키
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # ~/.bash_profile 재 실행 시키기
 source ~/.bash_profile
 ```
+</details>
 
-**Windows**: https://github.com/coreybutler/nvm-windows/releases
+Windows
+
+https://github.com/coreybutler/nvm-windows/releases
 
 ```sh
 # 설치 된 node.js 리스트를 본다.
 nvm ls
 
 # 해당 버전을 설치 한다.
-nvm install 8.12.0
+nvm install 14.15.5
 
 # 해당 버전을 삭제 한다.
-nvm uninstall 8.12.0
+nvm uninstall 14.15.5
 
 # 해당 버전을 사용 한다.
-nvm use 8.12.0
+nvm use 14.15.5
 
 # 기본 버전 변경 하기
-nvm alias default 8.12.0
-```
-
-## NPM (Node Package Manager)
-```sh
-# 상위 버전으로 업 한다. 현재 v6.4.1
-npm install -g npm
+nvm alias default 14.15.5
 ```
 
 <!-- ## Visual Studio Code
@@ -89,22 +87,31 @@ https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
 
 ## Create React App 설치
 https://github.com/facebook/create-react-app
-
-https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment
 ```sh
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
 # npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
 npx create-react-app my-app
-# redux 사용
-npx create-react-app my-app --template redux
 
 npm run test
 npm run build
 npm install -g serve
 serve -s build
+
+## 프로젝트 실행
+npm start
 ```
 
-## 현재 문서 Git clone 하기
+<!-- # redux 사용
+npx create-react-app my-app --template redux -->
+
+## GIT
+소스 관리를 위해 사용한다. 어느 파일이 언제 어떻게 변경 되었는지 쉽게 볼 수 있다.
+
+**GIT 설치**
+
+**VSCode 확장 Git Graph 설치**
+
+<!-- ## 현재 문서 Git clone 하기
 
 git clone https://github.com/ovdncids/react-curriculum.git
 
@@ -136,7 +143,7 @@ git commit --amend -m ""
 **commit 취소**
 ```sh
 git reset HEAD~
-```
+``` -->
 
 <!-- **첫 commit 취소**
 ```sh
@@ -161,14 +168,12 @@ git add .
 git rebase --continue
 ``` -->
 
-**VSCode 확장 Git History 설치**
-
 ## Sass 설치
 css를 프로그램화 하여 색상 테마를 변수에 넣을 수 있고, 반복 부분을 저장하고 불러 올 수 있다. 이름은 Sass지만 파일명은 scss이다.
 
-https://sass-guidelin.es/ko/
+https://sass-guidelin.es/ko
 ```sh
-npm install --save node-sass sass-loader
+npm install sass sass-loader
 ```
 
 ## 필요 없는 파일 지우기
