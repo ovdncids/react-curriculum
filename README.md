@@ -418,7 +418,7 @@ npm install --save mobx mobx-react
 
 src/stores/MembersStore.js
 ```js
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable } from 'mobx';
 
 export default class MembersStore {
   constructor() {
@@ -537,7 +537,7 @@ debugger;
 
 ## Members Store CRUD
 ### Read
-src/shared/stores/MembersStore.js
+src/stores/MembersStore.js
 ```js
 membersRead() {
   this.members = [{
@@ -580,7 +580,7 @@ useEffect(() => {
 ```
 
 ### Update
-src/shared/stores/MembersStore.js
+src/stores/MembersStore.js
 ```js
 membersUpdate(index, member) {
   this.members[index] = member;
@@ -615,7 +615,7 @@ src/components/contents/Members.js
 ```
 
 ### Delete
-src/shared/stores/MembersStore.js
+src/stores/MembersStore.js
 ```js
 membersDelete(index) {
   this.members.splice(index, 1);
@@ -629,6 +629,117 @@ src/components/contents/Members.js
 ```
 ```js
 <button onClick={() => membersStore.membersDelete(index)}>Delete</button>
+```
+
+
+## Backend Server
+* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
+```sh
+# BE 서버 실행 방법
+npm install
+node index.js
+# 터미널 종료
+Ctrl + c
+```
+
+## Axios 서버 연동
+https://github.com/axios/axios
+```sh
+npm install axios
+```
+
+### Create
+src/stores/common.js
+```js
+export const axiosError = function(error) {
+  console.error(error.response || error.message || error)
+}
+```
+
+src/stores/MembersStore.js
+```js
+import axios from 'axios';
+import { axiosError } from './common.js';
+```
+```diff
+membersCreate() {
+- this.members.push({
+-   name: this.member.name,
+-   age: this.member.age
+- })
+- console.log('Done membersCreate', this.members);
+```
+```js
+axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
+  console.log('Done membersCreate', response);
+  this.membersRead();
+}).catch(function(error) {
+  axiosError(error);
+});
+```
+
+### Read
+src/stores/MembersStore.js
+```diff
+membersRead() {
+- this.members = [{
+-   name: '홍길동',
+-   age: 20
+- }, {
+-   name: '춘향이',
+-   age: 16
+- }];
+- console.log('Done membersRead', this.members);
+```
+```js
+membersRead() {
+  axios.get('http://localhost:3100/api/v1/members').then((response) => {
+    console.log('Done membersRead', response);
+    this.members = response.data.members;
+  }).catch(function(error) {
+    axiosError(error);
+  });
+}
+```
+
+### Update
+src/stores/MembersStore.js
+```diff
+```
+membersUpdate(index, member) {
+- this.members[index] = member;
+- console.log('Done membersUpdate', this.members);
+```js
+membersUpdate(index, member) {
+  const memberUpdate = {
+    index: index,
+    member: member,
+  }
+  axios.patch('http://localhost:3100/api/v1/members', memberUpdate).then((response) => {
+    console.log('Done membersUpdate', response);
+    this.membersRead();
+  }).catch(function(error) {
+    axiosError(error);
+  });
+}
+```
+
+### Delete
+src/stores/MembersStore.js
+```diff
+membersDelete(index) {
+- this.members.splice(index, 1);
+- console.log('Done membersDelete', this.members);
+```
+```js
+membersDelete(index) {
+  axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
+    console.log('Done membersDelete', response);
+    this.membersRead();
+  }).catch(function(error) {
+    axiosError(error);
+  });
+}
 ```
 
 ## Search Conpenent Markup
@@ -664,7 +775,7 @@ src/components/contents/Search.js
 ```
 
 ## Search Store 만들기
-src/shared/stores/SearchStore.js
+src/stores/SearchStore.js
 ```js
 import { decorate, observable, action } from 'mobx';
 import axios from 'axios';
@@ -701,7 +812,7 @@ export const searchStore = new SearchStore();
 **Search Store 등록**
 src/index.js
 ```js
-import { searchStore } from './shared/stores/SearchStore';
+import { searchStore } from './stores/SearchStore';
 
 searchStore={searchStore}
 ```
