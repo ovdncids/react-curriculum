@@ -66,7 +66,7 @@ nvm uninstall 14.15.5
 # 해당 버전을 사용 한다.
 nvm use 14.15.5
 
-# 기본 버전 변경 하기
+# 기본 버전 변경
 nvm alias default 14.15.5
 ```
 
@@ -156,7 +156,7 @@ git rebase -i HEAD~2
 # 2번째 줄 pick을 fixup으로 바꾸고 저장
 ``` -->
 
-<!-- **이전으로 돌아가 수정 하기**
+<!-- **이전으로 돌아가 수정**
 ```sh
 # 첫 commit 수정
 git rebase -i --root $tip
@@ -374,7 +374,7 @@ export default Members;
 
 src/component/contents/Search.js (동일)
 
-**render, props 풀어서 설명 하기**
+**render, props 풀어서 설명**
 
 **router를 타이핑으로 바꾸어 보기**
 
@@ -385,7 +385,7 @@ import { Link } from 'react-router-dom';
 <li><h2><Link to="members">Members</Link></h2></li>
 <li><h2><Link to="search">Search</Link></h2></li>
 ```
-**You should not use `<Link>` outside a `<Router>` 설명하기**
+**You should not use `<Link>` outside a `<Router>` 설명**
 
 <!-- history.push 자식으로 넘기기
 ```js
@@ -404,51 +404,11 @@ function A1(props) {
 
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
-## CRUD Conpenent Markup
-src/components/contents/CRUD.js
-```js
-class CRUD extends React.Component {
-  render() {
-    return (
-      <div>
-        <h3>CRUD</h3>
-        <hr className="d-block" />
-        <div>
-          <h4>Read</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Created Date</th>
-                <th>Modify</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>횽길동</td>
-                <td>39</td>
-                <td>2018-10-04</td>
-                <td>
-                  <button>Update</button>
-                  <button>Delete</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <hr className="d-block" />
-        <div>
-          <h4>Create</h4>
-          <input type="text" placeholder="Name" />
-          <input type="text" placeholder="Age" />
-          <button>Create</button>
-        </div>
-      </div>
-    );
-  }
-}
-```
+## Members Store 만들기
+
+**Store 개념 설명**
+
+Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽다, store 값이 변하면 해당 값을 바라 보는 모든 Component가 수정 된다.
 
 ## MobX 설치
 https://github.com/mobxjs/mobx
@@ -456,31 +416,31 @@ https://github.com/mobxjs/mobx
 npm install --save mobx mobx-react
 ```
 
-## CRUD Store 만들기
-**Store 개념 설명**
-
-Component는 상하, 수직, 부모 자식 관계인데 Store는 수평, 평등 관계이다.
-
-src/shared/stores/CRUDStore.js
+src/stores/MembersStore.js
 ```js
-import { observable, decorate } from 'mobx';
+import { makeAutoObservable } from "mobx"
 
-export default class CRUDStore {
-  member = {
-      name: '',
-      age: ''
+export default class MembersStore {
+  constructor() {
+    makeAutoObservable(this);
   }
 
-  // create() {
-  //   console.log('create')
-  // }
+  members = [];
+  member = {
+    name: '',
+    age: ''
+  };
+
+  membersCreate() {
+    this.members.push({
+      name: this.member.name,
+      age: this.member.age
+    })
+    console.log('Done membersCreate', this.members)
+  }
 }
 
-decorate(CRUDStore, {
-  member: observable
-})
-
-export const crudStore = new CRUDStore();
+export const membersStore = new MembersStore();
 ```
 
 <!-- ## VSCode experimentalDecorators 에러 발생시
@@ -492,57 +452,82 @@ tsconfig.json
     "allowJs": true
   }
 }
-```
--->
+``` -->
 
-**CRUD Store 등록하기**
+**Members Store 등록**
 src/index.js
 ```js
+import { configure } from 'mobx';
 import { Provider } from 'mobx-react';
-import { crudStore } from './shared/stores/CRUDStore';
-
+import { membersStore } from './stores/MembersStore.js';
+configure({
+  // enforceActions: 'never'
+});
+```
+```diff
+- <App />
 <Provider
-  crudStore={crudStore}
+  crudStore={membersStore}
 >
   <App />
 </Provider>
 ```
 
-## CRUD Conpenent Store inject & observer
-src/components/contents/CRUD.js
+## Members Conpenent Store inject & observer
+src/components/contents/Members.js
 ```js
 import { inject, observer } from 'mobx-react';
 
-create() {
-  const { crudStore } = this.props;
-  crudStore.create();
+function Members(props) {
+  const { membersStore } = props;
+  const { member } = membersStore;
+  return (
+    <div>
+      <h3>Members</h3>
+      <hr className="d-block" />
+      <div>
+        <h4>Read</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Modify</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>홍길동</td>
+              <td>20</td>
+              <td>
+                <button>Update</button>
+                <button>Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <h4>Create</h4>
+        <input
+          type="text" placeholder="Name" value={member.name}
+          onChange={e => {member.name = e.target.value}}
+        />
+        <input
+          type="text" placeholder="Age" value={member.age}
+          onChange={e => {member.age = e.target.value}}
+        />
+        <button onClick={() => membersStore.membersCreate()}>Create</button>
+      </div>
+    </div>
+  )
 }
 
-const { crudStore } = this.props;
-const { member } = crudStore;
-
-<input
-  type="text" placeholder="Name" value={member.name}
-  onChange={e => {member.name = e.target.value}}
-/>
-<input
-  type="text" placeholder="Age" value={member.age}
-  onChange={e => {member.age = e.target.value}}
-/>
-<button onClick={() => this.create()}>Create</button>
-
-// Life cycle
-componentDidMount() {
-  const { crudStore } = this.props;
-  const { member } = crudStore;
-  member.name = '';
-  member.age = '';
-}
-
-CRUD = inject('crudStore')(observer(CRUD));
+export default inject('membersStore')(observer(Members));
 ```
 
-**render 함수 설명 하기**
+**render 함수 설명**
 
 **debugger 설명**
 ```js
@@ -862,7 +847,7 @@ decorate(SearchStore, {
 export const searchStore = new SearchStore();
 ```
 
-**Search Store 등록하기**
+**Search Store 등록**
 src/index.js
 ```js
 import { searchStore } from './shared/stores/SearchStore';
@@ -959,13 +944,13 @@ package.json
 "proxy": "http://localhost:3100"
 ```
 
-모든 파일 수정 하기
+모든 파일 수정
 ```diff
 - http://localhost:3100/api
 + /api
 ```
 
-당황 하지 말고 다시 실행 하기
+당황 하지 말고 다시 실행
 ```sh
 npm start
 ```
