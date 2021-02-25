@@ -513,11 +513,11 @@ function Members(props) {
         <h4>Create</h4>
         <input
           type="text" placeholder="Name" value={member.name}
-          onChange={e => {member.name = e.target.value}}
+          onChange={event => {member.name = event.target.value}}
         />
         <input
           type="text" placeholder="Age" value={member.age}
-          onChange={e => {member.age = e.target.value}}
+          onChange={event => {member.age = event.target.value}}
         />
         <button onClick={() => membersStore.membersCreate()}>Create</button>
       </div>
@@ -580,49 +580,38 @@ useEffect(() => {
 ```
 
 ### Update
-src/components/contents/CRUD.js
-```js
-update(spinnerTarget, key) {
-  const { membersStore } = this.props;
-  membersStore.update(spinnerTarget, key);
-}
-```
-```js
-<input
-  type="text" placeholder="Name" value={member.name}
-  onChange={e => {member.name = e.target.value}}
-/>
-
-<input
-  type="text" placeholder="Age" value={member.age}
-  onChange={e => {member.age = e.target.value}}
-/>
-
-<button className="relative pointer" onClick={e => this.update(e.target, key)}>Update</button>
-```
-
 src/shared/stores/MembersStore.js
 ```js
-update(spinnerTarget, key) {
-  const member = this.members[key];
-  if (!member.name) {
-    utils.toastr().warning('Please text your name.');
-    return;
-  }
-  if (!Number(member.age) || Number(member.age) <= 0) {
-    utils.toastr().warning('Please text your age and upper than 0.');
-    return;
-  }
-  const spinner = utils.spinner().spin(spinnerTarget);
-  axios.put('http://localhost:3100/api/v1/member', {key, member}).then(response => {
-    console.log(response);
-    spinner.stop();
-    utils.toastr().success(response.data.result);
-    this.read();
-  }).catch(error => {
-    utils.apiCommonError(error, spinner);
-  });
+membersUpdate(index, member) {
+  this.members[index] = member;
+  console.log('Done membersUpdate', this.members);
 }
+```
+
+src/components/contents/Members.js
+```diff
+<td>{member.name}</td>
+<td>{member.age}</td>
+```
+```js
+<td>
+  <input
+    type="text" placeholder="Name" value={member.name}
+    onChange={event => {member.name = event.target.value}}
+  />
+</td>
+<td>
+  <input
+    type="text" placeholder="Age" value={member.age}
+    onChange={event => {member.age = event.target.value}}
+  />
+</td>
+```
+```diff
+<button>Update</button>
+```
+```js
+<button onClick={() => membersStore.membersUpdate(index, member)}>Update</button>
 ```
 
 ### Delete
