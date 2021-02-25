@@ -615,33 +615,20 @@ src/components/contents/Members.js
 ```
 
 ### Delete
-src/components/contents/CRUD.js
-```js
-delete(spinnerTarget, key) {
-  const { membersStore } = this.props;
-  membersStore.delete(spinnerTarget, key);
-}
-```
-```js
-<button className="relative pointer" onClick={e => this.delete(e.target, key)}>Delete</button>
-```
-
 src/shared/stores/MembersStore.js
 ```js
-delete(spinnerTarget, key) {
-  if (!window.confirm('Are you sure?')) {
-    return;
-  }
-  const spinner = utils.spinner().spin(spinnerTarget);
-  axios.delete(`http://localhost:3100/api/v1/member/${key}`).then(response => {
-    console.log(response);
-    spinner.stop();
-    utils.toastr().success(response.data.result);
-    this.read();
-  }).catch(error => {
-    utils.apiCommonError(error, spinner);
-  });
+membersDelete(index) {
+  this.members.splice(index, 1);
+  console.log('Done membersDelete', this.members);
 }
+```
+
+src/components/contents/Members.js
+```diff
+<button>Delete</button>
+```
+```js
+<button onClick={() => membersStore.membersDelete(index)}>Delete</button>
 ```
 
 ## Search Conpenent Markup
