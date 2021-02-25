@@ -298,21 +298,6 @@ import Header from './component/Header.js';
 import Nav from './component/Nav.js';
 import Footer from './component/Footer.js';
 ```
-
-src/component/Header.js
-```js
-function Header() {
-  return (
-    <header>
-      <h1>React study</h1>
-    </header>
-  )
-}
-
-export default Header;
-```
-
-src/App.js
 ```diff
 - <header>
 -  <h1>React study</h1>
@@ -331,6 +316,19 @@ src/App.js
 + <Footer></Footer>
 ```
 
+src/component/Header.js
+```js
+function Header() {
+  return (
+    <header>
+      <h1>React study</h1>
+    </header>
+  )
+}
+
+export default Header;
+```
+
 ## React Router DOM 설치
 https://reacttraining.com/react-router
 ```sh
@@ -341,22 +339,66 @@ npm install react-router-dom
 src/App.js
 ```js
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import Members from './component/contents/Members.js';
+import Search from './component/contents/Search.js';
 
 <BrowserRouter>
-    <Switch>
-        <Route exact={true} path="/crud" render={props => <CRUD {...props} testProps={true} />} />
-        <Route exact={true} path="/search" component={Search} />
-        {/* <Route component={CRUD} /> */}
-        <Redirect to={{pathname: "/crud"}} />
-    </Switch>
+  <Switch>
+    <Route exact={true} path="/members" render={props => <Members {...props} testProps={true} />} />
+    <Route exact={true} path="/search" component={Search} />
+    <Redirect to={{pathname: "/members"}} />
+  </Switch>
 </BrowserRouter>
 ```
+```diff
+- <div>
+-   <h3>Members</h3>
+-   <p>Contents</p>
+- </div>
+```
 
-**BrowserRouter Only one element 설명**
+src/component/contents/Members.js
+```js
+function Members(props) {
+  console.log(props);
+  return (
+    <div>
+      <h3>Members</h3>
+      <p>Contents</p>
+    </div>
+  )
+}
 
-**props 설명**
+export default Members;
+```
+**render, props 풀어서 설명 하기**
+**router를 타이핑으로 바꾸어 보기**
 
-**BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함
+src/components/Nav.js
+```js
+import { Link } from 'react-router-dom';
+
+<li><h2><Link to="members">Members</Link></h2></li>
+<li><h2><Link to="search">Search</Link></h2></li>
+```
+**You should not use `<Link>` outside a `<Router>` 설명하기**
+
+<!-- history.push 자식으로 넘기기
+```js
+<A1 {...props}></A1>
+
+function A1(props) {
+  return (
+    <button onClick={() => {props.history.push('/b')}}>
+      A1
+    </button>
+  );
+}
+``` -->
+
+<!-- **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함 -->
+
+**여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
 ## CRUD Conpenent Markup
 src/components/contents/CRUD.js
@@ -403,29 +445,6 @@ class CRUD extends React.Component {
   }
 }
 ```
-
-src/components/Nav.js
-```js
-import { Link } from 'react-router-dom';
-
-<li><h2><Link to="crud">CRUD</Link></h2></li>
-<li><h2><Link to="search">Search</Link></h2></li>
-```
-
-<!-- history.push 자식으로 넘기기
-```js
-<A1 {...props}></A1>
-
-function A1(props) {
-  return (
-    <button onClick={() => {props.history.push('/b')}}>
-      A1
-    </button>
-  );
-}
-``` -->
-
-**여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
 ## MobX 설치
 https://github.com/mobxjs/mobx
