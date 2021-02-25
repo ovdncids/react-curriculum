@@ -371,7 +371,11 @@ function Members(props) {
 
 export default Members;
 ```
+
+src/component/contents/Search.js (동일)
+
 **render, props 풀어서 설명 하기**
+
 **router를 타이핑으로 바꾸어 보기**
 
 src/components/Nav.js
