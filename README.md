@@ -673,7 +673,7 @@ membersCreate() {
 axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
   console.log('Done membersCreate', response);
   this.membersRead();
-}).catch(function(error) {
+}).catch((error) => {
   axiosError(error);
 });
 ```
@@ -696,7 +696,7 @@ membersRead() {
   axios.get('http://localhost:3100/api/v1/members').then((response) => {
     console.log('Done membersRead', response);
     this.members = response.data.members;
-  }).catch(function(error) {
+  }).catch((error) => {
     axiosError(error);
   });
 }
@@ -718,7 +718,7 @@ membersUpdate(index, member) {
   axios.patch('http://localhost:3100/api/v1/members', memberUpdate).then((response) => {
     console.log('Done membersUpdate', response);
     this.membersRead();
-  }).catch(function(error) {
+  }).catch((error) => {
     axiosError(error);
   });
 }
@@ -736,7 +736,7 @@ membersDelete(index) {
   axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
     console.log('Done membersDelete', response);
     this.membersRead();
-  }).catch(function(error) {
+  }).catch((error) => {
     axiosError(error);
   });
 }
@@ -777,34 +777,26 @@ src/components/contents/Search.js
 ## Search Store 만들기
 src/stores/SearchStore.js
 ```js
-import { decorate, observable, action } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
-import * as utils from '../utils';
+import { axiosError } from './common.js';
+import { membersStore } from './MembersStore.js';
 
-class SearchStore {
-  member = {
-    name: ''
+export default class SearchStore {
+  constructor() {
+    makeAutoObservable(this);
   }
 
-  members = []
-
-  read() {
-    utils.nProgress.start();
-    axios.get(`http://localhost:3100/api/v1/search?name=${this.member.name}`).then(response => {
-      console.log(response);
-      this.members = response.data.members;
-      utils.nProgress.done();
-    }).catch(error => {
-      utils.apiCommonError(error);
+  searchRead(search) {
+    const url = `http://localhost:3100/api/v1/search?search=${search}`;
+    axios.get(url).then((response) => {
+      console.log('Done searchRead', response);
+      membersStore.members = response.data.members;
+    }).catch((error) => {
+      axiosError(error);
     });
   }
 }
-
-decorate(SearchStore, {
-  member: observable,
-  members: observable,
-  search: action
-})
 
 export const searchStore = new SearchStore();
 ```
@@ -820,82 +812,80 @@ searchStore={searchStore}
 ## Search Conpenent Store inject & observer
 src/components/contents/Search.js
 ```js
+import { useState, useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
-import _ from 'lodash';
-import moment from 'moment';
 
-read() {
-  const { searchStore } = this.props;
-  searchStore.read();
+function Search(props) {
+  const { membersStore, searchStore } = props;
+  const { members } = membersStore;
+  const [ search, setSearch ] = useState('');
+  const searchRead = (search) => {
+    searchStore.searchRead(search);
+  };
+  useEffect(() => {
+    searchStore.searchRead('');
+  }, [searchStore]);
+  return (
+    <div>
+      <h3>Search</h3>
+      <hr className="d-block" />
+      <div>
+        <input type="text"
+          value={search}
+          onChange={event => {setSearch(event.target.value)}}
+          onKeyUp={event => {if (event.key === 'Enter') searchRead(search)}}
+        />
+        <button onClick={() => searchRead(search)}>Search</button>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+          {members.map((member, index) => (
+            <tr key={index}>
+              <td>{member.name}</td>
+              <td>{member.age}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
 }
 
-keyPress(e) {
-  if (e.charCode === 13) {
-    this.read();
-  }
-}
-
-const { searchStore } = this.props;
-const { member, members } = searchStore;
-```
-```js
-<input
-  type="text" value={member.name}
-  onChange={e => {member.name = e.target.value}}
-  onKeyPress={(e) => this.keyPress(e)}
-/>
-<button className="relative pointer" onClick={e => this.read()}>Search</button>
-
-{_.map(members, (member, key) => (
-  <tr key={key}>
-    <td>{member.name}</td>
-    <td>{member.age}</td>
-    <td>{moment(member.createdDate).format('YYYY-MM-DD HH:mm')}</td>
-  </tr>
-))}
-```
-```js
-// Life cycle
-componentDidMount() {
-  console.log('componentDidMount');
-  const { searchStore } = this.props;
-  const { member } = searchStore;
-  member.name = '';
-  searchStore.read();
-}
-
-Search = inject('searchStore')(observer(Search));
+export default inject('membersStore', 'searchStore')(observer(Search));
 ```
 
 ## Search Conpenent 파라미터 변경과 새로고침 적용
 src/components/contents/Search.js
+```diff
+- const { membersStore, searchStore } = props;
+```
 ```js
-import querystring from 'querystring';
-
-read() {
-  const { history, searchStore } = this.props;
-  const { member } = searchStore;
-  history.push(`/search?name=${member.name}`);
-}
-
-// Life cycle
-componentDidMount() {
-  console.log('componentDidMount');
-  const { location, searchStore } = this.props;
-  // const { member } = searchStore;
-  // member.name = '';
-  const { name } = querystring.parse(location.search.split('?')[1]);
-  searchStore.member.name = name || '';
-  searchStore.read();
-}
-
-componentWillReceiveProps(nextProps) {
-  console.log('componentWillReceiveProps');
-  const { searchStore } = this.props;
-  const { name } = querystring.parse(nextProps.location.search.split('?')[1]);
-  searchStore.member.name = name || '';
-  searchStore.read();
-}
+const url = new URL(window.location.href);
+const spSearch = url.searchParams.get('search') || '';
+const { membersStore, searchStore, history } = props;
+```
+```diff
+- searchStore.searchRead(search)
++ history.push(`/search?search=${search}`)
+```
+```diff
+- useEffect(() => {
+-   searchStore.searchRead('');
+- }, [searchStore]);
+```
+```js
+useEffect(() => {
+  searchStore.searchRead(spSearch);
+}, [searchStore, spSearch]);
 ```
 
 ## Proxy 설정
