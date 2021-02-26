@@ -876,4 +876,22 @@ package.json
 "build": "react-scripts build && rm -fr ../express/public && mv build ../express/public",
 ``` -->
 
+<!-- ## React for IE11
+```sh
+npm install react-app-polyfill
+```
+
+package.json
+```diff
+"browserslist": {
+  "development": [
++   "ie 11",
+``` -->
+
+index.js
+```js
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+```
+
 # 수고 하셨습니다.
