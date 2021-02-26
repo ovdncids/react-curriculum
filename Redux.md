@@ -1,5 +1,9 @@
 # Redux
 
+**Store 개념 설명**
+
+Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽다, state 값이 변하면 해당 값을 바라 보는 모든 Component가 수정 된다.
+
 ## 설치
 ```sh
 npm install react-redux @reduxjs/toolkit
@@ -80,3 +84,18 @@ function App() {
   age: 30
 }]))}>Update</button>
  ```
+
+## state 주의 사항
+src/App.js
+```js
+members[0] = {
+  name: '박지삼',
+  age: 40
+};
+dispatch(actionsMembers.membersUpdate([{
+  name: '이순신',
+  age: 30
+}]));
+// dispatch 전에 리덕스의 state 값이 바뀐다면 dispatch 할때 오류가 발생한다.
+// 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경 해야 한다.
+```
