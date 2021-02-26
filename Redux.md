@@ -43,7 +43,7 @@ export default membersSlice.reducer;
 src/store.js
 ```js
 import { configureStore } from '@reduxjs/toolkit';
-import membersReducer from './store/membersSlice';
+import membersReducer from './store/members/membersSlice';
 
 export default configureStore({
   reducer: {
@@ -71,7 +71,7 @@ import store from './store.js';
 src/App.js
 ```js
 import { useSelector, useDispatch } from 'react-redux';
-import { stateMembers, actionsMembers } from './store/membersSlice';
+import { stateMembers, actionsMembers } from './store/members/membersSlice';
 
 function App() {
   const { members } = useSelector(stateMembers);
@@ -82,7 +82,7 @@ function App() {
 <button onClick={() => dispatch(actionsMembers.membersUpdate([{
   name: '이순신',
   age: 30
-}]))}>Update</button>
+}]))}>Update {members[0].name}: {members[0].age}</button>
  ```
 
 ## state 주의 사항
@@ -136,11 +136,11 @@ export default actions;
 ```
 src/App.js
 ```diff
-- import { useSelector, useDispatch } from 'react-redux';
 - import { stateMembers, actionsMembers } from './store/membersSlice';
-+ import { stateMembers } from './store/membersSlice.js';
-+ import actionsMembers from './store/membersActions.js';
 ```
 ```js
+import { stateMembers } from './store/members/membersSlice.js';
+import actionsMembers from './store/members/membersActions.js';
+
 dispatch(actionsMembers.membersUpdate())
 ```
