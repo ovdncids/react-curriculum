@@ -43,7 +43,7 @@ export default membersSlice.reducer;
 src/store.js
 ```js
 import { configureStore } from '@reduxjs/toolkit';
-import membersReducer from './store/members/membersSlice';
+import membersReducer from './store/members/membersSlice.js';
 
 export default configureStore({
   reducer: {
@@ -71,7 +71,7 @@ import store from './store.js';
 src/App.js
 ```js
 import { useSelector, useDispatch } from 'react-redux';
-import { stateMembers, actionsMembers } from './store/members/membersSlice';
+import { stateMembers, actionsMembers } from './store/members/membersSlice.js';
 
 function App() {
   const { members } = useSelector(stateMembers);
@@ -121,7 +121,7 @@ export default configureStore({
 
 src/store/membersActions.js
 ```js
-import { actionsMembers } from "./membersSlice";
+import { actionsMembers } from "./membersSlice.js";
 
 const actions = {
   membersUpdate: () => (dispatch) => {
@@ -134,9 +134,75 @@ const actions = {
 
 export default actions;
 ```
+
 src/App.js
 ```diff
-- import { stateMembers, actionsMembers } from './store/membersSlice';
+- import { stateMembers, actionsMembers } from './store/membersSlice.js';
+```
+```js
+import { stateMembers } from './store/members/membersSlice.js';
+import actionsMembers from './store/members/membersActions.js';
+
+dispatch(actionsMembers.membersUpdate())
+```
+
+# Redux Saga
+Redux Saga, Redux thunk 중 하나를 사용하면 된다. Redux thunk 보다 기능이 더 많다.
+
+## 설치
+```sh
+npm install redux-saga
+```
+
+src/store/membersActions.js
+```js
+import { put, takeEvery } from 'redux-saga/effects';
+import { createAction } from '@reduxjs/toolkit';
+import { actionsMembers } from './membersSlice.js';
+
+export const membersUpdate = createAction('membersUpdate', payload => { return { payload: payload } });
+
+export function* takeEveryMembers() {
+  yield takeEvery(membersUpdate, function* () {
+    yield put(actionsMembers.membersUpdate([{
+      name: '김유신',
+      age: 40
+    }]))
+  });
+}
+
+const actions = {
+  membersUpdate
+}
+
+export default actions;
+```
+
+src/store.js
+```js
+import { configureStore } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects'
+import membersReducer from './store/members/membersSlice.js';
+import { takeEveryMembers } from './store/members/membersActions.js';
+
+const sagaMiddleware = createSagaMiddleware();
+
+export default configureStore({
+  reducer: {
+    members: membersReducer
+  },
+  middleware : [ sagaMiddleware ]
+});
+
+sagaMiddleware.run(function* () {
+  yield all([takeEveryMembers()]);
+});
+```
+
+src/App.js
+```diff
+- import { stateMembers, actionsMembers } from './store/membersSlice.js';
 ```
 ```js
 import { stateMembers } from './store/members/membersSlice.js';
