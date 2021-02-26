@@ -122,7 +122,7 @@ export default configureStore({
 ## Members Actions 미들웨어 만들기
 src/store/membersActions.js
 ```js
-import { actionsMembers } from "./membersSlice.js";
+import { actionsMembers } from './membersSlice.js';
 
 const actions = {
   membersUpdate: () => (dispatch) => {
