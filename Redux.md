@@ -215,3 +215,31 @@ import actionsMembers from './store/members/membersActions.js';
 
 dispatch(actionsMembers.membersUpdate())
 ```
+
+## Members Actions 미들웨어에서 통신 하기
+```sh
+npm install axios
+```
+
+src/store/membersActions.js
+```diff
+- import { put, takeEvery } from 'redux-saga/effects';
+```
+```js
+import axios from 'axios';
+import { put, takeEvery, call } from 'redux-saga/effects';
+```
+```diff
+- yield put(actionsMembers.membersUpdate([{
+-   name: '김유신',
+-   age: 40
+- }]))
+```
+```js
+try {
+  const response = yield call(() => axios.get('http://localhost:3100/api/v1/members'));
+  yield put(actionsMembers.membersUpdate(response.data.members));
+} catch(error) {
+  console.error(error.message);
+}
+```
