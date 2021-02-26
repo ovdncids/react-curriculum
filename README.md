@@ -294,9 +294,9 @@ Header, Nav, Footer 이렇게 Component 별로 파일을 나눈다.
 
 src/App.js
 ```js
-import Header from './component/Header.js';
-import Nav from './component/Nav.js';
-import Footer from './component/Footer.js';
+import Header from './components/Header.js';
+import Nav from './components/Nav.js';
+import Footer from './components/Footer.js';
 ```
 ```diff
 - <header>
@@ -316,7 +316,7 @@ import Footer from './component/Footer.js';
 + <Footer></Footer>
 ```
 
-src/component/Header.js
+src/components/Header.js
 ```js
 function Header() {
   return (
@@ -339,8 +339,8 @@ npm install react-router-dom
 src/App.js
 ```js
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import Members from './component/contents/Members.js';
-import Search from './component/contents/Search.js';
+import Members from './components/contents/Members.js';
+import Search from './components/contents/Search.js';
 
 <BrowserRouter>
   <Switch>
@@ -357,7 +357,7 @@ import Search from './component/contents/Search.js';
 - </div>
 ```
 
-src/component/contents/Members.js
+src/components/contents/Members.js
 ```js
 function Members(props) {
   console.log(props);
@@ -372,11 +372,11 @@ function Members(props) {
 export default Members;
 ```
 
-src/component/contents/Search.js (동일)
+src/components/contents/Search.js (동일)
 
-**render, props 풀어서 설명**
+**render={props ...} 풀어서 설명**
 
-**router를 타이핑으로 바꾸어 보기**
+**주소 창에서 router 바꾸어 보기**
 
 src/components/Nav.js
 ```js
@@ -413,7 +413,7 @@ Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽�
 ### MobX 설치
 https://github.com/mobxjs/mobx
 ```sh
-npm install --save mobx mobx-react
+npm install mobx mobx-react
 ```
 
 src/stores/MembersStore.js
@@ -461,6 +461,7 @@ src/index.js
 import { configure } from 'mobx';
 import { Provider } from 'mobx-react';
 import { membersStore } from './stores/MembersStore.js';
+
 configure({
   // enforceActions: 'never'
 });
@@ -528,7 +529,7 @@ function Members(props) {
 export default inject('membersStore')(observer(Members));
 ```
 
-**render 함수 설명**
+**render에 대한 설명**
 
 **debugger 설명**
 ```js
@@ -590,8 +591,8 @@ membersUpdate(index, member) {
 
 src/components/contents/Members.js
 ```diff
-<td>{member.name}</td>
-<td>{member.age}</td>
+- <td>{member.name}</td>
+- <td>{member.age}</td>
 ```
 ```js
 <td>
@@ -608,7 +609,7 @@ src/components/contents/Members.js
 </td>
 ```
 ```diff
-<button>Update</button>
+- <button>Update</button>
 ```
 ```js
 <button onClick={() => membersStore.membersUpdate(index, member)}>Update</button>
@@ -692,36 +693,32 @@ membersRead() {
 - console.log('Done membersRead', this.members);
 ```
 ```js
-membersRead() {
-  axios.get('http://localhost:3100/api/v1/members').then((response) => {
-    console.log('Done membersRead', response);
-    this.members = response.data.members;
-  }).catch((error) => {
-    axiosError(error);
-  });
-}
+axios.get('http://localhost:3100/api/v1/members').then((response) => {
+  console.log('Done membersRead', response);
+  this.members = response.data.members;
+}).catch((error) => {
+  axiosError(error);
+});
 ```
 
 ### Update
 src/stores/MembersStore.js
 ```diff
-```
 membersUpdate(index, member) {
 - this.members[index] = member;
 - console.log('Done membersUpdate', this.members);
+```
 ```js
-membersUpdate(index, member) {
-  const memberUpdate = {
-    index: index,
-    member: member,
-  }
-  axios.patch('http://localhost:3100/api/v1/members', memberUpdate).then((response) => {
-    console.log('Done membersUpdate', response);
-    this.membersRead();
-  }).catch((error) => {
-    axiosError(error);
-  });
+const memberUpdate = {
+  index: index,
+  member: member,
 }
+axios.patch('http://localhost:3100/api/v1/members', memberUpdate).then((response) => {
+  console.log('Done membersUpdate', response);
+  this.membersRead();
+}).catch((error) => {
+  axiosError(error);
+});
 ```
 
 ### Delete
@@ -732,14 +729,12 @@ membersDelete(index) {
 - console.log('Done membersDelete', this.members);
 ```
 ```js
-membersDelete(index) {
-  axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
-    console.log('Done membersDelete', response);
-    this.membersRead();
-  }).catch((error) => {
-    axiosError(error);
-  });
-}
+axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
+  console.log('Done membersDelete', response);
+  this.membersRead();
+}).catch((error) => {
+  axiosError(error);
+});
 ```
 
 ## Search Conpenent Markup
