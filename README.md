@@ -408,7 +408,7 @@ function A1(props) {
 
 **Store 개념 설명**
 
-Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽다, store 값이 변하면 해당 값을 바라 보는 모든 Component가 수정 된다.
+Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽다, state 값이 변하면 해당 값을 바라 보는 모든 Component가 수정 된다.
 
 ### MobX 설치
 https://github.com/mobxjs/mobx
