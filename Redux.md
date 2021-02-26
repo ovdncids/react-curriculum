@@ -119,6 +119,7 @@ export default configureStore({
   ]
 ```
 
+## Members Actions 미들웨어 만들기
 src/store/membersActions.js
 ```js
 import { actionsMembers } from "./membersSlice.js";
@@ -135,6 +136,7 @@ const actions = {
 export default actions;
 ```
 
+## Redux에서 Members Actions으로 액션 수정하기
 src/App.js
 ```diff
 - import { stateMembers, actionsMembers } from './store/membersSlice.js';
@@ -154,6 +156,7 @@ Redux Saga, Redux thunk 중 하나를 사용하면 된다. Redux thunk 보다 �
 npm install redux-saga
 ```
 
+## Members Actions 미들웨어 만들기
 src/store/membersActions.js
 ```js
 import { put, takeEvery } from 'redux-saga/effects';
@@ -178,6 +181,7 @@ const actions = {
 export default actions;
 ```
 
+## Redux Saga 등록
 src/store.js
 ```js
 import { configureStore } from '@reduxjs/toolkit';
@@ -200,6 +204,7 @@ sagaMiddleware.run(function* () {
 });
 ```
 
+## Redux에서 Members Actions으로 액션 수정하기
 src/App.js
 ```diff
 - import { stateMembers, actionsMembers } from './store/membersSlice.js';
