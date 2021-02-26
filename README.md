@@ -580,6 +580,13 @@ useEffect(() => {
 ))}
 ```
 
+<!-- Hook exhaustive-deps 경고
+https://www.npmjs.com/package/eslint-plugin-react-hooks#installation
+
+또는 마지막 줄에
+// eslint-disable-next-line
+추가 -->
+
 ### Update
 src/stores/MembersStore.js
 ```js
