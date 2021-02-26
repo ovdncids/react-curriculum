@@ -99,3 +99,48 @@ dispatch(actionsMembers.membersUpdate([{
 // dispatch 전에 리덕스의 state 값이 바뀐다면 dispatch 할때 오류가 발생한다.
 // 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경 해야 한다.
 ```
+
+# Redux Thunk
+dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신  컴포넌트에서 빼기 위해 사용한다.
+
+## 설치
+```sh
+npm install redux-thunk
+```
+
+## Redux Thunk 등록
+src/store.js
+```js
+import ReduxThunk from 'redux-thunk';
+
+export default configureStore({
+  middleware: [
+    ReduxThunk
+  ]
+```
+
+src/store/membersActions.js
+```js
+import { actionsMembers } from "./membersSlice";
+
+const actions = {
+  membersUpdate: () => (dispatch) => {
+    dispatch(actionsMembers.membersUpdate([{
+      name: '김유신',
+      age: 40
+    }]));
+  }
+};
+
+export default actions;
+```
+src/App.js
+```diff
+- import { useSelector, useDispatch } from 'react-redux';
+- import { stateMembers, actionsMembers } from './store/membersSlice';
++ import { stateMembers } from './store/membersSlice.js';
++ import actionsMembers from './store/membersActions.js';
+```
+```js
+dispatch(actionsMembers.membersUpdate())
+```
