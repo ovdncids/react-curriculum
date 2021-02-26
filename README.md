@@ -848,8 +848,8 @@ const { membersStore, searchStore, history } = props;
 ```
 ```js
 useEffect(() => {
-  setSearch(spSearch);
   searchStore.searchRead(spSearch);
+   setSearch(spSearch);
 }, [searchStore, spSearch]);
 ```
 
