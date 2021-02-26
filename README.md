@@ -737,38 +737,6 @@ axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) =>
 });
 ```
 
-## Search Conpenent Markup
-src/components/contents/Search.js
-```js
-<div>
-  <h3>Search</h3>
-  <hr className="d-block" />
-  <div>
-    <input type="text" />
-    <button>Search</button>
-  </div>
-  <hr className="d-block" />
-  <div>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Created Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>횽길동</td>
-          <td>39</td>
-          <td>2018-10-04</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-```
-
 ## Search Store 만들기
 src/stores/SearchStore.js
 ```js
@@ -797,6 +765,7 @@ export const searchStore = new SearchStore();
 ```
 
 **Search Store 등록**
+
 src/index.js
 ```js
 import { searchStore } from './stores/SearchStore';
@@ -869,8 +838,8 @@ const spSearch = url.searchParams.get('search') || '';
 const { membersStore, searchStore, history } = props;
 ```
 ```diff
-- searchStore.searchRead(search)
-+ history.push(`/search?search=${search}`)
+- searchStore.searchRead(search);
++ history.push(`/search?search=${search}`);
 ```
 ```diff
 - useEffect(() => {
@@ -879,13 +848,12 @@ const { membersStore, searchStore, history } = props;
 ```
 ```js
 useEffect(() => {
+  setSearch(spSearch);
   searchStore.searchRead(spSearch);
 }, [searchStore, spSearch]);
 ```
 
 ## Proxy 설정
-https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#proxying-api-requests-in-development
-
 package.json
 ```json
 "proxy": "http://localhost:3100"
