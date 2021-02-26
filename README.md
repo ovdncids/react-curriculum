@@ -886,12 +886,12 @@ package.json
 "browserslist": {
   "development": [
 +   "ie 11",
-``` -->
+```
 
-index.js
+src/index.js
 ```js
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
-```
+``` -->
 
 # 수고 하셨습니다.
