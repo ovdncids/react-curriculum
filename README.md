@@ -686,6 +686,49 @@ axios.post('http://localhost:3100/api/v1/members', this.member).then((response) 
 });
 ```
 
+<details><summary>class method 안에서 this에 대한 function과 화살표 함수 비교</summary>
+
+```js
+const C = class {
+  method() {
+    const f1 = function() {
+      console.log('f1: ', this);
+      // f1:  undefined
+    };
+    const f2 = () => {
+      console.log('f2: ', this);
+      // f2: C {}
+    };
+    f1();
+    f2();
+  }
+};
+const c = new C();
+c.method();
+```
+</details>
+
+<!-- ```js
+const C = class {
+  method() {
+    const object = {
+      f1: function() {
+        console.log('f1: ', this);
+        // f1: 부모 {}
+      },
+      f2: () => {
+        console.log('f2: ', this);
+        // f2: C {} (부모 object가 무시 되고 자신의 class가 this가 된다)
+      }
+    };
+    object.f1();
+    object.f2();
+  }
+};
+const c = new C();
+c.method();
+``` -->
+
 ### Read
 src/stores/MembersStore.js
 ```diff
