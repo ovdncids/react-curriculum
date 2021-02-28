@@ -119,7 +119,7 @@ export default configureStore({
 ```
 
 ## Members Actions 미들웨어 만들기
-src/store/membersActions.js
+src/store/members/membersActions.js
 ```js
 import { actionsMembers } from './membersSlice.js';
 
@@ -156,7 +156,7 @@ npm install redux-saga
 ```
 
 ## Members Actions 미들웨어 만들기
-src/store/membersActions.js
+src/store/members/membersActions.js
 ```js
 import { put, takeEvery } from 'redux-saga/effects';
 import { createAction } from '@reduxjs/toolkit';
@@ -220,7 +220,7 @@ dispatch(actionsMembers.membersUpdate())
 npm install axios
 ```
 
-src/store/membersActions.js
+src/store/members/membersActions.js
 ```diff
 - import { put, takeEvery } from 'redux-saga/effects';
 ```
