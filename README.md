@@ -659,9 +659,9 @@ npm install axios
 ### Create
 src/stores/common.js
 ```js
-export const axiosError = function(error) {
+export const axiosError = (error) => {
   console.error(error.response || error.message || error)
-}
+};
 ```
 
 src/stores/MembersStore.js
