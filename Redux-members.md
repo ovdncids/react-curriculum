@@ -38,8 +38,8 @@ export const membersSlice = createSlice({
     memberSet: (state, action) => {
       state.member = action.payload;
     },
-    membersCreate: (state) => {
-      state.members.push(state.member);
+    membersCreate: (state, action) => {
+      state.members.push(action.payload);
     }
   },
 });
@@ -83,7 +83,7 @@ import store from './store.js';
 src/components/contents/Members.js
 ```js
 import { useSelector, useDispatch } from 'react-redux';
-import { stateMembers, actionsMembers } from '../../store/members/membersSlice.js';
+import { stateMembers, actionsMembers } from 'store/members/membersSlice.js';
 
 function Members() {
   const dispatch = useDispatch();
@@ -136,7 +136,7 @@ export default Members;
 
 ## Members Store CRUD
 ### Read
-src/stores/MembersStore.js
+src/stores/members/MembersStore.js
 ```js
 membersRead: (state) => {
   state.members.push({
@@ -175,7 +175,7 @@ function Members() {
 ```
 
 ### Update
-src/stores/MembersStore.js
+src/stores/members/MembersStore.js
 ```js
 membersSet: (state, action) => {
   state.members = action.payload;
@@ -212,7 +212,7 @@ src/components/contents/Members.js
 ```
 
 ### Delete
-src/stores/MembersStore.js
+src/stores/members/MembersStore.js
 ```js
 membersDelete(state, action) {
   state.members.splice(action.payload, 1);
@@ -225,4 +225,62 @@ src/components/contents/Members.js
 ```
 ```js
 <button onClick={() => dispatch(actionsMembers.membersDelete(index))}>Delete</button>
+```
+
+## Redux Thunk 액션 만들기
+dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신  컴포넌트에서 빼기 위해 사용한다.
+
+## 설치
+```sh
+npm install redux-thunk
+```
+
+## Redux Thunk 등록
+src/store.js
+```js
+import ReduxThunk from 'redux-thunk';
+
+export default configureStore({
+  middleware: [
+    ReduxThunk
+  ]
+```
+
+## Members Actions 미들웨어 만들기
+src/store/members/membersActions.js
+```js
+import { actionsMembers } from './membersSlice.js';
+
+const actions = {
+  memberSet: payload => (dispatch) => {
+    dispatch(actionsMembers.memberSet(payload));
+  },
+  membersSet: payload => (dispatch) => {
+    dispatch(actionsMembers.membersSet(payload));
+  },
+  membersCreate: payload => (dispatch) => {
+    dispatch(actionsMembers.membersCreate(payload));
+  },
+  membersRead: () => (dispatch) => {
+    dispatch(actionsMembers.membersRead());
+  },
+  membersUpdate: payload => (dispatch) => {
+    dispatch(actionsMembers.membersCreate(payload));
+  },
+  membersDelete: payload => (dispatch) => {
+    dispatch(actionsMembers.membersDelete(payload));
+  }
+};
+
+export default actions;
+```
+
+## Redux에서 Members Actions으로 액션 수정하기
+src/stores/members/MembersStore.js
+```diff
+- import { stateMembers, actionsMembers } from 'store/members/membersSlice.js';
+```
+```js
+import { stateMembers } from 'store/members/membersSlice.js';
+import actionsMembers from 'store/members/membersActions.js';
 ```
