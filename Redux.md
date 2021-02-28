@@ -23,8 +23,7 @@ export const membersSlice = createSlice({
     }, {
       name: '춘향이',
       age: 16
-    }],
-    member: 'abc'
+    }]
   },
   reducers: {
     membersUpdate: (state, action) => {
