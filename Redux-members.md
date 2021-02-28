@@ -139,13 +139,13 @@ export default Members;
 src/stores/MembersStore.js
 ```js
 membersRead: (state) => {
-  state.members.push([{
+  state.members.push({
     name: '홍길동',
     age: 20
   }, {
     name: '춘향이',
     age: 16
-  }]);
+  });
 }
 ```
 
@@ -177,11 +177,13 @@ function Members() {
 ### Update
 src/stores/MembersStore.js
 ```js
+membersSet: (state, action) => {
+  state.members = action.payload;
+},
 membersUpdate: (state, action) => {
   state.members[action.payload.index] = action.payload.member;
 }
 ```
-
 
 src/components/contents/Members.js
 ```diff
@@ -213,10 +215,9 @@ src/components/contents/Members.js
 src/stores/MembersStore.js
 ```js
 membersDelete(state, action) {
-  state.members.splice(action.payload.index, 1);
+  state.members.splice(action.payload, 1);
 }
 ```
-
 
 src/components/contents/Members.js
 ```diff
