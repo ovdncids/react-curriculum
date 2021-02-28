@@ -898,7 +898,7 @@ const { membersStore, searchStore, history } = props;
 ```js
 useEffect(() => {
   searchStore.searchRead(spSearch);
-   setSearch(spSearch);
+  setSearch(spSearch);
 }, [searchStore, spSearch]);
 ```
 
