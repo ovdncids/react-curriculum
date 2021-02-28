@@ -136,7 +136,7 @@ export default Members;
 
 ## Members Store CRUD
 ### Read
-src/stores/members/MembersStore.js
+src/store/members/MembersStore.js
 ```js
 membersRead: (state) => {
   state.members.push({
@@ -156,7 +156,7 @@ import { useEffect } from 'react';
 function Members() {
   const members = JSON.parse(JSON.stringify(useSelector(stateMembers).members));
   useEffect(() => {
-    dispatch(actionsMembers.membersRead())
+    dispatch(actionsMembers.membersRead());
   }, [dispatch]);
 ```
 ```diff
@@ -175,7 +175,7 @@ function Members() {
 ```
 
 ### Update
-src/stores/members/MembersStore.js
+src/store/members/MembersStore.js
 ```js
 membersSet: (state, action) => {
   state.members = action.payload;
@@ -212,7 +212,7 @@ src/components/contents/Members.js
 ```
 
 ### Delete
-src/stores/members/MembersStore.js
+src/store/members/MembersStore.js
 ```js
 membersDelete(state, action) {
   state.members.splice(action.payload, 1);
@@ -276,11 +276,129 @@ export default actions;
 ```
 
 ## Redux에서 Members Actions으로 액션 수정하기
-src/stores/members/MembersStore.js
+src/store/members/MembersStore.js
 ```diff
 - import { stateMembers, actionsMembers } from 'store/members/membersSlice.js';
 ```
 ```js
 import { stateMembers } from 'store/members/membersSlice.js';
 import actionsMembers from 'store/members/membersActions.js';
+```
+
+## Backend Server
+* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
+```sh
+# BE 서버 실행 방법
+npm install
+node index.js
+# 터미널 종료
+Ctrl + c
+```
+
+## Axios 서버 연동
+https://github.com/axios/axios
+```sh
+npm install axios
+```
+
+### Create
+src/store/common.js
+```js
+export const axiosError = function(error) {
+  console.error(error.response || error.message || error)
+}
+```
+
+src/store/members/membersActions.js
+```js
+import axios from 'axios';
+import { axiosError } from '../common.js';
+```
+```diff
+membersCreate: payload => (dispatch) => {
+- dispatch(actionsMembers.membersCreate(payload));
+```
+```js
+axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
+  console.log('Done membersCreate', response);
+  (actions.membersRead())(dispatch);
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+### Read
+src/store/members/membersActions.js
+```diff
+membersRead: () => (dispatch) => {
+- dispatch(actionsMembers.membersRead());
+```
+```js
+axios.get('http://localhost:3100/api/v1/members').then((response) => {
+  console.log('Done membersRead', response);
+  dispatch(actionsMembers.membersRead(response.data.members));
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+src/store/members/membersSlice.js
+```diff
+- membersRead: (state) => {
+-   state.members.push({
+-     name: '홍길동',
+-     age: 20
+-   }, {
+-     name: '춘향이',
+-     age: 16
+-   });
+- },
+```
+```js
+membersRead: (state, action) => {
+  state.members = action.payload;
+},
+```
+
+### Update
+src/store/members/membersActions.js
+```diff
+membersUpdate: payload => (dispatch) => {
+- dispatch(actionsMembers.membersCreate(payload));
+```
+```js
+axios.patch('http://localhost:3100/api/v1/members', payload).then((response) => {
+  console.log('Done membersUpdate', response);
+  (actions.membersRead())(dispatch);
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+### Delete
+src/store/members/membersActions.js
+```diff
+membersDelete: payload => (dispatch) => {
+- dispatch(actionsMembers.membersDelete(payload));
+```
+```js
+axios.delete('http://localhost:3100/api/v1/members/' + payload).then((response) => {
+  console.log('Done membersDelete', response);
+  (actions.membersRead())(dispatch);
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+src/store/members/membersSlice.js
+```diff
+- membersCreate: (state, action) => {
+-   state.members.push(action.payload);
+- },
+- membersUpdate: (state, action) => {
+-   state.members[action.payload.index] = action.payload.member;
+- },
+- membersDelete(state, action) {
+-   state.members.splice(action.payload, 1);
+- }
 ```
