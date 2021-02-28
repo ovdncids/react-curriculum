@@ -133,3 +133,95 @@ function Members() {
 
 export default Members;
 ```
+
+## Members Store CRUD
+### Read
+src/stores/MembersStore.js
+```js
+membersRead: (state) => {
+  state.members.push([{
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  }]);
+}
+```
+
+src/components/contents/Members.js
+```js
+import { useEffect } from 'react';
+
+function Members() {
+  const members = JSON.parse(JSON.stringify(useSelector(stateMembers).members));
+  useEffect(() => {
+    dispatch(actionsMembers.membersRead())
+  }, [dispatch]);
+```
+```diff
+- <tr>
+-   <td>홍길동</td>
+-   <td>20</td>
+```
+```js
+{members.map((member, index) => (
+  <tr key={index}>
+    <td>{member.name}</td>
+    <td>{member.age}</td>
+    ...
+  </tr>
+))}
+```
+
+### Update
+src/stores/MembersStore.js
+```js
+membersUpdate: (state, action) => {
+  state.members[action.payload.index] = action.payload.member;
+}
+```
+
+
+src/components/contents/Members.js
+```diff
+- <td>{member.name}</td>
+- <td>{member.age}</td>
+```
+```js
+<td>
+  <input
+    type="text" placeholder="Name" value={member.name}
+    onChange={event => {member.name = event.target.value; dispatch(actionsMembers.membersSet(members))}}
+  />
+</td>
+<td>
+  <input
+    type="text" placeholder="Age" value={member.age}
+    onChange={event => {member.age = event.target.value; dispatch(actionsMembers.membersSet(members))}}
+  />
+</td>
+```
+```diff
+- <button>Update</button>
+```
+```js
+<button onClick={() => dispatch(actionsMembers.membersUpdate({index, member}))}>Update</button>
+```
+
+### Delete
+src/stores/MembersStore.js
+```js
+membersDelete(state, action) {
+  state.members.splice(action.payload.index, 1);
+}
+```
+
+
+src/components/contents/Members.js
+```diff
+<button>Delete</button>
+```
+```js
+<button onClick={() => dispatch(actionsMembers.membersDelete(index))}>Delete</button>
+```
