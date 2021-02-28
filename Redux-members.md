@@ -79,7 +79,7 @@ import store from './store.js';
 ```
 
 
-## Members Conpenent Store inject & observer
+## Members Conpenent Store inject
 src/components/contents/Members.js
 ```js
 import { useSelector, useDispatch } from 'react-redux';
@@ -285,7 +285,7 @@ import { stateMembers } from 'store/members/membersSlice.js';
 import actionsMembers from 'store/members/membersActions.js';
 ```
 
-## Backend Server
+### Backend Server
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
 ```sh
 # BE 서버 실행 방법
@@ -295,7 +295,7 @@ node index.js
 Ctrl + c
 ```
 
-## Axios 서버 연동
+### Axios 서버 연동
 https://github.com/axios/axios
 ```sh
 npm install axios
@@ -402,3 +402,130 @@ src/store/members/membersSlice.js
 -   state.members.splice(action.payload, 1);
 - }
 ```
+
+## Search
+### Search Action 만들기
+src/store/search/searchActions.js
+```js
+import axios from 'axios';
+import { axiosError } from '../common.js';
+import { actionsMembers } from 'store/members/membersSlice.js';
+
+const actions = {
+  searchRead: search => (dispatch) => {
+    const url = `http://localhost:3100/api/v1/search?search=${search}`;
+    axios.get(url).then((response) => {
+      console.log('Done searchRead', response);
+      dispatch(actionsMembers.membersRead(response.data.members));
+    }).catch((error) => {
+      axiosError(error);
+    });
+  }
+};
+
+export default actions;
+```
+
+## Search Conpenent Store inject
+src/components/contents/Search.js
+```js
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { stateMembers } from 'store/members/membersSlice.js';
+import actionsSearch from 'store/search/searchActions.js';
+
+function Search() {
+  const dispatch = useDispatch();
+  const members = useSelector(stateMembers).members;
+  const [ search, setSearch ] = useState('');
+  const searchRead = (search) => {
+    dispatch(actionsSearch.searchRead(search));
+  };
+  useEffect(() => {
+    dispatch(actionsSearch.searchRead(''));
+  }, [dispatch]);
+  return (
+    <div>
+      <h3>Search</h3>
+      <hr className="d-block" />
+      <div>
+        <input type="text"
+          value={search}
+          onChange={event => {setSearch(event.target.value)}}
+          onKeyUp={event => {if (event.key === 'Enter') searchRead(search)}}
+        />
+        <button onClick={() => searchRead(search)}>Search</button>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+          {members.map((member, index) => (
+            <tr key={index}>
+              <td>{member.name}</td>
+              <td>{member.age}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+export default Search;
+```
+
+## Search Conpenent 쿼리스트링 변경과 새로고침 적용
+src/components/contents/Search.js
+```diff
+- function Search() {
+```
+```js
+function Search(props) {
+  const url = new URL(window.location.href);
+  const spSearch = url.searchParams.get('search') || '';
+  const { history } = props;
+```
+```diff
+- dispatch(actionsSearch.searchRead(search));
++ history.push(`/search?search=${search}`);
+```
+```diff
+- useEffect(() => {
+-   dispatch(actionsSearch.searchRead(''));
+- }, [dispatch]);
+```
+```js
+useEffect(() => {
+  searchStore.searchRead(spSearch);
+  setSearch(spSearch);
+}, [searchStore, spSearch]);
+```
+
+## Proxy 설정
+package.json
+```json
+"proxy": "http://localhost:3100"
+```
+
+모든 파일 수정
+```diff
+- http://localhost:3100/api
++ /api
+```
+
+당황 하지 말고 다시 실행
+```sh
+npm start
+```
+
+# 수고 하셨습니다.
+
+
