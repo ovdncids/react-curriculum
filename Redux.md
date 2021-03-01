@@ -162,14 +162,14 @@ import { put, takeEvery } from 'redux-saga/effects';
 import { createAction } from '@reduxjs/toolkit';
 import { actionsMembers } from './membersSlice.js';
 
-export const membersUpdate = createAction('membersUpdate', payload => { return { payload: payload } });
+export const membersUpdate = createAction('membersUpdate', payload => {return {payload: payload}});
 
 export function* takeEveryMembers() {
   yield takeEvery(membersUpdate, function* () {
     yield put(actionsMembers.membersUpdate([{
       name: '김유신',
       age: 40
-    }]))
+    }]));
   });
 }
 
@@ -232,7 +232,7 @@ import { put, takeEvery, call } from 'redux-saga/effects';
 - yield put(actionsMembers.membersUpdate([{
 -   name: '김유신',
 -   age: 40
-- }]))
+- }]));
 ```
 ```js
 try {
