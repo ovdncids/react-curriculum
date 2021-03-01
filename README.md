@@ -656,7 +656,7 @@ https://github.com/axios/axios
 npm install axios
 ```
 
-### Create
+### Axios common 에러 처리
 src/stores/common.js
 ```js
 export const axiosError = (error) => {
@@ -664,6 +664,7 @@ export const axiosError = (error) => {
 };
 ```
 
+### Create
 src/stores/MembersStore.js
 ```js
 import axios from 'axios';
