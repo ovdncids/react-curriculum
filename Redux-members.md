@@ -240,8 +240,13 @@ src/components/contents/Members.js
 // 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경 해야 한다.
 ```
 
-## Redux Thunk 액션 만들기
-dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신  컴포넌트에서 빼기 위해 사용한다.
+## 스토어 액션 만들기
+dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신을 컴포넌트에서 빼기 위해 사용한다.
+
+### Redux Thunk VS Redux Saga
+Redux Thunk: 설정도 간단하고 쉽게 만들 수 있다.
+
+Redux Saga: 설정이 Redux Thunk 보다 복잡하지만 다양한 기능을 사용할 수 있다. 다양한 기능을 사용하기 위한 러닝 커브가 크다.
 
 ## 설치
 ```sh
@@ -296,30 +301,6 @@ src/store/members/MembersStore.js
 ```js
 import { stateMembers } from 'store/members/membersSlice.js';
 import actionsMembers from 'store/members/membersActions.js';
-```
-
-### Backend Server
-* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
-```sh
-# BE 서버 실행 방법
-npm install
-node index.js
-# 터미널 종료
-Ctrl + c
-```
-
-### Axios 서버 연동
-https://github.com/axios/axios
-```sh
-npm install axios
-```
-
-### Create
-src/store/common.js
-```js
-export const axiosError = function(error) {
-  console.error(error.response || error.message || error)
-}
 ```
 
 src/store/members/membersActions.js
@@ -439,7 +420,216 @@ const actions = {
 export default actions;
 ```
 
-## Search Conpenent Store inject
+## 설치
+```sh
+npm install redux-saga
+```
+
+## Members Actions 미들웨어 만들기
+src/store/members/membersActions.js
+```js
+import { put, takeEvery } from 'redux-saga/effects';
+import { createAction } from '@reduxjs/toolkit';
+import { actionsMembers } from './membersSlice.js';
+
+export const memberSet = createAction('memberSet', payload => {return {payload: payload}});
+export const membersSet = createAction('membersSet', payload => {return {payload: payload}});
+export const membersCreate = createAction('membersCreate', payload => {return {payload: payload}});
+export const membersRead = createAction('membersRead', payload => {return {payload: payload}});
+export const membersUpdate = createAction('membersUpdate', payload => {return {payload: payload}});
+export const membersDelete = createAction('membersDelete', payload => {return {payload: payload}});
+
+export function* takeEveryMembers() {
+  yield takeEvery(memberSet, function* (action) {
+    yield put(actionsMembers.memberSet(action.payload));
+  });
+
+  yield takeEvery(membersSet, function* (action) {
+    yield put(actionsMembers.membersSet(action.payload));
+  });
+  
+  yield takeEvery(membersCreate, function* (action) {
+    yield put(actionsMembers.membersCreate(action.payload));
+  });
+
+  yield takeEvery(membersRead, function* () {
+    yield put(actionsMembers.membersRead());
+  });
+
+  yield takeEvery(membersUpdate, function* (action) {
+    yield put(actionsMembers.membersUpdate(action.payload));
+  });
+
+  yield takeEvery(membersDelete, function* (action) {
+    yield put(actionsMembers.membersDelete(action.payload));
+  });
+}
+
+const actions = {
+  memberSet,
+  membersSet,
+  membersCreate,
+  membersRead,
+  membersUpdate,
+  membersDelete
+}
+
+export default actions;
+```
+
+## Redux Saga 등록
+src/store.js
+```js
+import { configureStore } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects'
+import membersReducer from './store/members/membersSlice.js';
+import { takeEveryMembers } from './store/members/membersActions.js';
+
+const sagaMiddleware = createSagaMiddleware();
+
+export default window.store = configureStore({
+  reducer: {
+    members: membersReducer
+  },
+  middleware : [ sagaMiddleware ]
+});
+
+sagaMiddleware.run(function* () {
+  yield all([takeEveryMembers()]);
+});
+```
+
+## Redux에서 Members Actions으로 액션 수정하기
+src/App.js
+```diff
+- import { stateMembers, actionsMembers } from 'store/membersSlice.js';
+```
+```js
+import { stateMembers } from 'store/members/membersSlice.js';
+import actionsMembers from 'store/members/membersActions.js';
+```
+
+
+
+
+
+
+## Backend Server
+* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
+```sh
+# BE 서버 실행 방법
+npm install
+node index.js
+# 터미널 종료
+Ctrl + c
+```
+
+## Axios 서버 연동
+https://github.com/axios/axios
+```sh
+npm install axios
+```
+
+### Axios common 에러 처리
+src/store/common.js
+```js
+export const axiosError = function(error) {
+  console.error(error.response || error.message || error)
+}
+```
+
+### Create
+src/store/members/membersActions.js
+```diff
+- import { put, takeEvery, call } from 'redux-saga/effects';
+```
+```js
+import axios from 'axios';
+import { axiosError } from '../common.js';
+import { put, takeEvery, call } from 'redux-saga/effects';
+```
+```diff
+yield takeEvery(membersCreate, function* (action) {
+- yield put(actionsMembers.membersCreate(action.payload))
+```
+```js
+try {
+  const response = yield call(() => axios.post('http://localhost:3100/api/v1/members', action.payload));
+  console.log('Done membersCreate', response);
+  window.store.dispatch(membersRead());
+} catch(error) {
+  axiosError();
+}
+```
+
+### Read
+src/store/members/membersActions.js
+```diff
+yield takeEvery(membersRead, function* () {
+- yield put(actionsMembers.membersRead());
+```
+```js
+try {
+  const response = yield call(() => axios.get('http://localhost:3100/api/v1/members'));
+  console.log('Done membersRead', response);
+  yield put(actionsMembers.membersRead(response.data.members));
+} catch(error) {
+  axiosError();
+}
+```
+
+src/store/members/membersSlice.js
+```diff
+- membersRead: (state) => {
+-   state.members.push({
+-     name: '홍길동',
+-     age: 20
+-   }, {
+-     name: '춘향이',
+-     age: 16
+-   });
+- },
+```
+```js
+membersRead: (state, action) => {
+  state.members = action.payload;
+},
+```
+
+### Update
+src/store/members/membersActions.js
+```diff
+yield takeEvery(membersUpdate, function* (action) {
+- yield put(actionsMembers.membersUpdate(action.payload));
+```
+```js
+try {
+  const response = yield call(() => axios.patch('http://localhost:3100/api/v1/members', action.payload));
+  console.log('Done membersUpdate', response);
+  window.store.dispatch(membersRead());
+} catch(error) {
+  axiosError();
+}
+```
+
+### Delete
+src/store/members/membersActions.js
+```diff
+yield takeEvery(membersDelete, function* (action) {
+- yield put(actionsMembers.membersDelete(action.payload));
+````
+```js
+try {
+  const response = yield call(() => axios.delete('http://localhost:3100/api/v1/members/' + action.payload));
+  console.log('Done membersUpdate', response);
+  window.store.dispatch(membersRead());
+} catch(error) {
+  axiosError();
+}
+```
+
+### Search Conpenent Store inject
 src/components/contents/Search.js
 ```js
 import { useState, useEffect } from 'react';
@@ -495,7 +685,7 @@ function Search() {
 export default Search;
 ```
 
-## Search Conpenent 쿼리스트링 변경과 새로고침 적용
+### Search Conpenent 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
 - function Search() {
