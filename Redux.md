@@ -100,7 +100,7 @@ dispatch(actionsMembers.membersUpdate([{
 ```
 
 # Redux Thunk
-dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신  컴포넌트에서 빼기 위해 사용한다.
+dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신 컴포넌트에서 빼기 위해 사용한다.
 
 ## 설치
 ```sh
