@@ -423,7 +423,6 @@ src/store/members/membersSlice.js
 - }
 ```
 
-
 ## Search
 ### Search Action 만들기
 src/store/search/searchActions.js
@@ -567,7 +566,7 @@ export const axiosError = function(error) {
 ### Create
 src/store/members/membersActions.js
 ```diff
-- import { put, takeEvery, call } from 'redux-saga/effects';
+- import { put, takeEvery } from 'redux-saga/effects';
 ```
 ```js
 import axios from 'axios';
@@ -652,6 +651,19 @@ try {
 } catch(error) {
   axiosError();
 }
+```
+
+src/store/members/membersSlice.js
+```diff
+- membersCreate: (state, action) => {
+-   state.members.push(action.payload);
+- },
+- membersUpdate: (state, action) => {
+-   state.members[action.payload.index] = action.payload.member;
+- },
+- membersDelete(state, action) {
+-   state.members.splice(action.payload, 1);
+- }
 ```
 
 ## Search
