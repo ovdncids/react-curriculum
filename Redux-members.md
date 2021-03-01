@@ -248,6 +248,8 @@ Redux Thunk: 설정도 간단하고 쉽게 만들 수 있다.
 
 Redux Saga: 설정이 Redux Thunk 보다 복잡하지만 다양한 기능을 사용할 수 있다. 다양한 기능을 사용하기 위한 러닝 커브가 크다.
 
+<details><summary>Redux Thunk</summary>
+
 ## 설치
 ```sh
 npm install redux-thunk
@@ -319,6 +321,30 @@ axios.post('http://localhost:3100/api/v1/members', payload).then((response) => {
 }).catch((error) => {
   axiosError(error);
 });
+```
+
+## Backend Server
+* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
+```sh
+# BE 서버 실행 방법
+npm install
+node index.js
+# 터미널 종료
+Ctrl + c
+```
+
+## Axios 서버 연동
+https://github.com/axios/axios
+```sh
+npm install axios
+```
+
+### Axios common 에러 처리
+src/store/common.js
+```js
+export const axiosError = function(error) {
+  console.error(error.response || error.message || error)
+}
 ```
 
 ### Read
@@ -397,6 +423,7 @@ src/store/members/membersSlice.js
 - }
 ```
 
+
 ## Search
 ### Search Action 만들기
 src/store/search/searchActions.js
@@ -419,6 +446,9 @@ const actions = {
 
 export default actions;
 ```
+</details>
+
+<details><summary>Redux Saga</summary>
 
 ## 설치
 ```sh
@@ -509,11 +539,6 @@ src/App.js
 import { stateMembers } from 'store/members/membersSlice.js';
 import actionsMembers from 'store/members/membersActions.js';
 ```
-
-
-
-
-
 
 ## Backend Server
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
@@ -628,6 +653,47 @@ try {
   axiosError();
 }
 ```
+
+## Search
+### Search Action 만들기
+src/store/search/searchActions.js
+```js
+import axios from 'axios';
+import { axiosError } from '../common.js';
+import { put, takeEvery, call } from 'redux-saga/effects';
+import { createAction } from '@reduxjs/toolkit';
+import { actionsMembers } from 'store/members/membersSlice.js';
+
+export const searchRead = createAction('searchRead', payload => {return {payload: payload}});
+
+export function* takeEverySearch() {
+  yield takeEvery(searchRead, function* (action) {
+    try {
+      const response = yield call(() => axios.get(`http://localhost:3100/api/v1/search?search=${action.payload}`));
+      console.log('Done searchRead', response);
+      yield put(actionsMembers.membersRead(response.data.members));
+    } catch(error) {
+      axiosError();
+    }
+  });
+}
+
+const actions = {
+  searchRead
+}
+
+export default actions;
+```
+
+### Search Action을 Redux Saga에 등록
+```js
+import { takeEverySearch } from './store/search/searchActions.js';
+```
+```diff
+- yield all([takeEveryMembers()]);
++ yield all([takeEveryMembers(), takeEverySearch()]);
+```
+</details>
 
 ### Search Conpenent Store inject
 src/components/contents/Search.js
