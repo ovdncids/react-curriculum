@@ -84,7 +84,7 @@ function App() {
 }]))}>Update {members[0].name}: {members[0].age}</button>
  ```
 
-## state 주의 사항
+## 스토어 state 주의 사항
 src/App.js
 ```js
 members[0] = {
