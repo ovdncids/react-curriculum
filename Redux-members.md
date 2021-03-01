@@ -481,9 +481,10 @@ export function* takeEveryMembers() {
     yield put(actionsMembers.membersCreate(action.payload));
   });
 
-  yield takeEvery(membersRead, function* () {
+  const membersRead$ = function* () {
     yield put(actionsMembers.membersRead());
-  });
+  };
+  yield takeEvery(membersRead, membersRead$);
 
   yield takeEvery(membersUpdate, function* (action) {
     yield put(actionsMembers.membersUpdate(action.payload));
@@ -517,7 +518,7 @@ import { takeEveryMembers } from './store/members/membersActions.js';
 
 const sagaMiddleware = createSagaMiddleware();
 
-export default window.store = configureStore({
+export default configureStore({
   reducer: {
     members: membersReducer
   },
@@ -581,7 +582,7 @@ yield takeEvery(membersCreate, function* (action) {
 try {
   const response = yield call(() => axios.post('http://localhost:3100/api/v1/members', action.payload));
   console.log('Done membersCreate', response);
-  window.store.dispatch(membersRead());
+  yield membersRead$();
 } catch(error) {
   axiosError();
 }
@@ -590,7 +591,7 @@ try {
 ### Read
 src/store/members/membersActions.js
 ```diff
-yield takeEvery(membersRead, function* () {
+const membersRead$ = function* () {
 - yield put(actionsMembers.membersRead());
 ```
 ```js
@@ -631,7 +632,7 @@ yield takeEvery(membersUpdate, function* (action) {
 try {
   const response = yield call(() => axios.patch('http://localhost:3100/api/v1/members', action.payload));
   console.log('Done membersUpdate', response);
-  window.store.dispatch(membersRead());
+  yield membersRead$();
 } catch(error) {
   axiosError();
 }
@@ -647,7 +648,7 @@ yield takeEvery(membersDelete, function* (action) {
 try {
   const response = yield call(() => axios.delete('http://localhost:3100/api/v1/members/' + action.payload));
   console.log('Done membersUpdate', response);
-  window.store.dispatch(membersRead());
+  yield membersRead$();
 } catch(error) {
   axiosError();
 }
