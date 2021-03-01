@@ -517,9 +517,9 @@ function Search(props) {
 ```
 ```js
 useEffect(() => {
-  searchStore.searchRead(spSearch);
   setSearch(spSearch);
-}, [searchStore, spSearch]);
+  dispatch(actionsSearch.searchRead(spSearch));
+}, [dispatch, spSearch]);
 ```
 
 ## Proxy 설정
