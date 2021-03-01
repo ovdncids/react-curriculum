@@ -156,6 +156,10 @@ import { useEffect } from 'react';
 function Members() {
   const members = JSON.parse(JSON.stringify(useSelector(stateMembers).members));
   useEffect(() => {
+    dispatch(actionsMembers.memberSet({
+      name: '',
+      age: ''
+    }));
     dispatch(actionsMembers.membersRead());
   }, [dispatch]);
 ```
@@ -225,6 +229,15 @@ src/components/contents/Members.js
 ```
 ```js
 <button onClick={() => dispatch(actionsMembers.membersDelete(index))}>Delete</button>
+```
+
+## 스토어 state 주의 사항
+src/components/contents/Members.js
+```diff
+- const members = JSON.parse(JSON.stringify(useSelector(stateMembers).members));
++ const members = useSelector(stateMembers).members;
+// dispatch 전에 리덕스의 state 값이 바뀐다면 dispatch 할때 오류가 발생한다.
+// 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경 해야 한다.
 ```
 
 ## Redux Thunk 액션 만들기
@@ -319,7 +332,7 @@ membersCreate: payload => (dispatch) => {
 - dispatch(actionsMembers.membersCreate(payload));
 ```
 ```js
-axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
+axios.post('http://localhost:3100/api/v1/members', payload).then((response) => {
   console.log('Done membersCreate', response);
   (actions.membersRead())(dispatch);
 }).catch((error) => {
