@@ -584,7 +584,7 @@ try {
   console.log('Done membersCreate', response);
   yield membersRead$();
 } catch(error) {
-  axiosError();
+  axiosError(error);
 }
 ```
 
@@ -600,7 +600,7 @@ try {
   console.log('Done membersRead', response);
   yield put(actionsMembers.membersRead(response.data.members));
 } catch(error) {
-  axiosError();
+  axiosError(error);
 }
 ```
 
@@ -634,7 +634,7 @@ try {
   console.log('Done membersUpdate', response);
   yield membersRead$();
 } catch(error) {
-  axiosError();
+  axiosError(error);
 }
 ```
 
@@ -650,7 +650,7 @@ try {
   console.log('Done membersUpdate', response);
   yield membersRead$();
 } catch(error) {
-  axiosError();
+  axiosError(error);
 }
 ```
 
@@ -686,7 +686,7 @@ export function* takeEverySearch() {
       console.log('Done searchRead', response);
       yield put(actionsMembers.membersRead(response.data.members));
     } catch(error) {
-      axiosError();
+      axiosError(error);
     }
   });
 }
