@@ -56,11 +56,7 @@ routers/members.js
 const jwtAuth = require('../middlewares/jwtAuth.js');
 
 router.post('/', function(request, response) {
-  const member = {
-    name: '홍길동',
-    age: 20
-  }
-  jwtAuth.tokenCreate(request, response, member);
+  jwtAuth.tokenCreate(request, response, request.body);
 });
 
 router.get('/', jwtAuth.tokenCheck, function(request, response) {
@@ -93,7 +89,11 @@ const axiosDefaultsHeaders = function(token) {
 };
 axiosDefaultsHeaders();
 
-axios.post('/api/v1/members').then(function(response) {
+const member = {
+  name: '홍길동',
+  age: 20
+};
+axios.post('/api/v1/members', member).then(function(response) {
   axiosDefaultsHeaders(response.data.token);
 });
 
