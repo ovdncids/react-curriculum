@@ -264,6 +264,12 @@ h1, footer {
       list-style: none;
       margin: 0.5rem 0 0.5rem 0;
       padding: 0;
+      a {
+        text-decoration: none;
+        &.active {
+          color: white;
+        }
+      }
       h2 {
         margin: 0;
         padding: 0.5rem;
@@ -380,10 +386,10 @@ src/components/contents/Search.js (동일)
 
 src/components/Nav.js
 ```js
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-<li><h2><Link to="members">Members</Link></h2></li>
-<li><h2><Link to="search">Search</Link></h2></li>
+<li><h2><NavLink to="members" exact={true} activeClassName='active'>Members</NavLink></h2></li>
+<li><h2><NavLink to="search" exact={true} activeClassName='active'>Search</NavLink></h2></li>
 ```
 **You should not use `<Link>` outside a `<Router>` 설명**
 
