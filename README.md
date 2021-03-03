@@ -347,7 +347,14 @@ src/App.js
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Members from './components/contents/Members.js';
 import Search from './components/contents/Search.js';
-
+```
+```diff
+- <div>
+-   <h3>Members</h3>
+-   <p>Contents</p>
+- </div>
+```
+```js
 <BrowserRouter>
   <Switch>
     <Route exact={true} path="/members" render={props => <Members {...props} testProps={true} />} />
@@ -355,12 +362,6 @@ import Search from './components/contents/Search.js';
     <Redirect to={{pathname: "/members"}} />
   </Switch>
 </BrowserRouter>
-```
-```diff
-- <div>
--   <h3>Members</h3>
--   <p>Contents</p>
-- </div>
 ```
 
 src/components/contents/Members.js
