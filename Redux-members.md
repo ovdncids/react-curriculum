@@ -225,7 +225,7 @@ membersDelete(state, action) {
 
 src/components/contents/Members.js
 ```diff
-<button>Delete</button>
+- <button>Delete</button>
 ```
 ```js
 <button onClick={() => dispatch(actionsMembers.membersDelete(index))}>Delete</button>
