@@ -154,6 +154,7 @@ src/components/contents/Members.js
 import { useEffect } from 'react';
 
 function Members() {
+  ...
   const members = JSON.parse(JSON.stringify(useSelector(stateMembers).members));
   useEffect(() => {
     dispatch(actionsMembers.memberSet({
