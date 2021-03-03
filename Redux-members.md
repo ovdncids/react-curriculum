@@ -51,7 +51,7 @@ export default membersSlice.reducer;
 ```
 
 ## Members 리듀서 등록
-src/store.js
+src/store/index.js
 ```js
 import { configureStore } from '@reduxjs/toolkit';
 import membersReducer from './store/members/membersSlice.js';
@@ -67,7 +67,7 @@ export default configureStore({
 src/index.js
 ```js
 import { Provider } from 'react-redux';
-import store from './store.js';
+import store from './store/index.js';
 ```
 ```diff
 - <App />
@@ -257,7 +257,7 @@ npm install redux-thunk
 ```
 
 ## Redux Thunk 등록
-src/store.js
+src/store/index.js
 ```js
 import ReduxThunk from 'redux-thunk';
 
@@ -509,7 +509,7 @@ export default actions;
 ```
 
 ## Redux Saga 등록
-src/store.js
+src/store/index.js
 ```js
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
@@ -810,5 +810,3 @@ npm start
 ```
 
 # 수고 하셨습니다.
-
-
