@@ -700,8 +700,9 @@ export default actions;
 ```
 
 ### Search Action을 Redux Saga에 등록
+src/store/index.js
 ```js
-import { takeEverySearch } from './store/search/searchActions.js';
+import { takeEverySearch } from './search/searchActions.js';
 ```
 ```diff
 - yield all([takeEveryMembers()]);
