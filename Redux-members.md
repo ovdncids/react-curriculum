@@ -477,7 +477,7 @@ export function* takeEveryMembers() {
   yield takeEvery(membersSet, function* (action) {
     yield put(actionsMembers.membersSet(action.payload));
   });
-  
+
   yield takeEvery(membersCreate, function* (action) {
     yield put(actionsMembers.membersCreate(action.payload));
   });
