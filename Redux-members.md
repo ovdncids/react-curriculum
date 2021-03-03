@@ -54,7 +54,7 @@ export default membersSlice.reducer;
 src/store/index.js
 ```js
 import { configureStore } from '@reduxjs/toolkit';
-import membersReducer from './store/members/membersSlice.js';
+import membersReducer from './members/membersSlice.js';
 
 export default configureStore({
   reducer: {
@@ -514,8 +514,8 @@ src/store/index.js
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects'
-import membersReducer from './store/members/membersSlice.js';
-import { takeEveryMembers } from './store/members/membersActions.js';
+import membersReducer from './members/membersSlice.js';
+import { takeEveryMembers } from './members/membersActions.js';
 
 const sagaMiddleware = createSagaMiddleware();
 
