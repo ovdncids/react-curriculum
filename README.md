@@ -304,6 +304,21 @@ import Header from './components/Header.js';
 import Nav from './components/Nav.js';
 import Footer from './components/Footer.js';
 ```
+
+src/components/Header.js
+```js
+function Header() {
+  return (
+    <header>
+      <h1>React study</h1>
+    </header>
+  )
+}
+
+export default Header;
+```
+
+src/App.js
 ```diff
 - <header>
 -  <h1>React study</h1>
@@ -320,19 +335,6 @@ import Footer from './components/Footer.js';
 
 - <footer>Copyright</footer>
 + <Footer></Footer>
-```
-
-src/components/Header.js
-```js
-function Header() {
-  return (
-    <header>
-      <h1>React study</h1>
-    </header>
-  )
-}
-
-export default Header;
 ```
 
 ## React Router DOM
@@ -477,6 +479,8 @@ configure({
 ```
 ```diff
 - <App />
+```
+```js
 <Provider
   membersStore={membersStore}
 >
