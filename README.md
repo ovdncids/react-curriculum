@@ -488,7 +488,7 @@ configure({
 </Provider>
 ```
 
-## Members Conpenent Store inject
+## Members Compenent Store inject
 src/components/contents/Members.js
 ```js
 import { inject, observer } from 'mobx-react';
@@ -843,7 +843,7 @@ import { searchStore } from './stores/SearchStore';
 searchStore={searchStore}
 ```
 
-## Search Conpenent Store inject
+## Search Compenent Store inject
 src/components/contents/Search.js
 ```js
 import { useState, useEffect } from 'react';
@@ -897,7 +897,7 @@ function Search(props) {
 export default inject('membersStore', 'searchStore')(observer(Search));
 ```
 
-## Search Conpenent 쿼리스트링 변경과 새로고침 적용
+## Search Compenent 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
 - const { membersStore, searchStore } = props;
