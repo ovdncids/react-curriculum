@@ -334,6 +334,25 @@ export const axiosError = function(error) {
 }
 ```
 
+### Create
+src/store/members/membersActions.js
+```js
+import axios from 'axios';
+import { axiosError } from '../common.js';
+```
+```diff
+membersCreate: payload => (dispatch) => {
+- dispatch(actionsMembers.membersCreate(payload));
+```
+```js
+axios.post('http://localhost:3100/api/v1/members', payload).then((response) => {
+  console.log('Done membersCreate', response);
+  (actions.membersRead())(dispatch);
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
 ### Read
 src/store/members/membersActions.js
 ```diff
