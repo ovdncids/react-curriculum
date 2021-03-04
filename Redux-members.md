@@ -134,9 +134,13 @@ function Members() {
 export default Members;
 ```
 
+**Redux DevTools 설치**
+
+https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
+
 ## Members Store CRUD
 ### Read
-src/store/members/MembersStore.js
+src/store/members/membersSlice.js
 ```js
 membersRead: (state) => {
   state.members.push({
@@ -180,7 +184,7 @@ function Members() {
 ```
 
 ### Update
-src/store/members/MembersStore.js
+src/store/members/membersSlice.js
 ```js
 membersSet: (state, action) => {
   state.members = action.payload;
@@ -217,7 +221,7 @@ src/components/contents/Members.js
 ```
 
 ### Delete
-src/store/members/MembersStore.js
+src/store/members/membersSlice.js
 ```js
 membersDelete(state, action) {
   state.members.splice(action.payload, 1);
@@ -297,7 +301,7 @@ export default actions;
 ```
 
 ## Redux에서 Members Actions으로 액션 수정하기
-src/store/members/MembersStore.js
+src/components/contents/Members.js
 ```diff
 - import { stateMembers, actionsMembers } from 'store/members/membersSlice.js';
 ```
