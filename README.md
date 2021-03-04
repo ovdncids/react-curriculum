@@ -335,13 +335,15 @@ function Header() {
 export default Header;
 ```
 
-## React Router DOM 설치
+## React Router DOM
 https://reacttraining.com/react-router
+
+### 설치
 ```sh
 npm install react-router-dom
 ```
 
-## Router 만들기
+### Router 만들기
 src/App.js
 ```js
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
