@@ -542,6 +542,13 @@ function Members(props) {
 export default inject('membersStore')(observer(Members));
 ```
 
+**enforceActions 설명**
+
+src/index.js (enforceActions 주석 풀기)
+```js
+enforceActions: 'never'
+```
+
 **render에 대한 설명**
 
 **debugger 설명**
