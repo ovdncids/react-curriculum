@@ -537,7 +537,7 @@ sagaMiddleware.run(function* () {
 ```
 
 ## Redux에서 Members Actions으로 액션 수정하기
-src/App.js
+src/components/contents/Members.js
 ```diff
 - import { stateMembers, actionsMembers } from 'store/membersSlice.js';
 ```
