@@ -310,24 +310,6 @@ import { stateMembers } from 'store/members/membersSlice.js';
 import actionsMembers from 'store/members/membersActions.js';
 ```
 
-src/store/members/membersActions.js
-```js
-import axios from 'axios';
-import { axiosError } from '../common.js';
-```
-```diff
-membersCreate: payload => (dispatch) => {
-- dispatch(actionsMembers.membersCreate(payload));
-```
-```js
-axios.post('http://localhost:3100/api/v1/members', payload).then((response) => {
-  console.log('Done membersCreate', response);
-  (actions.membersRead())(dispatch);
-}).catch((error) => {
-  axiosError(error);
-});
-```
-
 ## Backend Server
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
 ```sh
