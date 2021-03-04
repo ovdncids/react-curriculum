@@ -514,7 +514,7 @@ export default actions;
 ```
 
 ## Redux Saga 등록
-src/store/index.js
+src/store/index.js (덮어 씌우기)
 ```js
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
