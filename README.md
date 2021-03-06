@@ -867,7 +867,7 @@ function Search(props) {
         <input type="text"
           value={search}
           onChange={event => {setSearch(event.target.value)}}
-          onKeyUp={event => {if (event.key === 'Enter') searchRead(search)}}
+          onKeyPress={event => {if (event.key === 'Enter') searchRead(search)}}
         />
         <button onClick={() => searchRead(search)}>Search</button>
       </div>
