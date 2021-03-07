@@ -1,5 +1,7 @@
 # 창 넓이가 변할때 window.innerWidth 값을 state에 넣기
 
+* [데모](https://ovdncids.github.io/react-curriculum/inner-width)
+
 InnerWidth.js
 ```js
 import { useState, useEffect } from 'react';
