@@ -429,7 +429,12 @@ npm install mobx mobx-react
 
 src/stores/MembersStore.js
 ```js
-import { makeAutoObservable } from 'mobx';
+import { configure, makeAutoObservable } from 'mobx';
+
+configure({
+  // enforceActions: 'never',
+  // useProxies: "never"
+});
 
 export default class MembersStore {
   constructor() {
@@ -469,13 +474,8 @@ tsconfig.json
 
 src/index.js
 ```js
-import { configure } from 'mobx';
 import { Provider } from 'mobx-react';
 import { membersStore } from './stores/MembersStore.js';
-
-configure({
-  // enforceActions: 'never'
-});
 ```
 ```diff
 - <App />
@@ -543,6 +543,8 @@ export default inject('membersStore')(observer(Members));
 ```
 
 **enforceActions 설명**
+
+**useProxies 설명**
 
 src/index.js (enforceActions 주석 풀기)
 ```js
