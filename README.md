@@ -557,6 +557,24 @@ enforceActions: 'never'
 ```js
 debugger;
 ```
+**Unexpected 'debugger' statement 발생할 경우**
+
+package.json
+```json
+"eslintConfig": {
+  "rules": {
+    "no-debugger": 1
+  }
+}
+// 0 = off, 1 = warn, 2 = error
+```
+
+**또는**
+
+```js
+debugger; // eslint-disable-line no-debugger
+```
+
 
 ## Members Store CRUD
 ### Read
