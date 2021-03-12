@@ -568,13 +568,10 @@ package.json
 }
 // 0 = off, 1 = warn, 2 = error
 ```
-
 **또는**
-
 ```js
 debugger; // eslint-disable-line no-debugger
 ```
-
 
 ## Members Store CRUD
 ### Read
