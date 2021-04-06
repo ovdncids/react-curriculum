@@ -670,7 +670,7 @@ membersDelete(index) {
 
 src/components/contents/Members.js
 ```diff
-<button>Delete</button>
+- <button>Delete</button>
 ```
 ```js
 <button onClick={() => membersStore.membersDelete(index)}>Delete</button>
