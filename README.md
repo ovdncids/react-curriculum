@@ -697,7 +697,7 @@ npm install axios
 src/stores/common.js
 ```js
 export const axiosError = (error) => {
-  console.error(error.response || error.message || error)
+  console.error(error.response || error.message || error);
 };
 ```
 
