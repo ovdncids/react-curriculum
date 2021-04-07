@@ -838,8 +838,8 @@ export default class SearchStore {
     makeAutoObservable(this);
   }
 
-  searchRead(search) {
-    const url = `http://localhost:3100/api/v1/search?search=${search}`;
+  searchRead(q) {
+    const url = `http://localhost:3100/api/v1/search?q=${q}`;
     axios.get(url).then((response) => {
       console.log('Done searchRead', response);
       membersStore.members = response.data.members;
@@ -869,9 +869,10 @@ import { inject, observer } from 'mobx-react';
 function Search(props) {
   const { membersStore, searchStore } = props;
   const { members } = membersStore;
-  const [ search, setSearch ] = useState('');
-  const searchRead = (search) => {
-    searchStore.searchRead(search);
+  const [ q, qSearch ] = useState('');
+  const searchRead = (event) => {
+    searchStore.searchRead(q);
+    event.preventDefault();
   };
   useEffect(() => {
     searchStore.searchRead('');
@@ -881,12 +882,13 @@ function Search(props) {
       <h3>Search</h3>
       <hr className="d-block" />
       <div>
-        <input type="text"
-          value={search}
-          onChange={event => {setSearch(event.target.value)}}
-          onKeyPress={event => {if (event.key === 'Enter') searchRead(search)}}
-        />
-        <button onClick={() => searchRead(search)}>Search</button>
+        <form onSubmit={(event) => {searchRead(event)}}>
+          <input type="text"
+            value={q}
+            onChange={event => {qSearch(event.target.value)}}
+          />
+          <button>Search</button>
+        </form>
       </div>
       <hr className="d-block" />
       <div>
@@ -921,12 +923,12 @@ src/components/contents/Search.js
 ```
 ```js
 const url = new URL(window.location.href);
-const spSearch = url.searchParams.get('search') || '';
+const spSearch = url.searchParams.get('q') || '';
 const { membersStore, searchStore, history } = props;
 ```
 ```diff
-- searchStore.searchRead(search);
-+ history.push(`/search?search=${search}`);
+- searchStore.searchRead(q);
++ history.push(`/search?q=${q}`);
 ```
 ```diff
 - useEffect(() => {
@@ -936,7 +938,7 @@ const { membersStore, searchStore, history } = props;
 ```js
 useEffect(() => {
   searchStore.searchRead(spSearch);
-  setSearch(spSearch);
+  setQ(spSearch);
 }, [searchStore, spSearch]);
 ```
 
