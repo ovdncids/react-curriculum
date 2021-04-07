@@ -438,8 +438,8 @@ import { axiosError } from '../common.js';
 import { actionsMembers } from 'store/members/membersSlice.js';
 
 const actions = {
-  searchRead: search => (dispatch) => {
-    const url = `http://localhost:3100/api/v1/search?search=${search}`;
+  searchRead: q => (dispatch) => {
+    const url = `http://localhost:3100/api/v1/search?q=${q}`;
     axios.get(url).then((response) => {
       console.log('Done searchRead', response);
       dispatch(actionsMembers.membersRead(response.data.members));
@@ -688,7 +688,7 @@ export const searchRead = createAction('searchRead', payload => {return {payload
 export function* takeEverySearch() {
   yield takeEvery(searchRead, function* (action) {
     try {
-      const response = yield call(() => axios.get(`http://localhost:3100/api/v1/search?search=${action.payload}`));
+      const response = yield call(() => axios.get(`http://localhost:3100/api/v1/search?q=${action.payload}`));
       console.log('Done searchRead', response);
       yield put(actionsMembers.membersRead(response.data.members));
     } catch(error) {
@@ -726,9 +726,10 @@ import actionsSearch from 'store/search/searchActions.js';
 function Search() {
   const dispatch = useDispatch();
   const members = useSelector(stateMembers).members;
-  const [ search, setSearch ] = useState('');
-  const searchRead = (search) => {
-    dispatch(actionsSearch.searchRead(search));
+  const [ q, setQ ] = useState('');
+  const searchRead = (event) => {
+    dispatch(actionsSearch.searchRead(q));
+    event.preventDefault();
   };
   useEffect(() => {
     dispatch(actionsSearch.searchRead(''));
@@ -738,12 +739,13 @@ function Search() {
       <h3>Search</h3>
       <hr className="d-block" />
       <div>
-        <input type="text"
-          value={search}
-          onChange={event => {setSearch(event.target.value)}}
-          onKeyUp={event => {if (event.key === 'Enter') searchRead(search)}}
-        />
-        <button onClick={() => searchRead(search)}>Search</button>
+        <form onSubmit={(event) => {searchRead(event)}}>
+          <input type="text"
+            value={q}
+            onChange={event => {setQ(event.target.value)}}
+          />
+          <button>Search</button>
+        </form>
       </div>
       <hr className="d-block" />
       <div>
@@ -779,12 +781,12 @@ src/components/contents/Search.js
 ```js
 function Search(props) {
   const url = new URL(window.location.href);
-  const spSearch = url.searchParams.get('search') || '';
+  const spSearch = url.searchParams.get('q') || '';
   const { history } = props;
 ```
 ```diff
-- dispatch(actionsSearch.searchRead(search));
-+ history.push(`/search?search=${search}`);
+- dispatch(actionsSearch.searchRead(q));
++ history.push(`/search?q=${q}`);
 ```
 ```diff
 - useEffect(() => {
@@ -793,7 +795,7 @@ function Search(props) {
 ```
 ```js
 useEffect(() => {
-  setSearch(spSearch);
+  setQ(spSearch);
   dispatch(actionsSearch.searchRead(spSearch));
 }, [dispatch, spSearch]);
 ```
