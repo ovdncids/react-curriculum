@@ -740,7 +740,8 @@ function Search() {
       <hr className="d-block" />
       <div>
         <form onSubmit={(event) => {searchRead(event)}}>
-          <input type="text"
+          <input
+            type="text" placeholder="Search"
             value={q}
             onChange={event => {setQ(event.target.value)}}
           />
@@ -749,7 +750,7 @@ function Search() {
       </div>
       <hr className="d-block" />
       <div>
-        <table>
+        <table className="table-search">
           <thead>
             <tr>
               <th>Name</th>
