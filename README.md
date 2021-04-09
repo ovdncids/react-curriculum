@@ -218,67 +218,68 @@ src/App.js
 
 src/index.scss
 ```scss
-body {
+* {
   margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
-
-// common
-.pointer {
-  cursor: pointer;
+a:link, a:visited {
+  text-decoration: none;
+  color: black;
 }
-
-.relative {
-  position: relative;
+a.active {
+  color: white;
 }
-
-.d-none {
+hr {
   display: none;
+}
+h1, footer, .nav ul {
+  padding: 0.5rem;
+}
+h4, li {
+  margin: 0.5rem 0;
+}
+hr {
+  margin: 1rem 0;
+}
+hr {
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+input[type=text] {
+  width: 120px;
 }
 
 .d-block {
   display: block;
 }
-
-.flex {
-  display: flex;
-}
-
-// Markup
-hr {
-  display: none;
-}
-
-h1, footer {
-  margin: 0.5rem;
-}
-
 .container {
-  @extend .flex;
+  display: flex;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+.nav {
   min-height: 300px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  .nav {
-    min-height: 300px;
-    background-color: skyblue;
-    ul {
-      list-style: none;
-      margin: 0.5rem 0 0.5rem 0;
-      padding: 0;
-      a {
-        text-decoration: none;
-        &.active {
-          color: white;
-        }
-      }
-      h2 {
-        margin: 0;
-        padding: 0.5rem;
-      }
-    }
-  }
-  .contents {
-    margin-left: 1rem;
-  }
+  background-color: #4285F4;
+}
+.nav ul {
+  list-style: none;
+}
+.contents {
+  flex: 1;
+  padding: 1rem;
+}
+
+.table-search {
+  border: 1px solid rgb(118, 118, 118);
+  border-collapse: collapse;
+  text-align: center;
+}
+.table-search th, .table-search td {
+  padding: 0.2rem;
+}
+.table-search td {
+  border-top: 1px solid rgb(118, 118, 118);
+  min-width: 100px;
 }
 ```
 
@@ -883,16 +884,17 @@ function Search(props) {
       <hr className="d-block" />
       <div>
         <form onSubmit={(event) => {searchRead(event)}}>
-          <input type="text"
+          <input
+            type="text" placeholder="Search"
             value={q}
-            onChange={event => {qSearch(event.target.value)}}
+            onChange={event => {setQ(event.target.value)}}
           />
           <button>Search</button>
         </form>
       </div>
       <hr className="d-block" />
       <div>
-        <table>
+        <table className="table-search">
           <thead>
             <tr>
               <th>Name</th>
