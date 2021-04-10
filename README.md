@@ -434,7 +434,7 @@ import { configure, makeAutoObservable } from 'mobx';
 
 configure({
   // enforceActions: 'never',
-  // useProxies: "never"
+  // useProxies: 'never'
 });
 
 export default class MembersStore {
