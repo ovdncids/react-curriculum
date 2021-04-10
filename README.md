@@ -986,4 +986,4 @@ import 'react-app-polyfill/stable';
 ``` -->
 
 # 수고 하셨습니다.
-* [데모](https://ovdncids.github.io/react-curriculum/demo/index.html)
+* [데모](https://ovdncids.github.io/react-curriculum/demo)
