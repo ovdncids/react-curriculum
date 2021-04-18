@@ -101,3 +101,12 @@ axios.get('/api/v1/members').then(function(response) {
   console.log(response.data.decoded);
 });
 ```
+
+### Logout
+```js
+import axios from 'axios';
+
+axios.defaults.headers.common['x-access-token'] = '';
+localStorage.setItem('token', '');
+window.location.href = '/login';
+```
