@@ -394,8 +394,8 @@ src/components/Nav.js
 ```js
 import { NavLink } from 'react-router-dom';
 
-<li><h2><NavLink to="members" exact={true} activeClassName='active'>Members</NavLink></h2></li>
-<li><h2><NavLink to="search" exact={true} activeClassName='active'>Search</NavLink></h2></li>
+<li><h2><NavLink to="members" activeClassName='active'>Members</NavLink></h2></li>
+<li><h2><NavLink to="search" activeClassName='active'>Search</NavLink></h2></li>
 ```
 **You should not use `<Link>` outside a `<Router>` 설명**
 
