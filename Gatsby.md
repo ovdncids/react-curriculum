@@ -150,7 +150,7 @@ export default function Layout({ children }) {
 
 src/pages/index.js
 ```js
-import Layout from '../components/layout.js';
+import Layout from '../components/layout.js'
 
 export default function Index() {
   return (
@@ -168,7 +168,7 @@ export default function Index() {
 src/pages/search.js
 ```js
 import React from "react"
-import Layout from '../components/layout.js';
+import Layout from '../components/layout.js'
 
 export default function Search() {
   return (
@@ -190,6 +190,180 @@ src/components/layout.js
 ```js
 <li><h2><Link to="/" activeClassName='active'>Members</Link></h2></li>
 <li><h2><Link to="/search" activeClassName='active'>Search</Link></h2></li>
+```
+
+## 404 Page
+src/pages/404.js
+```js
+import React from "react"
+
+export default function Page404() {
+  return (
+    <div>404 Page</div>
+  )
+}
+```
+
+## Members Store 만들기
+### MobX 설치
+```sh
+npm install mobx mobx-react
+```
+src/stores/MembersStore.js
+```js
+import { configure, makeAutoObservable } from 'mobx';
+
+configure({
+  // enforceActions: 'never',
+  // useProxies: 'never'
+});
+
+export default class MembersStore {
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  members = [];
+  member = {
+    name: '',
+    age: ''
+  };
+
+  membersCreate() {
+    this.members.push({
+      name: this.member.name,
+      age: this.member.age
+    });
+    console.log('Done membersCreate', this.members);
+  }
+}
+
+export const membersStore = new MembersStore();
+```
+
+### Provide 등록
+provide-stores.js
+```js
+import React from 'react'
+import { Provider } from 'mobx-react'
+import { membersStore } from './src/stores/MembersStore'
+
+export default function Stores({ element }) {
+  return (
+    <Provider membersStore={membersStore}>{element}</Provider>
+  )
+}
+```
+
+gatsby-browser.js
+gatsby-ssr.js
+```js
+import provideStores from './provide-stores'
+
+export const wrapRootElement = provideStores
+```
+
+### Members Compenent Store inject
+src/pages/index.js
+```diff
+- export default function Index() {
+```
+```js
+import { inject, observer } from 'mobx-react';
+
+function Index(props) {
+  const { membersStore } = props;
+  const { member } = membersStore;
+  return (
+    <Layout>
+      <div>
+        <h3>Members</h3>
+        <hr className="d-block" />
+        <div>
+          <h4>Read</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Modify</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>홍길동</td>
+                <td>20</td>
+                <td>
+                  <button>Update</button>
+                  <button>Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr className="d-block" />
+        <div>
+          <h4>Create</h4>
+          <input
+            type="text" placeholder="Name" value={member.name}
+            onChange={event => {member.name = event.target.value}}
+          />
+          <input
+            type="text" placeholder="Age" value={member.age}
+            onChange={event => {member.age = event.target.value}}
+          />
+          <button onClick={() => membersStore.membersCreate()}>Create</button>
+        </div>
+      </div>
+    </Layout>
+  )
+}
+
+export default inject('membersStore')(observer(Index));
+```
+
+### Members Store CRUD
+src/stores/MembersStore.js
+```js
+membersRead() {
+  this.members = [{
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  }];
+  console.log('Done membersRead', this.members);
+}
+```
+
+src/pages/index.js
+```diff
+- import React from "react"
++ import React, { useEffect } from "react"
+```
+```diff
+- const { member } = membersStore;
+```
+```js
+const { members, member } = membersStore;
+useEffect(() => {
+  membersStore.membersRead();
+}, [membersStore]);
+```
+```diff
+- <tr>
+-   <td>홍길동</td>
+-   <td>20</td>
+```
+```js
+{members.map((member, index) => (
+  <tr key={index}>
+    <td>{member.name}</td>
+    <td>{member.age}</td>
+    ...
+  </tr>
+))}
 ```
 
 ## https
