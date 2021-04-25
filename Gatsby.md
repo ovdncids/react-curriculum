@@ -19,6 +19,7 @@ gatsby serve
 src/pages/index.js
 ```js
 import React from "react"
+import "../styles/index.css"
 
 export default function Home() {
   return <div>
@@ -113,12 +114,6 @@ input[type=text] {
   min-width: 100px;
 }
 ```
-
-gatsby-browser.js
-```js
-import "./src/styles/index.css"
-```
-
 
 ## https
 https://www.gatsbyjs.com/docs/local-https
