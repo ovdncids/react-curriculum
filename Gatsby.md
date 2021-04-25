@@ -21,7 +21,7 @@ src/pages/index.js
 import React from "react"
 import "../styles/index.css"
 
-export default function Home() {
+export default function Index() {
   return (
     <div>
       <header>
@@ -118,43 +118,79 @@ input[type=text] {
 ```
 
 ## React Component 만들기
-src/pages/index.js
-```js
-import Header from '../components/Header.js';
-import Nav from '../components/Nav.js';
-import Footer from '../components/Footer.js';
-```
-
-src/components/Header.js
+src/components/layout.js
 ```js
 import React from "react"
 
-export default function Header() {
-  return <header>
-    <h1>React study</h1>
-  </header>
+export default function Layout({ children }) {
+  return (
+    <div>
+      <header>
+        <h1>React study</h1>
+      </header>
+      <hr />
+      <div className="container">
+        <nav className="nav">
+          <ul>
+            <li><h2>Members</h2></li>
+            <li><h2>Search</h2></li>
+          </ul>
+        </nav>
+        <hr />
+        <section className="contents">
+          {children}
+        </section>
+        <hr />
+      </div>
+      <footer>Copyright</footer>
+    </div>
+  )
 }
 ```
 
 src/pages/index.js
 ```js
-- <header>
--  <h1>React study</h1>
-- </header>
-+ <Header></Header>
+import Layout from '../components/layout.js';
 
-- <nav className="nav">
--   <ul>
--     <li><h2>Members</h2></li>
--     <li><h2>Search</h2></li>
--   </ul>
-- </nav>
-+ <Nav></Nav>
-
-- <footer>Copyright</footer>
-+ <Footer></Footer>
+export default function Index() {
+  return (
+    <Layout>
+      <div>
+        <h3>Members</h3>
+        <p>Contents</p>
+      </div>
+    </Layout>
+  )
+}
 ```
 
+## React Router DOM
+src/pages/search.js
+```js
+import React from "react"
+import Layout from '../components/layout.js';
+
+export default function Search() {
+  return (
+    <Layout>
+      <div>
+        <h3>Search</h3>
+        <p>Contents</p>
+      </div>
+    </Layout>
+  )
+}
+```
+
+src/components/layout.js
+```diff
+- <li><h2>Members</h2></li>
+- <li><h2>Search</h2></li>
+```
+```js
+<li><h2><Link to="/" activeClassName='active'>Members</Link></h2></li>
+<li><h2><Link to="/search" activeClassName='active'>Search</Link></h2></li>
+```
 
 ## https
 https://www.gatsbyjs.com/docs/local-https
