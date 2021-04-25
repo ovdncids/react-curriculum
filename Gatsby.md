@@ -22,29 +22,31 @@ import React from "react"
 import "../styles/index.css"
 
 export default function Home() {
-  return <div>
-    <header>
-      <h1>React study</h1>
-    </header>
-    <hr />
-    <div className="container">
-      <nav className="nav">
-        <ul>
-          <li><h2>Members</h2></li>
-          <li><h2>Search</h2></li>
-        </ul>
-      </nav>
+  return (
+    <div>
+      <header>
+        <h1>React study</h1>
+      </header>
       <hr />
-      <section className="contents">
-        <div>
-          <h3>Members</h3>
-          <p>Contents</p>
-        </div>
-      </section>
-      <hr />
+      <div className="container">
+        <nav className="nav">
+          <ul>
+            <li><h2>Members</h2></li>
+            <li><h2>Search</h2></li>
+          </ul>
+        </nav>
+        <hr />
+        <section className="contents">
+          <div>
+            <h3>Members</h3>
+            <p>Contents</p>
+          </div>
+        </section>
+        <hr />
+      </div>
+      <footer>Copyright</footer>
     </div>
-    <footer>Copyright</footer>
-  </div>
+  )
 }
 ```
 
@@ -114,6 +116,45 @@ input[type=text] {
   min-width: 100px;
 }
 ```
+
+## React Component 만들기
+src/pages/index.js
+```js
+import Header from '../components/Header.js';
+import Nav from '../components/Nav.js';
+import Footer from '../components/Footer.js';
+```
+
+src/components/Header.js
+```js
+import React from "react"
+
+export default function Header() {
+  return <header>
+    <h1>React study</h1>
+  </header>
+}
+```
+
+src/pages/index.js
+```js
+- <header>
+-  <h1>React study</h1>
+- </header>
++ <Header></Header>
+
+- <nav className="nav">
+-   <ul>
+-     <li><h2>Members</h2></li>
+-     <li><h2>Search</h2></li>
+-   </ul>
+- </nav>
++ <Nav></Nav>
+
+- <footer>Copyright</footer>
++ <Footer></Footer>
+```
+
 
 ## https
 https://www.gatsbyjs.com/docs/local-https
