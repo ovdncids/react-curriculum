@@ -853,7 +853,7 @@ export default class SearchStore {
 export const searchStore = new SearchStore();
 ```
 
-**Search Store 등록**
+### Search Store 등록
 src/index.js
 ```js
 import { searchStore } from './stores/SearchStore';
@@ -861,7 +861,7 @@ import { searchStore } from './stores/SearchStore';
 searchStore={searchStore}
 ```
 
-## Search Compenent Store inject
+### Search Compenent Store inject
 src/components/contents/Search.js
 ```js
 import { useState, useEffect } from 'react';
