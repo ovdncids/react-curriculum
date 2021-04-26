@@ -18,8 +18,8 @@ gatsby serve
 ## Markup
 src/pages/index.js
 ```js
-import React from "react"
-import "../styles/index.css"
+import React from 'react'
+import '../styles/index.css'
 
 export default function Index() {
   return (
@@ -120,7 +120,7 @@ input[type=text] {
 ## React Component 만들기
 src/components/layout.js
 ```js
-import React from "react"
+import React from 'react'
 
 export default function Layout({ children }) {
   return (
@@ -167,7 +167,7 @@ export default function Index() {
 ## React Router DOM
 src/pages/search.js
 ```js
-import React from "react"
+import React from 'react'
 import Layout from '../components/layout.js'
 
 export default function Search() {
@@ -195,7 +195,7 @@ src/components/layout.js
 ## 404 Page
 src/pages/404.js
 ```js
-import React from "react"
+import React from 'react'
 
 export default function Page404() {
   return (
@@ -340,8 +340,8 @@ membersRead() {
 
 src/pages/index.js
 ```diff
-- import React from "react"
-+ import React, { useEffect } from "react"
+- import React from 'react'
++ import React, { useEffect } from 'react'
 ```
 ```diff
 - const { member } = membersStore
@@ -561,7 +561,7 @@ import { searchStore } from './src/stores/SearchStore'
 ### Search Compenent Store inject
 src/pages/search.js
 ```js
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from 'react'
 import Layout from '../components/layout.js'
 import { inject, observer } from 'mobx-react'
 
