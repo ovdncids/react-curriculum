@@ -870,7 +870,7 @@ import { inject, observer } from 'mobx-react';
 function Search(props) {
   const { membersStore, searchStore } = props;
   const { members } = membersStore;
-  const [ q, qSearch ] = useState('');
+  const [ q, setQ ] = useState('');
   const searchRead = (event) => {
     searchStore.searchRead(q);
     event.preventDefault();
