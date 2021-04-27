@@ -624,7 +624,7 @@ src/pages/search.js
 - const { membersStore, searchStore } = props
 ```
 ```js
-const url = new URL(window.location.href)
+const url = new URL(props.location.href)
 const spSearch = url.searchParams.get('q') || ''
 const { membersStore, searchStore, navigate } = props
 ```
