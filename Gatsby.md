@@ -653,3 +653,5 @@ npm run develop -- --https
 
 ## gatsby-node.js
 https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/
+
+https://medium.com/@christinavhastenrath/rest-apis-in-gatsby-at-runtime-89a89dd976d7
