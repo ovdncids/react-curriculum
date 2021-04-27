@@ -650,3 +650,6 @@ https://www.gatsbyjs.com/docs/local-https
 ```sh
 npm run develop -- --https
 ```
+
+## gatsby-node.js
+https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/
