@@ -1,4 +1,6 @@
 # useMemo
+https://www.daleseo.com/react-hooks-use-memo/
+
 * 부모 컴포넌트가 redering 되어 자식까지 redering 되는 경우, 자식에서 사용되는 일정 부분의 함수를 다시 실행하지 않기
 
 ## useMemo 사용전
