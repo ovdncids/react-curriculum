@@ -20,7 +20,7 @@ function App() {
       />
       <button onClick={() => setMembers([...members, member])}>Create</button>
     </div>
-  );
+  )
 }
 
 function Members(props) {
@@ -35,7 +35,7 @@ function Members(props) {
       <div key={index}>{member}</div>
     ))}
     </div>
-  );
+  )
 }
 
 export default App;
