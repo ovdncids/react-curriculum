@@ -21,6 +21,7 @@ export default class FollowsStore {
   followsCreate() {
     axios.post('https://ovdncids-red-firebase-default-rtdb.firebaseio.com/follows.json', this.follow).then((response) => {
       console.log('Done followsCreate', response);
+      // this.followsRead();
     }).catch((error) => {
       axiosError(error);
     });
@@ -52,7 +53,6 @@ function Follows(props) {
   return (
     <div>
       <h3>Follow</h3>
-      <hr className="d-block" />
       <div style={{display: 'flex'}}>
         <div>
           <table className="table-search">
@@ -121,4 +121,66 @@ import Follows from './components/contents/Follows.js';
 src/components/Nav.js
 ```js
 <li><h2><NavLink to="follows" exact={true} activeClassName='active'>Follows</NavLink></h2></li>
+```
+
+## Follows Read
+src/stores/FollowsStore.js
+```diff
+- // this.followsRead();
++ this.followsRead();
+```
+```js
+followsRead() {
+  axios.get('https://ovdncids-red-firebase-default-rtdb.firebaseio.com/follows.json').then((response) => {
+    console.log('Done followsRead', response);
+    const follows = [];
+    for(const key in response.data) {
+      response.data[key].key = key;
+      follows.push(response.data[key]);
+    }
+    this.follows = follows;
+  }).catch((error) => {
+    axiosError(error);
+  });
+}
+```
+
+src/components/contents/Follows.js
+```diff
+- useEffect(() => {
+```
+```js
+useEffect(() => {
+  membersStore.membersRead();
+  followsStore.followsRead();
+}, [membersStore, followsStore]);
+const getMemberName = (key) => {
+  return members.map(member => {
+    return member.key === key ? member.name : '';
+  })
+}
+```
+```js
+{follows.length && members.length ? (
+<div>
+  <hr className="d-block" />
+  <h3>Follows</h3>
+  <table className="table-search">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Following</th>
+      </tr>
+    </thead>
+    <tbody>
+    {follows.map((follow, index) => (
+      <tr key={index}>
+        <td>{getMemberName(follow.member)}</td>
+        <td>{getMemberName(follow.following)}</td>
+      </tr>
+    ))}
+    </tbody>
+  </table>
+</div>
+) : undefined}
 ```
