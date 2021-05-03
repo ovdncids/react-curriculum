@@ -19,7 +19,7 @@ export default class FollowsStore {
   };
 
   followsCreate() {
-    axios.post('https://ovdncids-red-firebase-default-rtdb.firebaseio.com/follows.json', this.follow).then((response) => {
+    axios.post('https://firebase-default-rtdb.firebaseio.com/follows.json', this.follow).then((response) => {
       console.log('Done followsCreate', response);
       // this.followsRead();
     }).catch((error) => {
@@ -131,7 +131,7 @@ src/stores/FollowsStore.js
 ```
 ```js
 followsRead() {
-  axios.get('https://ovdncids-red-firebase-default-rtdb.firebaseio.com/follows.json').then((response) => {
+  axios.get('https://firebase-default-rtdb.firebaseio.com/follows.json').then((response) => {
     console.log('Done followsRead', response);
     const follows = [];
     for(const key in response.data) {
@@ -183,4 +183,27 @@ const getMemberName = (key) => {
   </table>
 </div>
 ) : undefined}
+```
+
+## Follows Delete
+src/stores/FollowsStore.js
+```js
+followsDelete(key) {
+  axios.delete(`https://firebase-default-rtdb.firebaseio.com/follows/${key}.json`).then((response) => {
+    console.log('Done followsDelete', response);
+    this.followsRead();
+  }).catch((error) => {
+    axiosError(error);
+  });
+}
+```
+
+src/components/contents/Follows.js
+```js
+<th>Delete</th>
+```
+```js
+<td>
+  <button onClick={() => followsStore.followsDelete(follow.key)}>Delete</button>
+</td>
 ```
