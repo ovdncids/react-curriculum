@@ -35,14 +35,14 @@ https://github.com/nvm-sh/nvm
 https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
 ```sh
 # 설치
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
 # vi 에디터 실행
 vi ~/.bash_profile
 
 # 해당 경로 적용 시키키
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # ~/.bash_profile 재 실행 시키기
 source ~/.bash_profile
