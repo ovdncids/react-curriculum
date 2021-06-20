@@ -415,6 +415,7 @@ function A1(props) {
 <!-- **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함 -->
 
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
+* [추가 패턴](https://web422.ca/notes/react-routing)
 
 ## Members Store 만들기
 
