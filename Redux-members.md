@@ -41,7 +41,7 @@ export const membersSlice = createSlice({
     membersCreate: (state, action) => {
       state.members.push(action.payload);
     }
-  },
+  }
 });
 
 export const stateMembers = state => state.members;
