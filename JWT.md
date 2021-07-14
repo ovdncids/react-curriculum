@@ -4,6 +4,8 @@
 https://www.npmjs.com/package/jsonwebtoken
 
 ## Backend
+* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
+
 ### 설치
 ```sh
 npm install jsonwebtoken
@@ -19,7 +21,7 @@ const privateKey = 'privateKey';
 const tokenCreate = function(request, response, member) {
   jwt.sign(member, privateKey, {
     expiresIn: '1d',
-    subject: 'signIn'
+    subject: 'login'
   }, function (error, token) {
     if (error) return response.status(403).json({
       message: error.message
@@ -31,7 +33,7 @@ const tokenCreate = function(request, response, member) {
 }
 
 const tokenCheck = function (request, response, next) {
-  const token = request.headers['x-access-token'] || request.query.token;
+  const token = request.headers['x-api-key'];
   if (!token) return response.status(403).json({
     message: 'You need to login first'
   });
@@ -55,23 +57,23 @@ routers/members.js
 ```js
 const jwtAuth = require('../middlewares/jwtAuth.js');
 
-router.post('/', function(request, response) {
+router.post('/login/', function(request, response) {
   jwtAuth.tokenCreate(request, response, request.body);
 });
 
-router.get('/', jwtAuth.tokenCheck, function(request, response) {
+router.get('/login/', jwtAuth.tokenCheck, function(request, response) {
   response.status(200).send({
     decoded: request.decoded
   });
 });
 ```
 
-### Access-Control-Allow-Headers에 x-access-token 적용 되어 있는지 확인
+### Access-Control-Allow-Headers에 x-api-key 적용 되어 있는지 확인
 index.js
 ```js
 app.use(function(request, response, next) {
   ...
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-access-token');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
 });
 ```
 
@@ -82,9 +84,9 @@ import axios from 'axios';
 const axiosDefaultsHeaders = function(token) {
   if (token) {
     localStorage.setItem('token', token);
-    axios.defaults.headers.common['x-access-token'] = token;
+    axios.defaults.headers.common['x-api-key'] = token;
   } else if (localStorage.getItem('token')) {
-    axios.defaults.headers.common['x-access-token'] = localStorage.getItem('token');
+    axios.defaults.headers.common['x-api-key'] = localStorage.getItem('token');
   }
 };
 axiosDefaultsHeaders();
@@ -106,7 +108,7 @@ axios.get('/api/v1/members').then(function(response) {
 ```js
 import axios from 'axios';
 
-axios.defaults.headers.common['x-access-token'] = '';
+axios.defaults.headers.common['x-api-key'] = '';
 localStorage.setItem('token', '');
 window.location.href = '/login';
 ```
