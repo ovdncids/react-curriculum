@@ -33,7 +33,7 @@ const tokenCreate = function(request, response, member) {
 }
 
 const tokenCheck = function (request, response, next) {
-  const token = request.headers['x-api-key'];
+  const token = request.headers['x-jwt-token'];
   if (!token) return response.status(403).json({
     message: 'You need to login first'
   });
@@ -58,6 +58,7 @@ routers/members.js
 const jwtAuth = require('../middlewares/jwtAuth.js');
 
 router.post('/login/', function(request, response) {
+  // TODO: 로그인 로직
   jwtAuth.tokenCreate(request, response, request.body);
 });
 
@@ -68,13 +69,80 @@ router.get('/login/', jwtAuth.tokenCheck, function(request, response) {
 });
 ```
 
-### Access-Control-Allow-Headers에 x-api-key 적용 되어 있는지 확인
+### Access-Control-Allow-Headers에 x-jwt-token 적용 되어 있는지 확인
 index.js
 ```js
 app.use(function(request, response, next) {
   ...
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-jwt-token');
 });
+```
+
+### Swagger 적용
+swagger.json
+```json
+"securityDefinitions": {
+  "jwtHeaderToken": {
+    "type": "apiKey",
+    "in": "header",
+    "name": "x-jwt-token"
+  }
+},
+```
+"paths": {
+```json
+"/members/login": {
+  "post": {
+    "tags": [
+      "members/login"
+    ],
+    "summary": "Login",
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "required": true,
+        "schema": {
+          "$ref": "#/definitions/member"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Login done"
+      }
+    }
+  },
+  "get": {
+    "security": [
+      {
+        "jwtHeaderToken": []
+      }
+    ],
+    "tags": [
+      "members/login"
+    ],
+    "summary": "Login check",
+    "headers": [
+      {
+        "in": "body",
+        "name": "body",
+        "required": true,
+        "schema": {
+          "$ref": "#/definitions/member"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Login checked"
+      },
+      "403": {
+        "description": "Login failed"
+      }
+    }
+  }
+},
 ```
 
 ## Frontend
@@ -83,10 +151,10 @@ import axios from 'axios';
 
 const axiosDefaultsHeaders = function(token) {
   if (token) {
-    localStorage.setItem('token', token);
-    axios.defaults.headers.common['x-api-key'] = token;
+    localStorage.setItem('x-jwt-token', token);
+    axios.defaults.headers.common['x-jwt-token'] = token;
   } else if (localStorage.getItem('token')) {
-    axios.defaults.headers.common['x-api-key'] = localStorage.getItem('token');
+    axios.defaults.headers.common['x-jwt-token'] = localStorage.getItem('x-jwt-token');
   }
 };
 axiosDefaultsHeaders();
@@ -108,7 +176,7 @@ axios.get('/api/v1/members').then(function(response) {
 ```js
 import axios from 'axios';
 
-axios.defaults.headers.common['x-api-key'] = '';
+axios.defaults.headers.common['x-jwt-token'] = '';
 localStorage.setItem('token', '');
 window.location.href = '/login';
 ```
