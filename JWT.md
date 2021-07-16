@@ -58,7 +58,7 @@ routers/members.js
 const jwtAuth = require('../middlewares/jwtAuth.js');
 
 router.post('/login/', function(request, response) {
-  // TODO: 로그인 로직
+  // TODO: 로그인 가능한 회원인지 확인
   jwtAuth.tokenCreate(request, response, request.body);
 });
 
@@ -146,6 +146,12 @@ swagger.json
 ```
 
 ## Frontend
+### 설치
+```sh
+npm install axios
+```
+
+### Login
 ```js
 import axios from 'axios';
 
@@ -165,6 +171,7 @@ const member = {
 };
 axios.post('/api/v1/members/login', member).then(function(response) {
   axiosDefaultsHeaders(response.data.token);
+  // TODO: 로그인 구현
 });
 
 axios.get('/api/v1/members/login').then(function(response) {
