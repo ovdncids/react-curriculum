@@ -184,6 +184,6 @@ axios.get('/api/v1/members/login').then(function(response) {
 import axios from 'axios';
 
 axios.defaults.headers.common['x-jwt-token'] = '';
-localStorage.setItem('x-jwt-token', '');
+localStorage.removeItem('x-jwt-token', '');
 window.location.href = '/login';
 ```
