@@ -246,7 +246,7 @@ src/components/contents/Members.js
 ```
 
 ## 스토어 액션 만들기
-dispatch로 리덕스의 state 값을 수정 하기 전에 실행될 함수를 사용하게 해준다. 주로 통신을 컴포넌트에서 빼기 위해 사용한다.
+dispatch로 리덕스의 state 값을 수정 하기 전에 호출될 함수를 사용하게 해준다. 주로 통신을 컴포넌트에서 빼기 위해 사용한다.
 
 ### Redux Thunk VS Redux Saga
 Redux Thunk: 설정도 간단하고 쉽게 만들 수 있다.
