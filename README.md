@@ -229,9 +229,6 @@ a:link, a:visited {
 a.active {
   color: white;
 }
-hr {
-  display: none;
-}
 h1, footer, .nav ul {
   padding: 0.5rem;
 }
@@ -239,9 +236,8 @@ h4, li {
   margin: 0.5rem 0;
 }
 hr {
+  display: none;
   margin: 1rem 0;
-}
-hr {
   border: 0;
   border-top: 1px solid #ccc;
 }
