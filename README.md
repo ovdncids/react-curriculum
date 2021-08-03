@@ -358,12 +358,16 @@ import Search from './components/contents/Search.js';
 ```js
 <BrowserRouter>
   <Switch>
-    <Route exact={true} path="/members" render={props => <Members {...props} testProps={true} />} />
-    <Route exact={true} path="/search" component={Search} />
+    <Route exact={true} path="/members" component={Members} />
+    <Route exact={true} path="/search" component={props => <Search {...props} testProps={true} />} />
     <Redirect to={{pathname: "/members"}} />
   </Switch>
 </BrowserRouter>
 ```
+<!--
+<Route exact={true} path="/members" render={props => <Members {...props} testProps={true} />} />
+render는 render={Members} 이렇게 사용할 수 없다.
+-->
 
 src/components/contents/Members.js
 ```js
