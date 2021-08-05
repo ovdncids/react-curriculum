@@ -608,13 +608,21 @@ useEffect(() => {
 - <tr>
 -   <td>홍길동</td>
 -   <td>20</td>
+-   <td>
+-     <button>Update</button>
+-     <button>Delete</button>
+-   </td>
+- </tr>
 ```
 ```js
 {members.map((member, index) => (
   <tr key={index}>
     <td>{member.name}</td>
     <td>{member.age}</td>
-    ...
+      <td>
+        <button>Update</button>
+        <button>Delete</button>
+      </td>
   </tr>
 ))}
 ```
