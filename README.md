@@ -548,7 +548,7 @@ export default inject('membersStore')(observer(Members));
 
 **useProxies 설명**
 
-src/index.js (enforceActions 주석 풀기)
+src/stores/MembersStore.js (enforceActions 주석 풀기)
 ```js
 enforceActions: 'never'
 ```
