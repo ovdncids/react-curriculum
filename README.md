@@ -619,10 +619,10 @@ useEffect(() => {
   <tr key={index}>
     <td>{member.name}</td>
     <td>{member.age}</td>
-      <td>
-        <button>Update</button>
-        <button>Delete</button>
-      </td>
+    <td>
+      <button>Update</button>
+      <button>Delete</button>
+    </td>
   </tr>
 ))}
 ```
