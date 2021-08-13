@@ -881,8 +881,8 @@ function Search(props) {
   const { members } = membersStore;
   const [ q, setQ ] = useState('');
   const searchRead = (event) => {
-    searchStore.searchRead(q);
     event.preventDefault();
+    searchStore.searchRead(q);
   };
   useEffect(() => {
     searchStore.searchRead('');
@@ -933,7 +933,7 @@ src/components/contents/Search.js
 - const { membersStore, searchStore } = props;
 ```
 ```js
-const url = new URL(window.location.href);
+const url = new URL(window.location);
 const spSearch = url.searchParams.get('q') || '';
 const { membersStore, searchStore, history } = props;
 ```
