@@ -933,8 +933,8 @@ src/components/contents/Search.js
 - const { membersStore, searchStore } = props;
 ```
 ```js
-const url = new URL(window.location);
-const spSearch = url.searchParams.get('q') || '';
+const searchParams = new URLSearchParams(props.location.search);
+const spSearch = searchParams.get('q') || '';
 const { membersStore, searchStore, history } = props;
 ```
 ```diff
