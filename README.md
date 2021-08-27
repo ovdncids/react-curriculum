@@ -996,3 +996,8 @@ import 'react-app-polyfill/stable';
 
 # 수고 하셨습니다.
 * [데모](https://ovdncids.github.io/react-curriculum/demo)
+
+<!--
+예전 라이프 사이클(Life cycle)
+https://coding-hyeok.tistory.com/5
+-->
