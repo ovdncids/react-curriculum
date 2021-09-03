@@ -393,7 +393,7 @@ membersUpdate: payload => (dispatch) => {
 - dispatch(actionsMembers.membersCreate(payload));
 ```
 ```js
-axios.patch('http://localhost:3100/api/v1/members', payload).then((response) => {
+axios.patch('http://localhost:3100/api/v1/members/' + payload.index, payload.member).then((response) => {
   console.log('Done membersUpdate', response);
   (actions.membersRead())(dispatch);
 }).catch((error) => {
@@ -636,7 +636,7 @@ yield takeEvery(membersUpdate, function* (action) {
 ```
 ```js
 try {
-  const response = yield call(() => axios.patch('http://localhost:3100/api/v1/members', action.payload));
+  const response = yield call(() => axios.patch('http://localhost:3100/api/v1/members/' + action.payload.index, action.payload.member));
   console.log('Done membersUpdate', response);
   yield membersRead$();
 } catch(error) {
