@@ -386,7 +386,7 @@ export default Members;
 
 src/components/contents/Search.js (동일)
 
-**render={props ...} 풀어서 설명**
+**component={props ...} 풀어서 설명**
 
 **주소 창에서 router 바꾸어 보기**
 
