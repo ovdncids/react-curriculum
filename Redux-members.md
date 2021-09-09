@@ -160,6 +160,7 @@ import { useEffect } from 'react';
 function Members() {
   ...
   const members = JSON.parse(JSON.stringify(useSelector(stateMembers).members));
+  // const members = Object.assign([], useSelector(stateMembers).members);
   useEffect(() => {
     dispatch(actionsMembers.memberSet({
       name: '',
@@ -190,6 +191,11 @@ function Members() {
   </tr>
 ))}
 ```
+<!--
+useState에서 members를 만들는 경우에는
+const members = Object.assign([], useSelector(stateMembers).members);
+사용해도 된다.
+-->
 
 ### Update
 src/store/members/membersSlice.js
