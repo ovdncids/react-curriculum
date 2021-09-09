@@ -178,7 +178,8 @@ function Members() {
 -   </td>
 - </tr>
 ```
-```js{members.map((member, index) => (
+```js
+{members.map((member, index) => (
   <tr key={index}>
     <td>{member.name}</td>
     <td>{member.age}</td>
