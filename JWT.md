@@ -183,7 +183,7 @@ axios.get('/api/v1/members/login').then(function(response) {
 ```js
 import axios from 'axios';
 
-axios.defaults.headers.common['x-jwt-token'] = '';
-localStorage.removeItem('x-jwt-token', '');
+axios.defaults.headers.common['x-jwt-token'] = null;
+localStorage.removeItem('x-jwt-token');
 window.location.href = '/login';
 ```
