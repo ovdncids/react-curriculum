@@ -172,6 +172,7 @@ const member = {
 axios.post('/api/v1/members/login', member).then(function(response) {
   axiosDefaultsHeaders(response.data.token);
   // TODO: 로그인 구현
+  // Store의 state값 수정 (token: localStorage.getItem('x-jwt-token'))
 });
 
 axios.get('/api/v1/members/login').then(function(response) {
@@ -186,4 +187,5 @@ import axios from 'axios';
 axios.defaults.headers.common['x-jwt-token'] = null;
 localStorage.removeItem('x-jwt-token');
 window.location.href = '/login';
+// Store의 state값 수정 (token: null)
 ```
