@@ -187,5 +187,5 @@ import axios from 'axios';
 axios.defaults.headers.common['x-jwt-token'] = null;
 localStorage.removeItem('x-jwt-token');
 window.location.href = '/login';
-// Store의 state값 수정 (token: null)
+// 또는 Store의 state값 수정 (token: null)
 ```
