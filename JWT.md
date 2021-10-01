@@ -1,7 +1,8 @@
 # JSON Web Token(JWT)
 서버와 클라이언트 통신에서 주로 로그인에 사용되는 보안 토큰
 
-https://www.npmjs.com/package/jsonwebtoken
+* https://www.npmjs.com/package/jsonwebtoken
+* https://jwt.io
 
 ## Backend
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
