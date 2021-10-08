@@ -91,6 +91,7 @@ https://github.com/facebook/create-react-app
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
 # npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
 npx create-react-app react-study
+cd react-study
 
 # VSCode로 해당 디렉토리 열기
 npm run build
