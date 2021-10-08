@@ -92,6 +92,7 @@ https://github.com/facebook/create-react-app
 # npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
 npx create-react-app react-study
 cd react-study
+code .
 
 # VSCode로 해당 디렉토리 열기
 npm run build
