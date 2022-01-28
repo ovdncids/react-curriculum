@@ -347,7 +347,7 @@ npm install react-router-dom
 ### Router 만들기
 src/App.js
 ```js
-import { BrowserRouter, Switch, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Members from './components/contents/Members.js';
 import Search from './components/contents/Search.js';
 ```
@@ -359,11 +359,11 @@ import Search from './components/contents/Search.js';
 ```
 ```js
 <BrowserRouter>
-  <Routes>
-    <Route path="/members" element={<Members />} />
-    <Route path="/search" element={<Search />} />
-    <Route path="*" element={<Navigate replace to="/members" />} />
-  </Routes>
+  <Switch>
+    <Route exact={true} path="/members" component={Members} />
+    <Route exact={true} path="/search" component={props => <Search {...props} testProps={true} />} />
+    <Redirect to={{pathname: "/members"}} />
+  </Switch>
 </BrowserRouter>
 ```
 <!--
