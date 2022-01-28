@@ -347,7 +347,7 @@ npm install react-router-dom
 ### Router 만들기
 src/App.js
 ```js
-import { BrowserRouter, Switch, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Members from './components/contents/Members.js';
 import Search from './components/contents/Search.js';
 ```
@@ -388,16 +388,14 @@ export default Members;
 
 src/components/contents/Search.js (동일)
 
-**component={props ...} 풀어서 설명**
-
 **주소 창에서 router 바꾸어 보기**
 
 src/components/Nav.js
 ```js
 import { NavLink } from 'react-router-dom';
 
-<li><h2><NavLink to="members" activeClassName='active'>Members</NavLink></h2></li>
-<li><h2><NavLink to="search" activeClassName='active'>Search</NavLink></h2></li>
+<li><h2><NavLink to="members" className={({ isActive }) => isActive ? 'active' : ''}>Members</NavLink></h2></li>
+<li><h2><NavLink to="search" className={({ isActive }) => isActive ? 'active' : ''}>Search</NavLink></h2></li>
 ```
 **You should not use `<Link>` outside a `<Router>` 설명**
 
@@ -417,7 +415,6 @@ function A1(props) {
 <!-- **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함 -->
 
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
-* [추가 패턴(useHistory)](https://web422.ca/notes/react-routing)
 
 ## Members Store 만들기
 
