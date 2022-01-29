@@ -941,6 +941,8 @@ function Search(props) {
 - searchStore.searchRead(q);
 + navigate(`/search?q=${q}`);
 ```
+* 검색 해보기
+
 ```diff
 - useEffect(() => {
 -   searchStore.searchRead('');
