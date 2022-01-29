@@ -925,16 +925,20 @@ export default inject('membersStore', 'searchStore')(observer(Search));
 ## Search Compenent 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
-- const { membersStore, searchStore } = props;
+- function Search(props) {
 ```
 ```js
-const searchParams = new URLSearchParams(props.location.search);
-const spSearch = searchParams.get('q') || '';
-const { membersStore, searchStore, history } = props;
+import { useLocation, useNavigate } from 'react-router-dom';
+
+function Search(props) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const spSearch = searchParams.get('q') || '';
 ```
 ```diff
 - searchStore.searchRead(q);
-+ history.push(`/search?q=${q}`);
++ navigate(`/search?q=${q}`);
 ```
 ```diff
 - useEffect(() => {
