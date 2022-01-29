@@ -306,7 +306,7 @@ import Footer from './components/Footer.js';
 
 src/components/Header.js
 ```js
-function Header() {
+function Header(props) {
   return (
     <header>
       <h1>React study</h1>
@@ -335,6 +335,7 @@ src/App.js
 - <footer>Copyright</footer>
 + <Footer></Footer>
 ```
+* `props`: 설명, `Properties`의 줄임말
 
 ## React Router DOM
 https://reacttraining.com/react-router
