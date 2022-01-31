@@ -306,7 +306,7 @@ import Footer from './components/Footer.js';
 
 src/components/Header.js
 ```js
-function Header() {
+function Header(props) {
   return (
     <header>
       <h1>React study</h1>
@@ -335,6 +335,7 @@ src/App.js
 - <footer>Copyright</footer>
 + <Footer></Footer>
 ```
+* `props`: 설명, `Properties`의 줄임말
 
 ## React Router DOM
 https://reacttraining.com/react-router
@@ -347,7 +348,7 @@ npm install react-router-dom
 ### Router 만들기
 src/App.js
 ```js
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Members from './components/contents/Members.js';
 import Search from './components/contents/Search.js';
 ```
@@ -359,11 +360,11 @@ import Search from './components/contents/Search.js';
 ```
 ```js
 <BrowserRouter>
-  <Switch>
-    <Route exact={true} path="/members" component={Members} />
-    <Route exact={true} path="/search" component={props => <Search {...props} testProps={true} />} />
-    <Redirect to={{pathname: "/members"}} />
-  </Switch>
+  <Routes>
+    <Route path="/members" element={<Members />} />
+    <Route path="/search" element={<Search />} />
+    <Route path="*" element={<Navigate replace to="/members" />} />
+  </Routes>
 </BrowserRouter>
 ```
 <!--
@@ -388,16 +389,14 @@ export default Members;
 
 src/components/contents/Search.js (동일)
 
-**component={props ...} 풀어서 설명**
-
 **주소 창에서 router 바꾸어 보기**
 
 src/components/Nav.js
 ```js
 import { NavLink } from 'react-router-dom';
 
-<li><h2><NavLink to="members" activeClassName='active'>Members</NavLink></h2></li>
-<li><h2><NavLink to="search" activeClassName='active'>Search</NavLink></h2></li>
+<li><h2><NavLink to="members" className={({ isActive }) => isActive ? 'active' : ''}>Members</NavLink></h2></li>
+<li><h2><NavLink to="search" className={({ isActive }) => isActive ? 'active' : ''}>Search</NavLink></h2></li>
 ```
 **You should not use `<Link>` outside a `<Router>` 설명**
 
@@ -417,7 +416,6 @@ function A1(props) {
 <!-- **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함 -->
 
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
-* [추가 패턴(useHistory)](https://web422.ca/notes/react-routing)
 
 ## Members Store 만들기
 
@@ -928,17 +926,23 @@ export default inject('membersStore', 'searchStore')(observer(Search));
 ## Search Compenent 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
-- const { membersStore, searchStore } = props;
+- function Search(props) {
 ```
 ```js
-const searchParams = new URLSearchParams(props.location.search);
-const spSearch = searchParams.get('q') || '';
-const { membersStore, searchStore, history } = props;
+import { useLocation, useNavigate } from 'react-router-dom';
+
+function Search(props) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const spSearch = searchParams.get('q') || '';
 ```
 ```diff
 - searchStore.searchRead(q);
-+ history.push(`/search?q=${q}`);
++ navigate(`/search?q=${q}`);
 ```
+* 검색 해보기
+
 ```diff
 - useEffect(() => {
 -   searchStore.searchRead('');
