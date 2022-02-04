@@ -106,3 +106,84 @@ function Members() {
 
 export default Members;
 ```
+
+## Members Store CRUD
+### Read
+src/components/contents/Members.js
+```diff
+- <tr>
+-   <td>홍길동</td>
+-   <td>20</td>
+-   <td>
+-     <button>Update</button>
+-     <button>Delete</button>
+-   </td>
+- </tr>
+```
+```js
+{members.map((member, index) => (
+  <tr key={index}>
+    <td>{member.name}</td>
+    <td>{member.age}</td>
+    <td>
+      <button>Update</button>
+      <button>Delete</button>
+    </td>
+  </tr>
+))}
+```
+
+### Delete
+src/components/contents/Members.js
+```diff
+- <button>Delete</button>
+```
+```js
+<button onClick={() => {
+  members.splice(index, 1);
+  setMembers(members);
+}}>Delete</button>
+```
+* `Delete` 버튼 눌러 보기
+
+```diff
+- const [members, setMembers] = useRecoilState(membersState);
++ const [[...members], setMembers] = useRecoilState(membersState);
+```
+* `전개 구조` 설명 하기
+
+### Update
+src/components/contents/Members.js
+```diff
+- <td>{member.name}</td>
+- <td>{member.age}</td>
+```
+```js
+<td>
+  <input
+    type="text" placeholder="Name" value={member.name}
+    onChange={event => {
+      member.name = event.target.value;
+      members[index] = member;
+      setMembers(members);
+    }}
+  />
+</td>
+<td>
+  <input
+    type="text" placeholder="Age" value={member.age}
+    onChange={event => {
+      member.age = event.target.value;
+      members[index] = member;
+      setMembers(members);
+    }}
+  />
+</td>
+```
+* `Input box` 수정 해보기
+
+```diff
+- {members.map((member, index) => (
++ {members.map(({...member}, index) => (
+```
+* `전개 구조` 설명 하기
