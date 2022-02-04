@@ -686,7 +686,6 @@ src/components/contents/Members.js
 <button onClick={() => membersStore.membersDelete(index)}>Delete</button>
 ```
 
-
 ## Backend Server
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
 ```sh
