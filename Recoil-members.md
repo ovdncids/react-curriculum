@@ -1,4 +1,5 @@
 # Recoil members
+* https://recoiljs.org
 
 ## Members Store 만들기
 
@@ -108,6 +109,7 @@ function Members() {
 
 export default Members;
 ```
+* `console.log(members);` 확인 해보기
 
 ## Members Store CRUD
 ### Read
@@ -282,10 +284,12 @@ export const membersRead = selector({
 src/components/contents/Members.js
 ```diff
 - import { useRecoilState } from 'recoil';
+- import { memberState, membersState } from '../../stores/members';
 ```
 ```js
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { memberState, membersState, membersRead } from '../../stores/members';
 ```
 ```js
 const _membersRead = useRecoilValue(membersRead);
@@ -293,6 +297,7 @@ useEffect(() => {
   setMembers(_membersRead);
 }, [setMembers, _membersRead]);
 ```
+* 확인 해보기
 
 index.js
 ```diff
@@ -306,10 +311,6 @@ index.js
 
 ### Create
 src/stores/MembersStore.js
-```diff
-- import { useRecoilState, useRecoilValue } from 'recoil';
-+ import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
-```
 ```js
 export const membersCreate = ({set}) => async (member) => {
   await membersService.create(member);
@@ -319,6 +320,14 @@ export const membersCreate = ({set}) => async (member) => {
 ```
 
 src/components/contents/Members.js
+```diff
+- import { useRecoilState, useRecoilValue } from 'recoil';
+- import { memberState, membersState, membersRead } from '../../stores/members';
+```
+```js
+import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
+import { memberState, membersState, membersRead, membersCreate } from '../../stores/members';
+```
 ```js
 const _membersCreate = useRecoilCallback(membersCreate);
 ```
@@ -346,6 +355,10 @@ export const membersDelete = ({set}) => async (index) => {
 ```
 
 src/components/contents/Members.js
+```diff
+- import { memberState, membersState, membersRead, membersCreate } from '../../stores/members';
++ import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/members';
+```
 ```js
 const _membersDelete = useRecoilCallback(membersDelete);
 ```
@@ -372,6 +385,10 @@ export const membersUpdate = ({set}) => async (index, member) => {
 ```
 
 src/components/contents/Members.js
+```diff
+- import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/members';
++ import { memberState, membersState, membersRead, membersCreate, membersDelete, membersUpdate } from '../../stores/members';
+```
 ```js
 const _membersUpdate = useRecoilCallback(membersUpdate);
 ```
