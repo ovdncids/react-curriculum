@@ -745,8 +745,8 @@ function Search() {
   const members = useSelector(stateMembers).members;
   const [ q, setQ ] = useState('');
   const searchRead = (event) => {
-    dispatch(actionsSearch.searchRead(q));
     event.preventDefault();
+    dispatch(actionsSearch.searchRead(q));
   };
   useEffect(() => {
     dispatch(actionsSearch.searchRead(''));
