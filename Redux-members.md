@@ -78,7 +78,6 @@ import store from './store/index.js';
 </Provider>
 ```
 
-
 ## Members Conpenent Store inject
 src/components/contents/Members.js
 ```js
@@ -526,6 +525,10 @@ const actions = {
 
 export default actions;
 ```
+* `function*`: `Generator function` 설명
+* https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*
+* `put`: 리듀서의 action을 호출함
+* `takeEvery`: 컴포넌트에서 호출할 수 있는 `미들웨어` 함수 등록
 
 ## Redux Saga 등록
 src/store/index.js (덮어 씌우기)
@@ -794,14 +797,17 @@ src/components/contents/Search.js
 - function Search() {
 ```
 ```js
-function Search(props) {
-  const url = new URL(window.location.href);
-  const spSearch = url.searchParams.get('q') || '';
-  const { history } = props;
+import { useLocation, useNavigate } from 'react-router-dom';
+
+function Search() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const spSearch = searchParams.get('q') || '';
 ```
 ```diff
 - dispatch(actionsSearch.searchRead(q));
-+ history.push(`/search?q=${q}`);
++ navigate(`/search?q=${q}`);
 ```
 ```diff
 - useEffect(() => {
@@ -810,8 +816,8 @@ function Search(props) {
 ```
 ```js
 useEffect(() => {
-  setQ(spSearch);
   dispatch(actionsSearch.searchRead(spSearch));
+  setQ(spSearch);
 }, [dispatch, spSearch]);
 ```
 
