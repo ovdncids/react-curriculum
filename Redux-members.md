@@ -344,7 +344,7 @@ src/store/common.js
 ```js
 export const axiosError = function(error) {
   console.error(error.response || error.message || error)
-}
+};
 ```
 
 ### Create
@@ -526,7 +526,7 @@ const actions = {
 export default actions;
 ```
 * `function*`: `Generator function` 설명
-* https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*
+* [function*](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*)
 * `put`: 리듀서의 action을 호출함
 * `takeEvery`: 컴포넌트에서 호출할 수 있는 `미들웨어` 함수 등록
 
@@ -584,7 +584,7 @@ src/store/common.js
 ```js
 export const axiosError = function(error) {
   console.error(error.response || error.message || error)
-}
+};
 ```
 
 ### Create
