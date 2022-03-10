@@ -90,6 +90,8 @@ https://github.com/facebook/create-react-app
 ```sh
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
 # npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
+# npm install -g create-react-app
+# create-react-app react-study
 npx create-react-app react-study
 cd react-study
 code .
@@ -626,6 +628,13 @@ useEffect(() => {
   </tr>
 ))}
 ```
+<!--
+#### members가 object인 경우
+```diff
+- {members.map((member, index) => (
++ {Object.entries(members).map(([index, member]) => (
+```
+-->
 
 <!-- Hook exhaustive-deps 경고
 https://www.npmjs.com/package/eslint-plugin-react-hooks#installation
