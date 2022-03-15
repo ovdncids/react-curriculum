@@ -50,6 +50,7 @@ import { memberState, membersState } from '../../stores/members';
 function Members() {
   const [member, setMember] = useRecoilState(memberState);
   const [members, setMembers] = useRecoilState(membersState);
+  console.log(member, members);
   return (
     <div>
       <h3>Members</h3>
@@ -79,29 +80,9 @@ function Members() {
       <hr className="d-block" />
       <div>
         <h4>Create</h4>
-        <input
-          type="text" placeholder="Name" value={member.name}
-          onChange={event => {
-            setMember({
-              ...member,
-              name: event.target.value
-            });
-          }}
-        />
-        <input
-          type="text" placeholder="Age" value={member.age}
-          onChange={event => {
-            setMember({
-              ...member,
-              age: event.target.value
-            });
-          }}
-        />
-        <button onClick={() => {
-          setMembers(members.concat({
-            ...member
-          }))
-        }}>Create</button>
+        <input type="text" placeholder="Name" />
+        <input type="text" placeholder="Age" />
+        <button>Create</button>
       </div>
     </div>
   )
@@ -109,9 +90,36 @@ function Members() {
 
 export default Members;
 ```
-* `console.log(members);` 확인 해보기
 
 ## Members Store CRUD
+### Create
+src/components/contents/Members.js
+```js
+<input
+  type="text" placeholder="Name" value={member.name}
+  onChange={event => {
+    setMember({
+      ...member,
+      name: event.target.value
+    });
+  }}
+/>
+<input
+  type="text" placeholder="Age" value={member.age}
+  onChange={event => {
+    setMember({
+      ...member,
+      age: event.target.value
+    });
+  }}
+/>
+<button onClick={() => {
+  setMembers(members.concat({
+    ...member
+  }))
+}}>Create</button>
+```
+
 ### Read
 src/components/contents/Members.js
 ```diff
