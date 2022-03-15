@@ -491,6 +491,7 @@ src/components/contents/Members.js
 import { inject, observer } from 'mobx-react';
 
 function Members(props) {
+  console.log(props);
   const { membersStore } = props;
   const { member } = membersStore;
   return (
