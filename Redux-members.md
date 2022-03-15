@@ -35,12 +35,6 @@ export const membersSlice = createSlice({
     }
   },
   reducers: {
-    memberSet: (state, action) => {
-      state.member = action.payload;
-    },
-    membersCreate: (state, action) => {
-      state.members.push(action.payload);
-    }
   }
 });
 
@@ -78,7 +72,7 @@ import store from './store/index.js';
 </Provider>
 ```
 
-## Members Conpenent Store inject
+### Members Conpenent Store inject
 src/components/contents/Members.js
 ```js
 import { useSelector, useDispatch } from 'react-redux';
@@ -87,6 +81,7 @@ import { stateMembers, actionsMembers } from 'store/members/membersSlice.js';
 function Members() {
   const dispatch = useDispatch();
   const member = {...useSelector(stateMembers).member};
+  console.log(member);
   return (
     <div>
       <h3>Members</h3>
@@ -116,15 +111,9 @@ function Members() {
       <hr className="d-block" />
       <div>
         <h4>Create</h4>
-        <input
-          type="text" placeholder="Name" value={member.name}
-          onChange={event => {member.name = event.target.value; dispatch(actionsMembers.memberSet(member))}}
-        />
-        <input
-          type="text" placeholder="Age" value={member.age}
-          onChange={event => {member.age = event.target.value; dispatch(actionsMembers.memberSet(member))}}
-        />
-        <button onClick={() => dispatch(actionsMembers.membersCreate(member))}>Create</button>
+        <input type="text" placeholder="Name" />
+        <input type="text" placeholder="Age" />
+        <button>Create</button>
       </div>
     </div>
   )
@@ -138,6 +127,32 @@ export default Members;
 https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
 
 ## Members Store CRUD
+### Create
+src/store/members/membersSlice.js
+```js
+reducers: {
+  memberSet: (state, action) => {
+    state.member = action.payload;
+  },
+  membersCreate: (state, action) => {
+    state.members.push(action.payload);
+  }
+}
+```
+
+src/components/contents/Members.js
+```js
+<input
+  type="text" placeholder="Name" value={member.name}
+  onChange={event => {member.name = event.target.value; dispatch(actionsMembers.memberSet(member))}}
+/>
+<input
+  type="text" placeholder="Age" value={member.age}
+  onChange={event => {member.age = event.target.value; dispatch(actionsMembers.memberSet(member))}}
+/>
+<button onClick={() => dispatch(actionsMembers.membersCreate(member))}>Create</button>
+```
+
 ### Read
 src/store/members/membersSlice.js
 ```js
