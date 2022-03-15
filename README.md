@@ -574,7 +574,7 @@ membersCreate(member) {
     name: member.name,
     age: member.age
   });
-  console.log('Done membersCreate', members);
+  console.log('Done membersCreate', this.members);
 }
 ```
 
@@ -744,7 +744,7 @@ membersCreate(member) {
 -   name: member.name,
 -   age: member.age
 - })
-- console.log('Done membersCreate', members);
+- console.log('Done membersCreate', this.members);
 ```
 ```js
 axios.post('http://localhost:3100/api/v1/members', member).then((response) => {
