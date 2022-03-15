@@ -569,12 +569,12 @@ debugger; // eslint-disable-line no-debugger
 ### Create
 src/stores/MembersStore.js
 ```js
-membersCreate() {
+membersCreate(member) {
   this.members.push({
-    name: this.member.name,
-    age: this.member.age
+    name: member.name,
+    age: member.age
   });
-  console.log('Done membersCreate', this.members);
+  console.log('Done membersCreate', members);
 }
 ```
 
@@ -588,7 +588,7 @@ src/components/contents/Members.js
   type="text" placeholder="Age" value={member.age}
   onChange={event => {member.age = event.target.value}}
 />
-<button onClick={() => membersStore.membersCreate()}>Create</button>
+<button onClick={() => membersStore.membersCreate(member)}>Create</button>
 ```
 
 ### Read
@@ -739,15 +739,15 @@ import axios from 'axios';
 import { axiosError } from './common.js';
 ```
 ```diff
-membersCreate() {
+membersCreate(member) {
 - this.members.push({
--   name: this.member.name,
--   age: this.member.age
+-   name: member.name,
+-   age: member.age
 - })
-- console.log('Done membersCreate', this.members);
+- console.log('Done membersCreate', members);
 ```
 ```js
-axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
+axios.post('http://localhost:3100/api/v1/members', member).then((response) => {
   console.log('Done membersCreate', response);
   this.membersRead();
 }).catch((error) => {
