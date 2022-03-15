@@ -451,14 +451,6 @@ export default class MembersStore {
     name: '',
     age: ''
   };
-
-  membersCreate() {
-    this.members.push({
-      name: this.member.name,
-      age: this.member.age
-    });
-    console.log('Done membersCreate', this.members);
-  }
 }
 
 export const membersStore = new MembersStore();
@@ -493,7 +485,7 @@ import { membersStore } from './stores/MembersStore.js';
 </Provider>
 ```
 
-## Members Compenent Store inject
+### Members Compenent Store inject
 src/components/contents/Members.js
 ```js
 import { inject, observer } from 'mobx-react';
@@ -530,15 +522,9 @@ function Members(props) {
       <hr className="d-block" />
       <div>
         <h4>Create</h4>
-        <input
-          type="text" placeholder="Name" value={member.name}
-          onChange={event => {member.name = event.target.value}}
-        />
-        <input
-          type="text" placeholder="Age" value={member.age}
-          onChange={event => {member.age = event.target.value}}
-        />
-        <button onClick={() => membersStore.membersCreate()}>Create</button>
+        <input type="text" placeholder="Name" />
+        <input type="text" placeholder="Age" />
+        <button>Create</button>
       </div>
     </div>
   )
@@ -579,6 +565,31 @@ debugger; // eslint-disable-line no-debugger
 ```
 
 ## Members Store CRUD
+### Create
+src/stores/MembersStore.js
+```js
+membersCreate() {
+  this.members.push({
+    name: this.member.name,
+    age: this.member.age
+  });
+  console.log('Done membersCreate', this.members);
+}
+```
+
+src/components/contents/Members.js
+```js
+<input
+  type="text" placeholder="Name" value={member.name}
+  onChange={event => {member.name = event.target.value}}
+/>
+<input
+  type="text" placeholder="Age" value={member.age}
+  onChange={event => {member.age = event.target.value}}
+/>
+<button onClick={() => membersStore.membersCreate()}>Create</button>
+```
+
 ### Read
 src/stores/MembersStore.js
 ```js
