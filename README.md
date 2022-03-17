@@ -890,17 +890,12 @@ searchStore={searchStore}
 ### Search Compenent Store inject
 src/components/contents/Search.js
 ```js
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
 
 function Search(props) {
   const { membersStore, searchStore } = props;
   const { members } = membersStore;
-  const [ q, setQ ] = useState('');
-  const searchRead = (event) => {
-    event.preventDefault();
-    searchStore.searchRead(q);
-  };
   useEffect(() => {
     searchStore.searchRead('');
   }, [searchStore]);
@@ -909,12 +904,8 @@ function Search(props) {
       <h3>Search</h3>
       <hr className="d-block" />
       <div>
-        <form onSubmit={(event) => {searchRead(event)}}>
-          <input
-            type="text" placeholder="Search"
-            value={q}
-            onChange={event => {setQ(event.target.value)}}
-          />
+        <form>
+          <input type="text" placeholder="Search" />
           <button>Search</button>
         </form>
       </div>
@@ -942,6 +933,36 @@ function Search(props) {
 }
 
 export default inject('membersStore', 'searchStore')(observer(Search));
+```
+
+## Search Component에서만 사용 가능한 state값 적용
+src/components/contents/Search.js
+```diff
+- import { useEffect } from 'react';
++ import { useState, useEffect } from 'react';
+```
+```js
+const [ q, setQ ] = useState('');
+const searchRead = (event) => {
+  event.preventDefault();
+  searchStore.searchRead(q);
+};
+```
+```diff
+- <form>
+-   <input type="text" placeholder="Search" />
+-   <button>Search</button>
+- </form>
+```
+```js
+<form onSubmit={(event) => {searchRead(event)}}>
+  <input
+    type="text" placeholder="Search"
+    value={q}
+    onChange={event => {setQ(event.target.value)}}
+  />
+  <button>Search</button>
+</form>
 ```
 
 ## Search Compenent 쿼리스트링 변경과 새로고침 적용
