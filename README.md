@@ -962,7 +962,7 @@ function Search(props) {
 - searchStore.searchRead(q);
 + navigate(`/search?q=${q}`);
 ```
-* 검색 해보기
+* `검색`, `뒤로가기` 해보기
 
 ```diff
 - useEffect(() => {
