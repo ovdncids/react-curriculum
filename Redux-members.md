@@ -750,7 +750,7 @@ import { takeEverySearch } from './search/searchActions.js';
 ### Search Conpenent Store inject
 src/components/contents/Search.js
 ```js
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { stateMembers } from 'store/members/membersSlice.js';
 import actionsSearch from 'store/search/searchActions.js';
@@ -758,11 +758,6 @@ import actionsSearch from 'store/search/searchActions.js';
 function Search() {
   const dispatch = useDispatch();
   const members = useSelector(stateMembers).members;
-  const [ q, setQ ] = useState('');
-  const searchRead = (event) => {
-    event.preventDefault();
-    dispatch(actionsSearch.searchRead(q));
-  };
   useEffect(() => {
     dispatch(actionsSearch.searchRead(''));
   }, [dispatch]);
@@ -771,12 +766,8 @@ function Search() {
       <h3>Search</h3>
       <hr className="d-block" />
       <div>
-        <form onSubmit={(event) => {searchRead(event)}}>
-          <input
-            type="text" placeholder="Search"
-            value={q}
-            onChange={event => {setQ(event.target.value)}}
-          />
+        <form>
+          <input type="text" placeholder="Search" />
           <button>Search</button>
         </form>
       </div>
@@ -806,6 +797,36 @@ function Search() {
 export default Search;
 ```
 
+## Search Component에서만 사용 가능한 state값 적용
+src/components/contents/Search.js
+```diff
+- import { useEffect } from 'react';
++ import { useState, useEffect } from 'react';
+```
+```js
+const [ q, setQ ] = useState('');
+const searchRead = (event) => {
+  event.preventDefault();
+  dispatch(actionsSearch.searchRead(q));
+};
+```
+```diff
+- <form>
+-   <input type="text" placeholder="Search" />
+-   <button>Search</button>
+- </form>
+```
+```js
+<form onSubmit={(event) => {searchRead(event)}}>
+  <input
+    type="text" placeholder="Search"
+    value={q}
+    onChange={event => {setQ(event.target.value)}}
+  />
+  <button>Search</button>
+</form>
+```
+
 ### Search Conpenent 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
@@ -824,6 +845,8 @@ function Search() {
 - dispatch(actionsSearch.searchRead(q));
 + navigate(`/search?q=${q}`);
 ```
+* `검색`, `뒤로가기` 해보기
+
 ```diff
 - useEffect(() => {
 -   dispatch(actionsSearch.searchRead(''));
