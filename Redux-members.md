@@ -840,6 +840,7 @@ function Search() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const spSearch = searchParams.get('q') || '';
+  console.log(spSearch);
 ```
 ```diff
 - dispatch(actionsSearch.searchRead(q));
@@ -858,6 +859,14 @@ useEffect(() => {
   setQ(spSearch);
 }, [dispatch, spSearch]);
 ```
+* ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
+* <details><summary>정답</summary>
+
+  ```diff
+  - const [ q, setQ ] = useState('');
+  + const [ q, setQ ] = useState(spSearch);
+  ```
+</details>
 
 ## Proxy 설정
 package.json
