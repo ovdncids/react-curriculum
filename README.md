@@ -978,6 +978,7 @@ function Search(props) {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const spSearch = searchParams.get('q') || '';
+  console.log(spSearch);
 ```
 ```diff
 - searchStore.searchRead(q);
