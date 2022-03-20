@@ -839,8 +839,8 @@ function Search() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-  const spSearch = searchParams.get('q') || '';
-  console.log(spSearch);
+  const spQ = searchParams.get('q') || '';
+  console.log(spQ);
 ```
 ```diff
 - dispatch(actionsSearch.searchRead(q));
@@ -855,16 +855,16 @@ function Search() {
 ```
 ```js
 useEffect(() => {
-  dispatch(actionsSearch.searchRead(spSearch));
-  setQ(spSearch);
-}, [dispatch, spSearch]);
+  dispatch(actionsSearch.searchRead(spQ));
+  setQ(spQ);
+}, [dispatch, spQ]);
 ```
 * ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
 * <details><summary>정답</summary>
 
   ```diff
   - const [ q, setQ ] = useState('');
-  + const [ q, setQ ] = useState(spSearch);
+  + const [ q, setQ ] = useState(spQ);
   ```
 </details>
 
