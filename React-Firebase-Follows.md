@@ -105,7 +105,7 @@ function Follows(props) {
         <button onClick={() => followsStore.followsCreate()}>Follow</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default inject('membersStore', 'followsStore')(observer(Follows));
