@@ -116,7 +116,7 @@ function Members() {
         <button>Create</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default Members;
@@ -791,7 +791,7 @@ function Search() {
         </table>
       </div>
     </div>
-  )
+  );
 }
 
 export default Search;
