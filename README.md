@@ -314,7 +314,7 @@ function Header(props) {
     <header>
       <h1>React study</h1>
     </header>
-  )
+  );
 }
 
 export default Header;
@@ -384,7 +384,7 @@ function Members(props) {
       <h3>Members</h3>
       <p>Contents</p>
     </div>
-  )
+  );
 }
 
 export default Members;
@@ -528,7 +528,7 @@ function Members(props) {
         <button>Create</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default inject('membersStore')(observer(Members));
@@ -929,7 +929,7 @@ function Search(props) {
         </table>
       </div>
     </div>
-  )
+  );
 }
 
 export default inject('membersStore', 'searchStore')(observer(Search));
