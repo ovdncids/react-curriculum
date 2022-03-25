@@ -20,14 +20,14 @@ function App() {
       />
       <button onClick={() => setMembers([...members, member])}>Create</button>
     </div>
-  )
+  );
 }
 
 function Members(props) {
   const fMembers = () => {
     console.log('fMembers');
-    return props.members
-  }
+    return props.members;
+  };
   const cMembers = fMembers();
   return (
     <div>
@@ -35,7 +35,7 @@ function Members(props) {
       <div key={index}>{member}</div>
     ))}
     </div>
-  )
+  );
 }
 
 export default App;
@@ -50,3 +50,19 @@ index.js
 - const cMembers = fMembers();
 + const cMembers = useMemo(fMembers, [props.members]);
 ```
+
+# useRef
+```js
+import { useRef } from 'react';
+
+function App() {
+  const refInput = useRef();
+  return (
+    <input
+      ref={refInput}
+      onChange={() => console.log(refInput)}
+    />
+  );
+}
+```
+* `refInput`는 `{current: input}` 형식을 갖는다.
