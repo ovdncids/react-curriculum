@@ -85,7 +85,7 @@ function Members() {
         <button>Create</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default Members;
