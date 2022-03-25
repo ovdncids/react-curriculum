@@ -46,7 +46,7 @@ export default function Index() {
       </div>
       <footer>Copyright</footer>
     </div>
-  )
+  );
 }
 ```
 
@@ -144,7 +144,7 @@ export default function Layout({ children }) {
       </div>
       <footer>Copyright</footer>
     </div>
-  )
+  );
 }
 ```
 
@@ -160,7 +160,7 @@ export default function Index() {
         <p>Contents</p>
       </div>
     </Layout>
-  )
+  );
 }
 ```
 
@@ -178,7 +178,7 @@ export default function Search() {
         <p>Contents</p>
       </div>
     </Layout>
-  )
+  );
 }
 ```
 
@@ -200,7 +200,7 @@ import React from 'react'
 export default function Page404() {
   return (
     <div>404 Page</div>
-  )
+  );
 }
 ```
 
@@ -251,7 +251,7 @@ import { membersStore } from './src/stores/MembersStore'
 export default function Stores({ element }) {
   return (
     <Provider membersStore={membersStore}>{element}</Provider>
-  )
+  );
 }
 ```
 
@@ -316,7 +316,7 @@ function Index(props) {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
 export default inject('membersStore')(observer(Index))
@@ -612,7 +612,7 @@ function Search(props) {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
 export default inject('membersStore', 'searchStore')(observer(Search))
