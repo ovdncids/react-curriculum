@@ -15,11 +15,11 @@ function InnerWidth() {
     window.addEventListener('resize', resize);
     return () => {
       window.removeEventListener('resize', resize);
-    }
+    };
   }, []);
   return (
     <div>{innerWidth}</div>
-  )
+  );
 }
 
 export default InnerWidth;
