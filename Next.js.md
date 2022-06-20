@@ -28,9 +28,6 @@ export default function App({ Component, pageProps }) {
 }
 ```
 
-## Layouts
-* https://nextjs.org/docs/basic-features/layouts
-
 ## Antd
 ```sh
 npm install antd
@@ -47,6 +44,9 @@ import { Button } from 'antd';
 
 <Button type="primary">button</Button>
 ```
+
+## Layouts
+* https://nextjs.org/docs/basic-features/layouts
 
 ## 404
 pages/404.js
