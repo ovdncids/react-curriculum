@@ -30,3 +30,20 @@ export default function App({ Component, pageProps }) {
 
 ## Layouts
 * https://nextjs.org/docs/basic-features/layouts
+
+## Antd
+```sh
+npm install antd
+```
+
+styles/global.scss
+```scss
+@import '~antd/dist/antd.css';
+```
+
+pages/index.js
+```js
+import { Button } from 'antd';
+
+<Button type="primary">button</Button>
+```
