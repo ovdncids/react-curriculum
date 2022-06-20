@@ -47,3 +47,27 @@ import { Button } from 'antd';
 
 <Button type="primary">button</Button>
 ```
+
+## 404
+pages/404.js
+```js
+export default function Custom404() {
+  return <div>404</div>;
+}
+```
+
+## Data Fetching - getInitialProps
+* https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
+```js
+function Page(props) {
+  return <div>Next stars: {props.stars}</div>
+}
+
+Page.getInitialProps = async (ctx) => {
+  const res = await fetch('https://api.github.com/repos/vercel/next.js')
+  const json = await res.json()
+  return { stars: json.stargazers_count }
+}
+
+export default Page
+```
