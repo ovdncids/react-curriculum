@@ -3,7 +3,7 @@
 ## Install
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
-npx create-next-app nextjs-blog --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
+npx create-next-app 프로젝트명 --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
 ```
 
 ## Scss
@@ -21,10 +21,10 @@ body {
 
 pages/_app.js
 ```js
-import '../styles/global.scss';
+import '../styles/global.scss'
 
 export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return <Component {...pageProps} />
 }
 ```
 
@@ -40,7 +40,7 @@ styles/global.scss
 
 pages/index.js
 ```js
-import { Button } from 'antd';
+import { Button } from 'antd'
 
 <Button type="primary">button</Button>
 ```
@@ -52,7 +52,7 @@ import { Button } from 'antd';
 pages/404.js
 ```js
 export default function Custom404() {
-  return <div>404</div>;
+  return <div>404</div>
 }
 ```
 
