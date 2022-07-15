@@ -426,6 +426,9 @@ function A1(props) {
 
 Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽다, state 값이 변하면 해당 값을 바라 보는 모든 Component가 수정 된다.
 
+**Store 사용 하는 이유**
+Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한다.
+
 ### MobX 설치
 https://github.com/mobxjs/mobx
 ```sh
