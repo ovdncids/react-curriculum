@@ -281,6 +281,212 @@ Redux Thunk: 설정도 간단하고 쉽게 만들 수 있다.
 
 Redux Saga: 설정이 Redux Thunk 보다 복잡하지만 다양한 기능을 사용할 수 있다. 다양한 기능을 사용하기 위한 러닝 커브가 크다.
 
+<details><summary>Redux Toolkit Thunk (추천)</summary>
+
+* https://redux-toolkit.js.org/api/createAsyncThunk
+
+## Members Thunk 미들웨어 만들기
+src/store/members/membersSlice.js
+```diff
+- import { createSlice } from '@reduxjs/toolkit';
++ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+```
+
+```js
+export const thunkMembers = {
+  membersCreate: createAsyncThunk(
+    'membersCreate',
+    (member, thunkAPI) => {
+      thunkAPI.dispatch(actionsMembers.membersCreate(member));
+    }
+  ),
+  membersRead: createAsyncThunk(
+    'membersRead',
+    (payload, thunkAPI) => {
+      thunkAPI.dispatch(actionsMembers.membersRead());
+    }
+  ),
+  membersUpdate: createAsyncThunk(
+    'membersUpdate',
+    (payload, thunkAPI) => {
+      thunkAPI.dispatch(actionsMembers.membersUpdate(payload));
+    }
+  ),
+  membersDelete: createAsyncThunk(
+    'membersDelete',
+    (index, thunkAPI) => {
+      thunkAPI.dispatch(actionsMembers.membersDelete(index));
+    }
+  )
+};
+```
+
+## Redux에서 Members Thunk로 액션 수정하기
+src/components/contents/Members.js
+```diff
+- import { stateMembers, actionsMembers } from 'store/members/membersSlice.js';
++ import { stateMembers, actionsMembers, thunkMembers } from 'store/members/membersSlice.js';
+```
+```diff
+- dispatch(actionsMembers.membersRead());
++ dispatch(thunkMembers.membersRead());
+```
+```diff
+- <button onClick={() => dispatch(actionsMembers.membersUpdate({index, member}))}>Update</button>
+- <button onClick={() => dispatch(actionsMembers.membersDelete(index))}>Delete</button>
++ <button onClick={() => dispatch(thunkMembers.membersUpdate({index, member}))}>Update</button>
++ <button onClick={() => dispatch(thunkMembers.membersDelete(index))}>Delete</button>
+```
+```diff
+- <button onClick={() => dispatch(actionsMembers.membersCreate(member))}>Create</button>
++ <button onClick={() => dispatch(thunkMembers.membersCreate(member))}>Create</button>
+```
+
+## Backend Server
+* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
+```sh
+# BE 서버 실행 방법
+npm install
+node index.js
+# 터미널 종료
+Ctrl + c
+```
+
+## Axios 서버 연동
+https://github.com/axios/axios
+```sh
+npm install axios
+```
+
+### Axios common 에러 처리
+src/store/common.js
+```js
+export const axiosError = function(error) {
+  console.error(error.response || error.message || error)
+};
+```
+
+### Create
+src/store/members/membersSlice.js
+```js
+import axios from 'axios';
+import { axiosError } from '../common.js';
+```
+```diff
+- thunkAPI.dispatch(actionsMembers.membersCreate(member));
+```
+```js
+axios.post('http://localhost:3100/api/v1/members', member).then((response) => {
+  console.log('Done membersCreate', response);
+  thunkAPI.dispatch(thunkMembers.membersRead());
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+### Read
+src/store/members/membersSlice.js
+```diff
+- thunkAPI.dispatch(actionsMembers.membersRead());
+```
+```js
+return axios.get('http://localhost:3100/api/v1/members').then((response) => {
+  console.log('Done membersRead', response);
+  // thunkAPI.dispatch(actionsMembers.membersSet(response.data.members));
+  return response.data.members;
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+```js
+reducers: {
+  ...
+},
+extraReducers: (builder) => {
+  // builder.addCase('membersRead/fulfilled', (state, action) => {
+  builder.addCase(thunkMembers.membersRead.fulfilled, (state, action) => {
+    state.members = action.payload;
+  })
+}
+```
+
+### Update
+src/store/members/membersSlice.js
+```diff
+- thunkAPI.dispatch(actionsMembers.membersUpdate(payload));
+```
+```js
+axios.patch('http://localhost:3100/api/v1/members/' + payload.index, payload.member).then((response) => {
+  console.log('Done membersUpdate', response);
+  thunkAPI.dispatch(thunkMembers.membersRead());
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+### Delete
+src/store/members/membersSlice.js
+```diff
+- thunkAPI.dispatch(actionsMembers.membersDelete(index));
+```
+```js
+axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
+  console.log('Done membersDelete', response);
+  thunkAPI.dispatch(thunkMembers.membersRead());
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+src/store/members/membersSlice.js
+```diff
+- membersCreate: (state, action) => {
+-   state.members.push(action.payload);
+- },
+- membersRead: (state) => {
+-   state.members.push({
+-     name: '홍길동',
+-     age: 20
+-   }, {
+-     name: '춘향이',
+-     age: 16
+-   });
+- },
+- membersUpdate: (state, action) => {
+-   state.members[action.payload.index] = action.payload.member;
+- },
+- membersDelete(state, action) {
+-   state.members.splice(action.payload, 1);
+- }
+```
+
+## Search
+### Search Thunk 만들기
+src/store/search/searchThunk.js
+```js
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { axiosError } from '../common.js';
+import { actionsMembers } from 'store/members/membersSlice.js';
+
+export const thunkSearch = {
+  searchRead: createAsyncThunk(
+    null,
+    (q, thunkAPI) => {
+      const url = `http://localhost:3100/api/v1/search?q=${q}`;
+      axios.get(url).then((response) => {
+      console.log('Done searchRead', response);
+      thunkAPI.dispatch(actionsMembers.membersSet(response.data.members));
+      }).catch((error) => {
+        axiosError(error);
+      });
+    }
+  )
+};
+```
+</details>
+
 <details><summary>Redux Thunk</summary>
 
 ## 설치
