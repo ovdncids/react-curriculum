@@ -342,6 +342,19 @@ src/components/contents/Members.js
 + <button onClick={() => dispatch(thunkMembers.membersCreate(member))}>Create</button>
 ```
 
+### Typescript 오류
+#### Argument of type 'AsyncThunkAction<void, void, {}>' is not assignable to parameter of type 'AnyAction'
+```diff
+- const dispatch = useDispatch();
++ const dispatch = useDispatch<any>();
+```
+
+#### Expected 0 arguments, but got 1.
+```diff
+- membersCreate: createAsyncThunk(
++ membersCreate: createAsyncThunk<any, object>(
+```
+
 ## Backend Server
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
 ```sh
