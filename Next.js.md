@@ -6,6 +6,12 @@
 npx create-next-app 프로젝트명 --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
 ```
 
+## typescript
+* https://nextjs.org/docs/basic-features/typescript
+```sh
+npx create-next-app@latest --ts
+```
+
 ## Scss
 * https://nextjs.org/docs/basic-features/built-in-css-support#sass-support
 ```sh
