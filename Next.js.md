@@ -77,3 +77,22 @@ Page.getInitialProps = async (ctx) => {
 
 export default Page
 ```
+
+## 환경 설정
+* https://nextjs.org/docs/basic-features/environment-variables
+```sh
+npm install env-cmd
+```
+package.json
+```json
+{
+  "scripts": {
+    "build:dev": "env-cmd -f .env.development next build",
+    "start:dev": "env-cmd -f .env.development next start",
+    "build:prod": "env-cmd -f .env.prod next build",
+    "start:prod": "env-cmd -f .env.prod next start"
+  }
+}
+```
+* local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
+* `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자
