@@ -5,7 +5,7 @@
 npm install react-hook-form
 ```
 
-## 배열에 radio 핸들링
+## 배열로 radio 핸들링
 src/App.js
 ```js
 import { useForm, useFieldArray } from 'react-hook-form';
