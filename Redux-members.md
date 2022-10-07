@@ -348,11 +348,22 @@ src/components/contents/Members.js
 - const dispatch = useDispatch();
 + const dispatch = useDispatch<any>();
 ```
+or
+```diff
+- export default configureStore({
++ export const store = configureStore({
+
+export type storeDispatch = typeof store.dispatch;
+```
+```diff
+- const dispatch = useDispatch();
++ const dispatch = useDispatch<storeDispatch>();
+```
 
 #### Expected 0 arguments, but got 1.
 ```diff
 - membersCreate: createAsyncThunk(
-+ membersCreate: createAsyncThunk<any, object>(
++ membersCreate: createAsyncThunk<void | any, object>(
 ```
 
 ## Backend Server
