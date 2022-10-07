@@ -364,6 +364,7 @@ export type storeDispatch = typeof store.dispatch;
 ```diff
 - membersCreate: createAsyncThunk(
 + membersCreate: createAsyncThunk<void | any, object>(
+# 첫번째 인자는 `return`될 타입을 뜻하고, 두번째 인자 넘겨 받은 타입을 뜻 한다.
 ```
 
 ## Backend Server
