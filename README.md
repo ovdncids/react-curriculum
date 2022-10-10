@@ -95,7 +95,7 @@ https://github.com/facebook/create-react-app
 # create-react-app react-study
 npx create-react-app react-study
 # Typescript
-npx create-react-app my-app --template typescript
+npx create-react-app react-study-typescript --template typescript
 cd react-study
 code .
 
