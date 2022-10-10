@@ -239,8 +239,8 @@ src/components/contents/Members.js
     type="text" placeholder="Name" value={member.name}
     onChange={(event) => {
       member.name = event.target.value;
-      dispatch(actionsMembers.membersSet(members);
-    )}}
+      dispatch(actionsMembers.membersSet(members));
+    }}
   />
 </td>
 <td>
