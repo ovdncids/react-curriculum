@@ -26,7 +26,7 @@ src/store/members/membersSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 export const membersSlice = createSlice({
-  name: 'members',
+  name: '$members',
   initialState: {
     members: [],
     member: {
@@ -38,7 +38,7 @@ export const membersSlice = createSlice({
   }
 });
 
-export const stateMembers = state => state.members;
+export const stateMembers = state => state.$members;
 export const actionsMembers = membersSlice.actions;
 
 export default membersSlice.reducer;
@@ -52,7 +52,7 @@ import membersReducer from './members/membersSlice.js';
 
 export default configureStore({
   reducer: {
-    members: membersReducer
+    $members: membersReducer
   }
 });
 ```
