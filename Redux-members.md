@@ -144,11 +144,17 @@ src/components/contents/Members.js
 ```js
 <input
   type="text" placeholder="Name" value={member.name}
-  onChange={event => {member.name = event.target.value; dispatch(actionsMembers.memberSet(member))}}
+  onChange={(event) => {
+    member.name = event.target.value;
+    dispatch(actionsMembers.memberSet(member));
+  }}
 />
 <input
   type="text" placeholder="Age" value={member.age}
-  onChange={event => {member.age = event.target.value; dispatch(actionsMembers.memberSet(member))}}
+  onChange={(event) => {
+    member.age = event.target.value;
+    dispatch(actionsMembers.memberSet(member));
+  }}
 />
 <button onClick={() => dispatch(actionsMembers.membersCreate(member))}>Create</button>
 ```
@@ -231,13 +237,19 @@ src/components/contents/Members.js
 <td>
   <input
     type="text" placeholder="Name" value={member.name}
-    onChange={event => {member.name = event.target.value; dispatch(actionsMembers.membersSet(members))}}
+    onChange={(event) => {
+      member.name = event.target.value;
+      dispatch(actionsMembers.membersSet(members);
+    )}}
   />
 </td>
 <td>
   <input
     type="text" placeholder="Age" value={member.age}
-    onChange={event => {member.age = event.target.value; dispatch(actionsMembers.membersSet(members))}}
+    onChange={(event) => {
+      member.age = event.target.value;
+      dispatch(actionsMembers.membersSet(members));
+    }}
   />
 </td>
 ```
