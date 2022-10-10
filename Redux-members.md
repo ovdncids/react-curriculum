@@ -365,11 +365,11 @@ or
 - export default configureStore({
 + export const store = configureStore({
 
-export type storeDispatch = typeof store.dispatch;
+export type StoreDispatch = typeof store.dispatch;
 ```
 ```diff
 - const dispatch = useDispatch();
-+ const dispatch = useDispatch<storeDispatch>();
++ const dispatch = useDispatch<StoreDispatch>();
 ```
 
 #### Expected 0 arguments, but got 1.
