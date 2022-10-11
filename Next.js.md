@@ -83,6 +83,13 @@ export default Page
 ```sh
 npm install env-cmd
 ```
+
+.env.development
+```env
+NEXT_PUBLIC_BACKEND_API_URL=http://backend.com
+```
+* `NEXT_PUBLIC_`를 붙히면 `클라이언트 사이드`에서도 사용 가능
+
 package.json
 ```json
 {
@@ -96,3 +103,23 @@ package.json
 ```
 * local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
 * `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자
+
+## Proxy
+next.config.js
+```js
+const nextConfig = {
+  ...
+}
+
+module.exports = {
+  ...nextConfig,
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/:path*`
+      }
+    ]
+  }
+}
+```
