@@ -123,3 +123,20 @@ module.exports = {
   }
 }
 ```
+
+## Next.js - Typescript 환경에서만 발생 하는 문제
+```ts
+const funny = async () => {
+  const array1 = [{ id: 1 }, { id: 2}]
+  const array2 = []
+  for (let index = 0; index < array1.length; index++) {
+    const obj = array1[index]
+    array2.push({
+      id: obj.id
+    })
+  }
+  console.log(array2)
+}
+funny()
+```
+* async 함수에서 `for문`을 사용하면 동일한 object가 push 된다. `[].forEach문`을 사용하면 문제 없다.
