@@ -31,7 +31,7 @@ const tokenCreate = function(request, response, member) {
       token: token
     });
   });
-}
+};
 
 const tokenCheck = function (request, response, next) {
   const token = request.headers['x-jwt-token'];
