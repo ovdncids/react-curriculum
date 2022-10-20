@@ -24,7 +24,7 @@ const tokenCreate = function(request, response, member) {
     expiresIn: '1d',
     subject: 'login'
   }, function (error, token) {
-    if (error) return response.status(403).json({
+    if (error) return response.status(403).send({
       message: error.message
     });
     response.status(200).send({
@@ -35,11 +35,11 @@ const tokenCreate = function(request, response, member) {
 
 const tokenCheck = function (request, response, next) {
   const token = request.headers['x-jwt-token'];
-  if (!token) return response.status(403).json({
+  if (!token) return response.status(403).send({
     message: 'You need to login first'
   });
   jwt.verify(token, privateKey, function (error, decoded) {
-    if (error) return response.status(403).json({
+    if (error) return response.status(403).send({
       message: error.message
     });
     request.decoded = decoded;
