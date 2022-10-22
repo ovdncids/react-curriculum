@@ -854,7 +854,7 @@ const searchRead = () => {
 ```js
 <form onSubmit={(event) => {
   event.preventDefault();
-  searchRead(event);
+  searchRead();
 }}>
   <input
     type="text" placeholder="Search"
