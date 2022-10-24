@@ -53,3 +53,18 @@ function App() {
 
 export default App;
 ```
+
+## reset을 활용 하여 새로운 값으로 전체 변경
+```js
+// 폼의 defaultValues값으로 돌림
+form.reset();
+
+// setValue는 값 하나만 수정 가능
+form.setValue('name', '이순신');
+
+// 폼에 새로운 값으로 전체 초기화함
+form.reset({
+  name: '홍길동',
+  age: 39
+});
+```
