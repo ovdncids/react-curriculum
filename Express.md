@@ -40,6 +40,11 @@ app.post('/', function(request, response) {
   response.send('Set cookite');
 })
 
+app.options('/', function(request, response)) {
+  // 클라이언트 사이드 렌더링일 경우 OPTIONS 메소드는 쿠키를 받을 수 없다.
+  response.send(request.cookies);
+}
+
 app.listen(port, function() {
   console.log(`Example app listening on port ${port}`)
 });
