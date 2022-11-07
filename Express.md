@@ -55,7 +55,7 @@ app.listen(port, function() {
 axios.get('http://backend.test.com:3100', {
   withCredentials: true
 });
-axios.post('http://backend.test.com:3100', {
+axios.post('http://backend.test.com:3100', {}, {
   withCredentials: true
 });
 ```
