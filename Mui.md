@@ -65,3 +65,19 @@ function Categories() {
 
 export default Categories;
 ```
+```diff
+- setProducts(JSON.parse(categoriesJSON));
++ categoriesGet();
+```
+```js
+const categoriesGet = () => {
+  axios.get('http://localhost:3100/api/v1/products', {
+    params: createSearchParams({
+      page: 1,
+      categories
+    })
+  }).then((response) => {
+    setProducts(response.data);
+  });
+};
+```
