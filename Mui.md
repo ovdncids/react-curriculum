@@ -7,6 +7,7 @@ Stepper: 단계를 표현 할때 사용
 ```
 
 ## Checkbox (배열, 쿼리스트링)
+* https://ultimatecourses.com/blog/navigate-to-url-query-strings-search-params-react-router
 ```js
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, createSearchParams } from 'react-router-dom';
