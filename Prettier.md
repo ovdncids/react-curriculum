@@ -29,3 +29,4 @@ VSCode 재시작
   "bracketSpacing": false
 }
 ```
+* `.prettierrc` 파일을 수정 하면, 바로 다음 저장 부터 포맷이 변경 된다.
