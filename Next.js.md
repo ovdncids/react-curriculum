@@ -141,7 +141,7 @@ funny()
 ```
 * async 함수에서 `for문`을 사용하면 동일한 object가 push 된다. `[].forEach문`을 사용하면 문제 없다.
 
-## 버전 내리기
+## 13에서 12로 버전 내리기
 ```sh
 yarn upgrade next@^12.3.2
 ```
