@@ -118,3 +118,10 @@ const categoriesGet = () => {
   });
 };
 ```
+* ❕ `React Hook useEffect has a missing dependency: 'categoriesGet'.` 피하려면 컴포넌트 상단에 `categoriesGet` 받을 객체를 하나 만든다.
+```diff
+window.categoriesGet = categoriesGet;
+
+- categoriesGet()
++ window.categoriesGet();
+```
