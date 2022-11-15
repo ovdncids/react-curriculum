@@ -125,3 +125,57 @@ window.categoriesGet = categoriesGet;
 - categoriesGet()
 + window.categoriesGet();
 ```
+
+### 무한 스크롤 (Infinite Scroll)
+```js
+const paging = {
+  page: 1,
+  categoriesGet: null,
+  isLoading: false
+};
+function Categories() {
+```
+```js
+paging.categoriesGet = categoriesGet;
+useEffect(() => {
+  const infiniteScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      // 바로 categoriesGet();를 사용 한다면 categoriesGet 함수 호출시 products는 항상 처음 렌더링 할때 초기값 []을 가리키므로 concat은 []을 추가 한다.
+      // 렌더링 될때 마다 categoriesGet 함수도 다시 선언되고 컴포넌트 안의 변수들도 새롭게 할당 된다.
+      paging.categoriesGet();
+    }
+  };
+  window.addEventListener('scroll', infiniteScroll);
+  return () => {
+    window.removeEventListener('scroll', infiniteScroll);
+  };
+}, []);
+```
+```js
+const makeSearchParams = (params) => {
+  const _params = {
+    categories
+  };
+  if (params.page) _params.page = params.page;
+  return createSearchParams(_params);
+};
+
+const categoriesGet = () => {
+  if (paging.isLoading) return;
+  paging.isLoading = true;
+  axios.get('http://localhost:8081/api/v1/products', {
+    params: makeSearchParams({
+      page: paging.page
+    })
+  }).then((response) => {
+    if (paging.page === 1) {
+      setProducts(response.data);
+    } else if (paging.page < 5) {
+      setProducts([].concat(products, response.data));
+    }
+  }).finally(() => {
+    paging.page++;
+    paging.isLoading = false;
+  });
+};
+```
