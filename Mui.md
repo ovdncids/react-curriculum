@@ -58,7 +58,6 @@ function Categories() {
   const [products, setProducts] = useState([]);
   const categories = searchParams.getAll('categories');
   const categoriesJSON = JSON.stringify(categories);
-  console.log('렌더링', location.search);
 
   const categoriesCheck = (category) => {
     if (categories.includes(category)) {
@@ -80,7 +79,6 @@ function Categories() {
   };
 
   useEffect(() => {
-    console.log('유즈 이펙트');
     setProducts(JSON.parse(categoriesJSON));
   }, [categoriesJSON, location.search]);
   return (
@@ -178,4 +176,10 @@ const categoriesGet = () => {
     paging.isLoading = false;
   });
 };
+```
+```js
+useEffect(() => {
+  paging.page = 1;
+  paging.categoriesGet();
+}, [location.search]);
 ```
