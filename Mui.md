@@ -133,13 +133,13 @@ const paging = {
 };
 function Categories() {
 ```
+* 컴포넌트 위에 `paging` 오브젝트 선언 
+
 ```js
 paging.categoriesGet = categoriesGet;
 useEffect(() => {
   const infiniteScroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      // 바로 categoriesGet();를 사용 한다면 categoriesGet 함수 호출시 products는 항상 처음 렌더링 할때 초기값 []을 가리키므로 concat은 []을 추가 한다.
-      // 렌더링 될때 마다 categoriesGet 함수도 다시 선언되고 컴포넌트 안의 변수들도 새롭게 할당 된다.
       paging.categoriesGet();
     }
   };
@@ -149,6 +149,9 @@ useEffect(() => {
   };
 }, []);
 ```
+* ❕ useEffect에서 바로 `categoriesGet();`를 사용 한다면 categoriesGet 함수 호출시 products는 항상 처음 렌더링 할때 초기값 `[]`을 가리키므로 concat은 `[]`을 추가 한다.
+* 렌더링 될때 마다 `categoriesGet` 함수도 다시 선언되고 컴포넌트 안의 변수들도 새롭게 할당 된다.
+
 ```js
 const makeSearchParams = (params) => {
   const _params = {
@@ -177,9 +180,12 @@ const categoriesGet = () => {
   });
 };
 ```
+* `createSearchParams` 함수는 양쪽에서 쓰이므로 공용 함수 `makeSearchParams`를 선언 한다.
+
 ```js
 useEffect(() => {
   paging.page = 1;
   paging.categoriesGet();
 }, [location.search]);
 ```
+* 쿼리스트링이 변경 될 경우 `page = 1`
