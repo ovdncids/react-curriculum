@@ -25,7 +25,7 @@ const ProgressBar = () => {
     router.events.on('routeChangeStart', () => setOpen(true));
     router.events.on('routeChangeComplete', () => setOpen(false));
     router.events.on('routeChangeError', () => setOpen(false));
-  }, []);
+  }, [router.events]);
   return (
     <Box sx={{width: '100%', minWidth: '1942px', position: 'absolute'}}>
       {open && <LinearProgress />}
