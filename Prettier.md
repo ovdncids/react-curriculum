@@ -84,3 +84,29 @@ package.json
   }
 }
 ```
+
+## npm run fix
+* `prettier` 설정에 맞지 않는 부분을 자동으로 수정 해준다.
+
+# husky
+* `Git hooks`를 편하게 설정 할 수 있다.
+* `git commit` 할때 `npm run lint` 실행 시켜서 통과 하지 못하면 `git commit`을 중지 시킨다.
+```sh
+npm install -D husky
+```
+
+package.json
+```diff
+- "prepare": "npm run compile",
++ "prepare": "husky install",
+```
+
+```sh
+npm run prepare
+```
+* `.husky` 폴더가 생성 된다.
+
+```sh
+npx husky add .husky/pre-commit "npm run lint"
+```
+* `.husky/pre-commit` 파일이 생성된다. 이제 부터 `git commit` 마다 `npm run lint`가 먼저 실행 된다.
