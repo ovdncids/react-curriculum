@@ -62,7 +62,7 @@ module.exports = {
 ## npm run lint
 ### ESLint couldn't find the plugin "@typescript-eslint/eslint-plugin".
 ```sh
-npm install @typescript-eslint/eslint-plugin
+npm install -D @typescript-eslint/eslint-plugin
 ```
 
 ### warning Strings must use singlequote quotes
