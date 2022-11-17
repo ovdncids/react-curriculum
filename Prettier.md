@@ -86,7 +86,7 @@ package.json
 ```
 
 ## npm run fix
-* `prettier` 설정에 맞지 않는 부분을 자동으로 수정 해준다.
+* `lint` 설정이 맞지 않는 부분을 가능한 것만 자동으로 수정 해준다.
 
 # husky
 * `Git hooks`를 편하게 설정 할 수 있다.
