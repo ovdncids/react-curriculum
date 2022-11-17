@@ -31,3 +31,56 @@ VSCode 재시작
 }
 ```
 * `.prettierrc` 파일을 수정 하면, 바로 다음 저장 부터 포맷이 변경 된다.
+
+# gts (Google TypeScript Style)
+* https://github.com/google/gts
+* https://jhyeok.com/gts-and-husky
+* 자동으로 `eslint` 설정 파일과 `prettier` 설정 파일을 생성 해준다.
+```sh
+npx gts init
+```
+* 알아서 `package.json` 파일에 설정이 추가 된다.
+
+package.json
+```diff
+- "lint": "next lint"
++ "lint": "gts lint",
+```
+
+.prettierrc.js
+```js
+module.exports = {
+  ...require("gts/.prettierrc.json"),
+  semi: false,
+  singleQuote: false,
+  trailingComma: "none",
+  bracketSpacing: false,
+  arrowParens: "always"
+}
+```
+
+## npm run lint
+### ESLint couldn't find the plugin "@typescript-eslint/eslint-plugin".
+```sh
+npm install @typescript-eslint/eslint-plugin
+```
+
+### warning Strings must use singlequote quotes
+.eslintrc.json
+```json
+{
+  "rules": {
+    "quotes": "off"
+  }
+}
+```
+
+### The 'URL' is not supported until Node.js 10.0.0. The configured version range is '>=8.0.0'
+package.json
+```json
+{
+  "engines": {
+    "node": "16.17.1"
+  }
+}
+```
