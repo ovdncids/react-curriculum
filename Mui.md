@@ -139,6 +139,7 @@ function Categories() {
 paging.categoriesGet = categoriesGet;
 useEffect(() => {
   const infiniteScroll = () => {
+    // if (window.innerHeight + window.scrollY >= document.getElementById('root').offsetHeight) {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       paging.categoriesGet();
     }
