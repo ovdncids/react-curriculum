@@ -11,6 +11,11 @@ Clip: 버튼과 비슷한 모양의 라벨
 Stepper: 단계를 표현 할때 사용
 ```
 
+## TextField
+```js
+<TextField inputProps={{maxLength: 100}}></TextField>
+```
+
 ## Progress bar
 ```js
 import { useState, useEffect } from 'react';
