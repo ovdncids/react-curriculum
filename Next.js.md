@@ -201,6 +201,60 @@ module.exports = {
 </ActiveLink>
 ```
 
+## cookies-next
+* https://www.npmjs.com/package/cookies-next
+* [Express Cookies - httpOnly](https://github.com/ovdncids/react-curriculum/blob/master/Express.md#%EC%84%9C%EB%A1%9C-%EB%8B%A4%EB%A5%B8-%EB%8F%84%EB%A9%94%EC%9D%B8-%EA%B0%84%EC%97%90-cookie-%EA%B3%B5%EC%9C%A0)
+```sh
+npm install cookies-next
+```
+
+<!--
+next.config.js
+```js
+const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/api',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: "true"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+-->
+
+/page/api/members.ts
+```ts
+import { setCookie } from 'cookies-next'
+
+setCookie("member_pk", 1, { req, res, maxAge: 60 * 60 * 24 })
+```
+
+/page/members.ts
+```ts
+import { getCookie } from 'cookies-next'
+
+export const getServerSideProps = async (context: NextPageContext) => {
+  const member_pk = getCookie('member_pk', { req: context.req, res: context.res })
+  const response = await axios.get('http://localhost:3000/api/members', {
+    headers: {
+      Cookie: `member_pk=${member_pk}`
+    }
+  })
+  return {
+    props: {
+      members: response.data
+    }
+  }
+}
+```
+
 ## Next.js - Typescript 환경에서만 발생 하는 문제
 ```ts
 const funny = async () => {
