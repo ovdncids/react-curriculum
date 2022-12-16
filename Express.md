@@ -49,6 +49,7 @@ app.listen(port, function() {
   console.log(`Example app listening on port ${port}`)
 });
 ```
+* ❕ `httpOnly: true`인 경우 `document.cookie`에 값이 사라진다.
 
 ### React
 ```js
