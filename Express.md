@@ -33,7 +33,7 @@ app.get('/', function(request, response) {
 app.post('/', function(request, response) {
   response.cookie('coo', 'kie', {
     httpOnly: true,
-    maxAge: 1000000,
+    maxAge: 60 * 60 * 24,
     signed: false,
     domain: 'test.com'
   });
