@@ -17,6 +17,14 @@ Stepper: 단계를 표현 할때 사용
 ```js
 <TextField inputProps={{maxLength: 100}}></TextField>
 ```
+```js
+<TextField
+  onBlur={() => {
+    form.setValue('name', form.getValues('name').trim());
+    form.trigger('name');  // name만 Validation 검사
+  }}
+/>
+```
 
 ## Select
 * https://react-hook-form.com/api/usecontroller/controller
