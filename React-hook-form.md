@@ -68,3 +68,9 @@ form.reset({
   age: 39
 });
 ```
+
+## isDirty
+```js
+const { formState: {isDirty} } = form;
+```
+* `value`가 수정 되면 `true`, 수정 후 다시 처음과 같아지면 `false`
