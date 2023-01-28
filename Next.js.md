@@ -285,31 +285,31 @@ npm install next@^12.3.2
 ## File Upload
 * https://codesandbox.io/s/thyb0?file=/package.json:234-244
 ```js
-import formidable from 'formidable';
-import fs from 'fs';
+import formidable from 'formidable'
+import fs from 'fs'
 
 // bodyParser를 사용 하 않아야 files을 받을 수 있다.
 export const config = {
   api: {
     bodyParser: false
   }
-};
+}
 
 const post = async (req, res) => {
-  const form = new formidable.IncomingForm();
+  const form = new formidable.IncomingForm()
   form.parse(req, async function (err, fields, files) {
-    await saveFile(files.file);
-    return res.status(200).send({ result: 'Done' });
-  });
-};
+    await saveFile(files.file)
+    return res.status(200).send({ result: 'Done' })
+  })
+}
 
 const saveFile = async (file) => {
-  const data = fs.readFileSync(file.path);
+  const data = fs.readFileSync(file.filepath)
   // 경로는 최상단 기준
-  fs.writeFileSync(`./uploads/${file.name}`, data);
-  await fs.unlinkSync(file.path);
-  return;
-};
+  fs.writeFileSync(`./uploads/${file.originalFilename}`, data)
+  await fs.unlinkSync(file.filepath)
+  return
+}
 
 export default (req, res) => {
   req.method === 'POST'
@@ -320,6 +320,6 @@ export default (req, res) => {
     ? console.log('DELETE')
     : req.method === 'GET'
     ? console.log('GET')
-    : res.status(404).send('');
-};
+    : res.status(404).send('')
+}
 ```
