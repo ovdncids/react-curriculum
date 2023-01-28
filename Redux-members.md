@@ -43,6 +43,7 @@ export const membersActions = membersSlice.actions;
 
 export default membersSlice.reducer;
 ```
+* [Typescript](https://github.com/ovdncids/angular-curriculum/blob/master/Typescript.md#redux-initialstate)
 
 ## Members 리듀서 등록
 src/store/index.js
