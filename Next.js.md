@@ -299,7 +299,7 @@ const saveFile = async (file) => {
   const data = fs.readFileSync(file.filepath)
   // 경로는 최상단 기준
   fs.writeFileSync(`./uploads/${file.originalFilename}`, data)
-  await fs.unlinkSync(file.filepath)
+  fs.unlinkSync(file.filepath)
   return
 }
 
@@ -331,9 +331,9 @@ import Jimp from 'jimp'
 
 const reFormatSize = async (file) => {
   const image = await Jimp.read(file.filepath)
-  const imageFormat = await image.write('./uploads/format.jpg')
-  const imageResize = await imageFormat.resize(1920, Jimp.AUTO)
-  await imageResize.write('./uploads/1920.jpg')
+  const imageFormat = image.write('./uploads/format.jpg')
+  const imageResize = imageFormat.resize(1920, Jimp.AUTO)
+  imageResize.write('./uploads/1920.jpg')
 }
 await reFormatSize(files.file)
 ```
