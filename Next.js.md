@@ -297,7 +297,7 @@ export const config = {
 
 const saveFile = async (file) => {
   const data = fs.readFileSync(file.filepath)
-  // 경로는 최상단 기준
+  // ./는 최상단 경로
   fs.writeFileSync(`./uploads/${file.originalFilename}`, data)
   fs.unlinkSync(file.filepath)
   return
