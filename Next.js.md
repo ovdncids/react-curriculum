@@ -325,7 +325,10 @@ export default (req, res) => {
 ```
 
 ## Jimp (이미지 포맷, 크기 변경)
+* https://github.com/oliver-moran/jimp
 ```js
+import Jimp from 'jimp'
+
 const reFormatSize = async (file) => {
   const image = await Jimp.read(file.filepath)
   const imageFormat = await image.write('./uploads/format.jpg')
