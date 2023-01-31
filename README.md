@@ -180,7 +180,7 @@ css를 프로그램화 하여 색상 테마를 변수에 넣을 수 있고, 반�
 
 https://sass-guidelin.es/ko
 ```sh
-npm install sass sass-loader
+npm install -D sass sass-loader
 ```
 
 ## 필요 없는 파일 지우기
