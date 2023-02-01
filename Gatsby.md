@@ -263,7 +263,7 @@ import provideStores from './provide-stores'
 export const wrapRootElement = provideStores
 ```
 
-### Members Compenent Store inject
+### Members Component Store inject
 src/pages/index.js
 ```diff
 - export default function Index() {
@@ -558,7 +558,7 @@ import { searchStore } from './src/stores/SearchStore'
 >{element}</Provider>
 ```
 
-### Search Compenent Store inject
+### Search Component Store inject
 src/pages/search.js
 ```js
 import React, { useState, useEffect } from 'react'
@@ -618,7 +618,7 @@ function Search(props) {
 export default inject('membersStore', 'searchStore')(observer(Search))
 ```
 
-## Search Compenent 쿼리스트링 변경과 새로고침 적용
+## Search Component 쿼리스트링 변경과 새로고침 적용
 src/pages/search.js
 ```diff
 - const { membersStore, searchStore } = props
