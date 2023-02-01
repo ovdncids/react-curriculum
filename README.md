@@ -872,7 +872,7 @@ export default class SearchStore {
   }
 
   searchRead(q) {
-    const url = `http://localhost:3100/api/v1/search?q=${q}`;
+    const url = 'http://localhost:3100/api/v1/search?q=' + q;
     axios.get(url).then((response) => {
       console.log('Done searchRead', response);
       membersStore.members = response.data.members;
@@ -988,7 +988,7 @@ function Search(props) {
 ```
 ```diff
 - searchStore.searchRead(q);
-+ navigate(`/search?q=${q}`);
++ navigate('/search?q=' + q);
 ```
 * `검색`, `뒤로가기` 해보기
 
