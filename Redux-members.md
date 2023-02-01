@@ -73,7 +73,7 @@ import store from './store/index.js';
 </Provider>
 ```
 
-### Members Conpenent Store inject
+### Members Compenent Store inject
 src/components/contents/Members.js
 ```js
 import { useSelector, useDispatch } from 'react-redux';
@@ -783,7 +783,7 @@ import { searchTakeEvery } from './search/searchSaga.js';
 ```
 </details>
 
-### Search Conpenent Store inject
+### Search Compenent Store inject
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
@@ -866,7 +866,7 @@ const searchRead = () => {
 </form>
 ```
 
-### Search Conpenent 쿼리스트링 변경과 새로고침 적용
+### Search Compenent 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
 - function Search() {
