@@ -662,6 +662,23 @@ https://www.npmjs.com/package/eslint-plugin-react-hooks#installation
 // eslint-disable-next-line
 추가 -->
 
+### Delete
+src/stores/MembersStore.js
+```js
+membersDelete(index) {
+  this.members.splice(index, 1);
+  console.log('Done membersDelete', this.members);
+}
+```
+
+src/components/contents/Members.js
+```diff
+- <button>Delete</button>
+```
+```js
+<button onClick={() => membersStore.membersDelete(index)}>Delete</button>
+```
+
 ### Update
 src/stores/MembersStore.js
 ```js
@@ -695,23 +712,6 @@ src/components/contents/Members.js
 ```
 ```js
 <button onClick={() => membersStore.membersUpdate(index, member)}>Update</button>
-```
-
-### Delete
-src/stores/MembersStore.js
-```js
-membersDelete(index) {
-  this.members.splice(index, 1);
-  console.log('Done membersDelete', this.members);
-}
-```
-
-src/components/contents/Members.js
-```diff
-- <button>Delete</button>
-```
-```js
-<button onClick={() => membersStore.membersDelete(index)}>Delete</button>
 ```
 
 ## Backend Server
