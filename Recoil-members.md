@@ -48,8 +48,8 @@ import { useRecoilState } from 'recoil';
 import { memberState, membersState } from '../../stores/members';
 
 function Members() {
-  const [member, setMember] = useRecoilState(memberState);
-  const [members, setMembers] = useRecoilState(membersState);
+  const [member] = useRecoilState(memberState);
+  const [members] = useRecoilState(membersState);
   console.log(member, members);
   return (
     <div>
@@ -94,6 +94,14 @@ export default Members;
 ## Members Store CRUD
 ### Create
 src/components/contents/Members.js
+```diff
+- const [member] = useRecoilState(memberState);
+- const [members] = useRecoilState(membersState);
+```
+```js
+const [member, setMember] = useRecoilState(memberState);
+const [members, setMembers] = useRecoilState(membersState);
+```
 ```js
 <input
   type="text" placeholder="Name" value={member.name}
@@ -265,7 +273,7 @@ export const membersService = {
   },
   delete: async (index) => {
     try {
-      const response = await axios.delete(`http://localhost:3100/api/v1/members/${index}`);
+      const response = await axios.delete('http://localhost:3100/api/v1/members/' + index);
       console.log('Done membersDelete', response);
       return response.data;
     } catch(error) {
@@ -274,7 +282,7 @@ export const membersService = {
   },
   update: async (index, member) => {
     try {
-      const response = await axios.patch(`http://localhost:3100/api/v1/members/${index}`, member);
+      const response = await axios.patch('http://localhost:3100/api/v1/members/' + index, member);
       console.log('Done membersUpdate', response);
       return response.data;
     } catch(error) {
