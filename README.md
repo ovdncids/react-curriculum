@@ -491,7 +491,7 @@ import { membersStore } from './stores/MembersStore.js';
 </Provider>
 ```
 
-### Members Compenent Store inject
+### Members Component Store inject
 src/components/contents/Members.js
 ```js
 import { inject, observer } from 'mobx-react';
@@ -893,7 +893,7 @@ import { searchStore } from './stores/SearchStore';
 searchStore={searchStore}
 ```
 
-### Search Compenent Store inject
+### Search Component Store inject
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
@@ -971,7 +971,7 @@ const searchRead = (event) => {
 </form>
 ```
 
-## Search Compenent 쿼리스트링 변경과 새로고침 적용
+## Search Component 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
 - function Search(props) {
