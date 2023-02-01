@@ -73,14 +73,13 @@ import store from './store/index.js';
 </Provider>
 ```
 
-### Members Compenent Store inject
+### Members Component Store inject
 src/components/contents/Members.js
 ```js
-import { useSelector, useDispatch } from 'react-redux';
-import { membersState, membersActions } from 'store/members/membersSlice.js';
+import { useSelector } from 'react-redux';
+import { membersState } from 'store/members/membersSlice.js';
 
 function Members() {
-  const dispatch = useDispatch();
   const member = {...useSelector(membersState).member};
   console.log(member);
   return (
@@ -142,6 +141,19 @@ reducers: {
 ```
 
 src/components/contents/Members.js
+```diff
+- import { useSelector } from 'react-redux';
+- import { membersState } from 'store/members/membersSlice.js';
+
+- function Members() {
+```
+```js
+import { useSelector, useDispatch } from 'react-redux';
+import { membersState, membersActions } from 'store/members/membersSlice.js';
+
+function Members() {
+  const dispatch = useDispatch();
+```
 ```js
 <input
   type="text" placeholder="Name" value={member.name}
@@ -218,6 +230,22 @@ const members = Object.assign([], useSelector(membersState).members);
 사용해도 된다.
 -->
 
+### Delete
+src/store/members/membersSlice.js
+```js
+membersDelete(state, action) {
+  state.members.splice(action.payload, 1);
+}
+```
+
+src/components/contents/Members.js
+```diff
+- <button>Delete</button>
+```
+```js
+<button onClick={() => dispatch(membersActions.membersDelete(index))}>Delete</button>
+```
+
 ### Update
 src/store/members/membersSlice.js
 ```js
@@ -259,22 +287,6 @@ src/components/contents/Members.js
 ```
 ```js
 <button onClick={() => dispatch(membersActions.membersUpdate({index, member}))}>Update</button>
-```
-
-### Delete
-src/store/members/membersSlice.js
-```js
-membersDelete(state, action) {
-  state.members.splice(action.payload, 1);
-}
-```
-
-src/components/contents/Members.js
-```diff
-- <button>Delete</button>
-```
-```js
-<button onClick={() => dispatch(membersActions.membersDelete(index))}>Delete</button>
 ```
 
 ## 스토어 state 주의 사항
@@ -327,16 +339,16 @@ export const membersThunks = {
       thunkAPI.dispatch(membersActions.membersRead());
     }
   ),
-  membersUpdate: createAsyncThunk(
-    'membersUpdate',
-    (payload, thunkAPI) => {
-      thunkAPI.dispatch(membersActions.membersUpdate(payload));
-    }
-  ),
   membersDelete: createAsyncThunk(
     'membersDelete',
     (index, thunkAPI) => {
       thunkAPI.dispatch(membersActions.membersDelete(index));
+    }
+  ),
+  membersUpdate: createAsyncThunk(
+    'membersUpdate',
+    (payload, thunkAPI) => {
+      thunkAPI.dispatch(membersActions.membersUpdate(payload));
     }
   )
 };
@@ -407,7 +419,7 @@ npm install axios
 src/store/common.js
 ```js
 export const axiosError = function(error) {
-  console.error(error.response || error.message || error)
+  console.error(error.response || error.message || error);
 };
 ```
 
@@ -456,20 +468,6 @@ extraReducers: (builder) => {
 }
 ```
 
-### Update
-src/store/members/membersSlice.js
-```diff
-- thunkAPI.dispatch(membersActions.membersUpdate(payload));
-```
-```js
-axios.patch('http://localhost:3100/api/v1/members/' + payload.index, payload.member).then((response) => {
-  console.log('Done membersUpdate', response);
-  thunkAPI.dispatch(membersThunks.membersRead());
-}).catch((error) => {
-  axiosError(error);
-});
-```
-
 ### Delete
 src/store/members/membersSlice.js
 ```diff
@@ -478,6 +476,20 @@ src/store/members/membersSlice.js
 ```js
 axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
   console.log('Done membersDelete', response);
+  thunkAPI.dispatch(membersThunks.membersRead());
+}).catch((error) => {
+  axiosError(error);
+});
+```
+
+### Update
+src/store/members/membersSlice.js
+```diff
+- thunkAPI.dispatch(membersActions.membersUpdate(payload));
+```
+```js
+axios.patch('http://localhost:3100/api/v1/members/' + payload.index, payload.member).then((response) => {
+  console.log('Done membersUpdate', response);
   thunkAPI.dispatch(membersThunks.membersRead());
 }).catch((error) => {
   axiosError(error);
@@ -498,11 +510,11 @@ src/store/members/membersSlice.js
 -     age: 16
 -   });
 - },
-- membersUpdate: (state, action) => {
--   state.members[action.payload.index] = action.payload.member;
-- },
 - membersDelete(state, action) {
 -   state.members.splice(action.payload, 1);
+- },
+- membersUpdate: (state, action) => {
+-   state.members[action.payload.index] = action.payload.member;
 - }
 ```
 
@@ -519,7 +531,7 @@ export const searchThunks = {
   searchRead: createAsyncThunk(
     '',
     (q, thunkAPI) => {
-      const url = `http://localhost:3100/api/v1/search?q=${q}`;
+      const url = 'http://localhost:3100/api/v1/search?q=' + q;
       axios.get(url).then((response) => {
       console.log('Done searchRead', response);
       thunkAPI.dispatch(membersActions.membersSet(response.data.members));
@@ -548,8 +560,8 @@ import { membersActions } from './membersSlice.js';
 
 export const membersCreate = createAction('membersCreate', (payload) => {return { payload: payload }});
 export const membersRead = createAction('membersRead', (payload) => {return { payload: payload }});
-export const membersUpdate = createAction('membersUpdate', (payload) => {return { payload: payload }});
 export const membersDelete = createAction('membersDelete', (payload) => {return { payload: payload }});
+export const membersUpdate = createAction('membersUpdate', (payload) => {return { payload: payload }});
 
 export function* membersTakeEvery() {
   yield takeEvery(membersCreate, function* (action) {
@@ -561,21 +573,21 @@ export function* membersTakeEvery() {
   };
   yield takeEvery(membersRead, membersRead$);
 
-  yield takeEvery(membersUpdate, function* (action) {
-    yield put(membersActions.membersUpdate(action.payload));
-  });
-
   yield takeEvery(membersDelete, function* (action) {
     yield put(membersActions.membersDelete(action.payload));
+  });
+
+  yield takeEvery(membersUpdate, function* (action) {
+    yield put(membersActions.membersUpdate(action.payload));
   });
 }
 
 export const membersSaga = {
   membersCreate,
   membersRead,
-  membersUpdate,
-  membersDelete
-}
+  membersDelete,
+  membersUpdate
+};
 ```
 * `function*`: `Generator function` 설명
 * [function*](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*)
@@ -645,7 +657,7 @@ npm install axios
 src/store/common.js
 ```js
 export const axiosError = function(error) {
-  console.error(error.response || error.message || error)
+  console.error(error.response || error.message || error);
 };
 ```
 
@@ -689,22 +701,6 @@ try {
 }
 ```
 
-### Update
-src/store/members/membersActions.js
-```diff
-yield takeEvery(membersUpdate, function* (action) {
-- yield put(membersActions.membersUpdate(action.payload));
-```
-```js
-try {
-  const response = yield call(() => axios.patch('http://localhost:3100/api/v1/members/' + action.payload.index, action.payload.member));
-  console.log('Done membersUpdate', response);
-  yield membersRead$();
-} catch(error) {
-  axiosError(error);
-}
-```
-
 ### Delete
 src/store/members/membersActions.js
 ```diff
@@ -714,6 +710,22 @@ yield takeEvery(membersDelete, function* (action) {
 ```js
 try {
   const response = yield call(() => axios.delete('http://localhost:3100/api/v1/members/' + action.payload));
+  console.log('Done membersUpdate', response);
+  yield membersRead$();
+} catch(error) {
+  axiosError(error);
+}
+```
+
+### Update
+src/store/members/membersActions.js
+```diff
+yield takeEvery(membersUpdate, function* (action) {
+- yield put(membersActions.membersUpdate(action.payload));
+```
+```js
+try {
+  const response = yield call(() => axios.patch('http://localhost:3100/api/v1/members/' + action.payload.index, action.payload.member));
   console.log('Done membersUpdate', response);
   yield membersRead$();
 } catch(error) {
@@ -735,11 +747,11 @@ src/store/members/membersSlice.js
 -     age: 16
 -   });
 - },
-- membersUpdate: (state, action) => {
--   state.members[action.payload.index] = action.payload.member;
-- },
 - membersDelete(state, action) {
 -   state.members.splice(action.payload, 1);
+- },
+- membersUpdate: (state, action) => {
+-   state.members[action.payload.index] = action.payload.member;
 - }
 ```
 
@@ -758,7 +770,7 @@ export const searchRead = createAction('searchRead', payload => {return {payload
 export function* searchTakeEvery() {
   yield takeEvery(searchRead, function* (action) {
     try {
-      const response = yield call(() => axios.get(`http://localhost:3100/api/v1/search?q=${action.payload}`));
+      const response = yield call(() => axios.get('http://localhost:3100/api/v1/search?q=' + action.payload));
       console.log('Done searchRead', response);
       yield put(membersActions.membersSet(response.data.members));
     } catch(error) {
@@ -769,7 +781,7 @@ export function* searchTakeEvery() {
 
 export const searchSaga = {
   searchRead
-}
+};
 ```
 
 ### Search Saga을 Redux에 등록
@@ -783,7 +795,7 @@ import { searchTakeEvery } from './search/searchSaga.js';
 ```
 </details>
 
-### Search Compenent Store inject
+### Search Component Store inject
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
@@ -795,8 +807,10 @@ import { searchThunks } from 'store/search/searchThunks.js';
 function Search() {
   const dispatch = useDispatch();
   const members = useSelector(membersState).members;
+  console.log(members);
   useEffect(() => {
     dispatch(searchThunks.searchRead(''));
+    // dispatch(searchSaga.searchRead(''));
   }, [dispatch]);
   return (
     <div>
@@ -866,7 +880,7 @@ const searchRead = () => {
 </form>
 ```
 
-### Search Compenent 쿼리스트링 변경과 새로고침 적용
+### Search Component 쿼리스트링 변경과 새로고침 적용
 src/components/contents/Search.js
 ```diff
 - function Search() {
@@ -883,7 +897,7 @@ function Search() {
 ```
 ```diff
 - dispatch(searchThunks.searchRead(q));
-+ navigate(`/search?q=${q}`);
++ navigate('/search?q=' + q);
 ```
 * `검색`, `뒤로가기` 해보기
 
