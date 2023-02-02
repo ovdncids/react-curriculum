@@ -899,7 +899,7 @@ function Search() {
 - dispatch(searchThunks.searchRead(q));
 + navigate('/search?q=' + q);
 ```
-* `검색`, `뒤로가기` 해보기
+`검색`, `뒤로가기` 해보기
 
 ### Search Component 새로고침 적용
 ```diff
