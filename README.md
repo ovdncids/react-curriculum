@@ -971,7 +971,7 @@ const searchRead = (event) => {
 </form>
 ```
 
-## Search Component 쿼리스트링 변경과 새로고침 적용
+## Search Component 쿼리스트링 변경
 src/components/contents/Search.js
 ```diff
 - function Search(props) {
@@ -992,6 +992,7 @@ function Search(props) {
 ```
 * `검색`, `뒤로가기` 해보기
 
+## Search Component 새로고침 적용
 ```diff
 - useEffect(() => {
 -   searchStore.searchRead('');
