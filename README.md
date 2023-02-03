@@ -1,5 +1,5 @@
 # React
-[데모](https://ovdncids-curriculums.web.app)
+[데모](https://curriculums-odc.web.app)
 
 <!-- ## 용어
 **Markup**: 디자인을 HTML, CSS로 변환 하는 과정 또는 HTML 파일을 뜻함. HTML, CSS로 변환 된다. 퍼블리싱이라고도 함.
