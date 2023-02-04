@@ -9,7 +9,7 @@ npm install recoil
 ```
 
 ### Members Store 생성
-src/stores/members.js
+src/stores/membersStore.js
 ```js
 import { atom } from 'recoil';
 
@@ -45,7 +45,7 @@ import { RecoilRoot } from 'recoil';
 src/components/contents/Members.js
 ```js
 import { useRecoilState } from 'recoil';
-import { memberState, membersState } from '../../stores/members';
+import { memberState, membersState } from '../../stores/membersStore.js';
 
 function Members() {
   const [member] = useRecoilState(memberState);
@@ -233,7 +233,7 @@ export const axiosError = (error) => {
 ```
 
 ### Read
-src/stores/MembersStore.js
+src/stores/membersStore.js
 ```js
 import { atom, selector } from 'recoil';
 import axios from 'axios';
@@ -300,12 +300,12 @@ export const membersRead = selector({
 src/components/contents/Members.js
 ```diff
 - import { useRecoilState } from 'recoil';
-- import { memberState, membersState } from '../../stores/members';
+- import { memberState, membersState } from '../../stores/membersStore.js';
 ```
 ```js
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { memberState, membersState, membersRead } from '../../stores/members';
+import { memberState, membersState, membersRead } from '../../stores/membersStore.js';
 ```
 ```js
 const _membersRead = useRecoilValue(membersRead);
@@ -326,7 +326,7 @@ index.js
 ```
 
 ### Create
-src/stores/MembersStore.js
+src/stores/membersStore.js
 ```js
 export const membersCreate = ({set}) => async (member) => {
   await membersService.create(member);
@@ -338,11 +338,11 @@ export const membersCreate = ({set}) => async (member) => {
 src/components/contents/Members.js
 ```diff
 - import { useRecoilState, useRecoilValue } from 'recoil';
-- import { memberState, membersState, membersRead } from '../../stores/members';
+- import { memberState, membersState, membersRead } from '../../stores/membersStore.js';
 ```
 ```js
 import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
-import { memberState, membersState, membersRead, membersCreate } from '../../stores/members';
+import { memberState, membersState, membersRead, membersCreate } from '../../stores/membersStore.js';
 ```
 ```js
 const _membersCreate = useRecoilCallback(membersCreate);
@@ -361,7 +361,7 @@ const _membersCreate = useRecoilCallback(membersCreate);
 ```
 
 ### Delete
-src/stores/MembersStore.js
+src/stores/membersStore.js
 ```js
 export const membersDelete = ({set}) => async (index) => {
   await membersService.delete(index);
@@ -372,8 +372,8 @@ export const membersDelete = ({set}) => async (index) => {
 
 src/components/contents/Members.js
 ```diff
-- import { memberState, membersState, membersRead, membersCreate } from '../../stores/members';
-+ import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/members';
+- import { memberState, membersState, membersRead, membersCreate } from '../../stores/membersStore.js';
++ import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/membersStore.js';
 ```
 ```js
 const _membersDelete = useRecoilCallback(membersDelete);
@@ -391,7 +391,7 @@ const _membersDelete = useRecoilCallback(membersDelete);
 ```
 
 ### Update
-src/stores/MembersStore.js
+src/stores/membersStore.js
 ```js
 export const membersUpdate = ({set}) => async (index, member) => {
   await membersService.update(index, member);
@@ -402,8 +402,8 @@ export const membersUpdate = ({set}) => async (index, member) => {
 
 src/components/contents/Members.js
 ```diff
-- import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/members';
-+ import { memberState, membersState, membersRead, membersCreate, membersDelete, membersUpdate } from '../../stores/members';
+- import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/membersStore.js';
++ import { memberState, membersState, membersRead, membersCreate, membersDelete, membersUpdate } from '../../stores/membersStore.js';
 ```
 ```js
 const _membersUpdate = useRecoilCallback(membersUpdate);
