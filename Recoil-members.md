@@ -41,7 +41,7 @@ import { RecoilRoot } from 'recoil';
 </RecoilRoot>
 ```
 
-## Members Compenent Store inject
+## Members Component Store inject
 src/components/contents/Members.js
 ```js
 import { useRecoilState } from 'recoil';
