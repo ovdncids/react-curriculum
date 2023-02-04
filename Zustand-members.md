@@ -287,184 +287,75 @@ export const axiosError = (error) => {
 ### Read
 src/stores/membersStore.js
 ```js
-import { atom, selector } from 'recoil';
 import axios from 'axios';
 import { axiosError } from './common.js';
-
-export const memberState = atom({
-  key: 'memberState',
-  default: {
-    name: '',
-    age: ''
-  }
-});
-
-export const membersState = atom({
-  key: 'membersState',
-  default: []
-});
-
-export const membersService = {
-  create: async (member) => {
-    try {
-      const response = await axios.post('http://localhost:3100/api/v1/members', member);
-      console.log('Done membersRead', response);
-      return response.data;
-    } catch(error) {
-      axiosError(error);
-    }
-  },
-  read: async () => {
-    try {
-      const response = await axios.get('http://localhost:3100/api/v1/members');
-      console.log('Done membersCreate', response);
-      return response.data.members;
-    } catch(error) {
-      axiosError(error);
-    }
-  },
-  delete: async (index) => {
-    try {
-      const response = await axios.delete('http://localhost:3100/api/v1/members/' + index);
-      console.log('Done membersDelete', response);
-      return response.data;
-    } catch(error) {
-      axiosError(error);
-    }
-  },
-  update: async (index, member) => {
-    try {
-      const response = await axios.patch('http://localhost:3100/api/v1/members/' + index, member);
-      console.log('Done membersUpdate', response);
-      return response.data;
-    } catch(error) {
-      axiosError(error);
-    }
-  }
-};
-
-export const membersRead = selector({
-  key: 'membersRead',
-  get: membersService.read
-});
 ```
-
-src/components/contents/Members.js
 ```diff
-- import { useRecoilState } from 'recoil';
-- import { memberState, membersState } from '../../stores/membersStore.js';
+- membersRead: () => {
 ```
 ```js
-import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { memberState, membersState, membersRead } from '../../stores/membersStore.js';
-```
-```js
-const _membersRead = useRecoilValue(membersRead);
-useEffect(() => {
-  setMembers(_membersRead);
-}, [setMembers, _membersRead]);
-```
-* 확인 해보기
-
-index.js
-```diff
-- <App />
-```
-```js
-<React.Suspense fallback={<div>Loading...</div>}>
-  <App />
-</React.Suspense>
+membersRead: async () => {
+  try {
+    const response = await axios.get('http://localhost:3100/api/v1/members');
+    console.log('Done membersCreate', response);
+    set({ members: response.data.members });
+  } catch(error) {
+    axiosError(error);
+  }
+},
 ```
 
 ### Create
 src/stores/membersStore.js
-```js
-export const membersCreate = ({set}) => async (member) => {
-  await membersService.create(member);
-  const members = await membersService.read();
-  set(membersState, members)
-};
-```
-
-src/components/contents/Members.js
 ```diff
-- import { useRecoilState, useRecoilValue } from 'recoil';
-- import { memberState, membersState, membersRead } from '../../stores/membersStore.js';
-```
-```js
-import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
-import { memberState, membersState, membersRead, membersCreate } from '../../stores/membersStore.js';
-```
-```js
-const _membersCreate = useRecoilCallback(membersCreate);
+- export const membersStore = create((set) => ({
+export const membersStore = create((set, get) => ({
 ```
 ```diff
-- <button onClick={() => {
--   setMembers(members.concat({
--     ...member
--   }));
-- }}>Create</button>
+- membersCreate: (member) => {
 ```
 ```js
-<button onClick={() => {
-  _membersCreate(member);
-}}>Create</button>
+membersCreate: async (member) => {
+  try {
+    const response = await axios.post('http://localhost:3100/api/v1/members', member);
+    console.log('Done membersRead', response);
+    get().membersRead();
+  } catch(error) {
+    axiosError(error);
+  }
+},
 ```
 
 ### Delete
 src/stores/membersStore.js
-```js
-export const membersDelete = ({set}) => async (index) => {
-  await membersService.delete(index);
-  const members = await membersService.read();
-  set(membersState, members)
-};
-```
-
-src/components/contents/Members.js
 ```diff
-- import { memberState, membersState, membersRead, membersCreate } from '../../stores/membersStore.js';
-+ import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/membersStore.js';
+- membersDelete: (index) => {
 ```
 ```js
-const _membersDelete = useRecoilCallback(membersDelete);
-```
-```diff
-- <button onClick={() => {
--   members.splice(index, 1);
--   setMembers(members);
-- }}>Delete</button>
-```
-```js
-<button onClick={() => {
-  _membersDelete(index);
-}}>Delete</button>
+membersDelete: async (index) => {
+  try {
+    const response = await axios.delete('http://localhost:3100/api/v1/members/' + index);
+    console.log('Done membersDelete', response);
+    get().membersRead();
+  } catch(error) {
+    axiosError(error);
+  }
+},
 ```
 
 ### Update
 src/stores/membersStore.js
-```js
-export const membersUpdate = ({set}) => async (index, member) => {
-  await membersService.update(index, member);
-  const members = await membersService.read();
-  set(membersState, members)
-};
-```
-
-src/components/contents/Members.js
 ```diff
-- import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/membersStore.js';
-+ import { memberState, membersState, membersRead, membersCreate, membersDelete, membersUpdate } from '../../stores/membersStore.js';
+- membersUpdate: async (index, member) => {
 ```
 ```js
-const _membersUpdate = useRecoilCallback(membersUpdate);
-```
-```diff
-- <button>Update</button>
-```
-```js
-<button onClick={() => {
-  _membersUpdate(index, member);
-}}>Update</button>
+membersUpdate: async (index, member) => {
+  try {
+    const response = await axios.patch('http://localhost:3100/api/v1/members/' + index, member);
+    console.log('Done membersUpdate', response);
+    get().membersRead();
+  } catch(error) {
+    axiosError(error);
+  }
+}
 ```
