@@ -114,7 +114,36 @@ const membersCreate = membersStore((state) => state.membersCreate);
 ```
 
 ### Read
+src/stores/membersStore.js
+```js
+membersRead: () => set((state) => {
+  state.members.push({
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  });
+  return {
+    members: [...state.members]
+  };
+})
+```
+
 src/components/contents/Members.js
+```js
+import { useEffect } from 'react';
+
+const membersRead = membersStore((state) => state.membersRead);
+useEffect(() => {
+  memberSet({
+    name: '',
+    age: ''
+  });
+  membersRead();
+}, [memberSet, membersRead]);
+```
+
 ```diff
 - <tr>
 -   <td>홍길동</td>
