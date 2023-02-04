@@ -75,17 +75,17 @@ export default Members;
 ### Create
 src/stores/membersStore.js
 ```js
-memberSet: (member) => set(() => {
-  return {
-    member
-  };
-}),
-membersCreate: (member) => set((state) => {
-  state.members.push(member);
-  return {
-    members: [...state.members]
-  };
-})
+memberSet: (member) => {
+  set(() => ({ member }));
+},
+membersCreate: (member) => {
+  set((state) => {
+    state.members.push(member);
+    return {
+      members: [...state.members]
+    };
+  });
+}
 ```
 * `전개 구조` 설명 하기
 
@@ -117,18 +117,20 @@ const membersCreate = membersStore((state) => state.membersCreate);
 ### Read
 src/stores/membersStore.js
 ```js
-membersRead: () => set((state) => {
-  state.members.push({
-    name: '홍길동',
-    age: 20
-  }, {
-    name: '춘향이',
-    age: 16
+membersRead: () => {
+  set((state) => {
+    state.members.push({
+      name: '홍길동',
+      age: 20
+    }, {
+      name: '춘향이',
+      age: 16
+    });
+    return {
+      members: [...state.members]
+    };
   });
-  return {
-    members: [...state.members]
-  };
-})
+}
 ```
 
 src/components/contents/Members.js
@@ -171,12 +173,14 @@ useEffect(() => {
 ### Delete
 src/stores/membersStore.js
 ```js
-membersDelete: (index) => set((state) => {
-  state.members.splice(index, 1);
-  return {
-    members: [...state.members]
-  };
-})
+membersDelete: (index) => {
+  set((state) => {
+    state.members.splice(index, 1);
+    return {
+      members: [...state.members]
+    };
+  });
+}
 ```
 
 src/components/contents/Members.js
@@ -196,17 +200,17 @@ const membersDelete = membersStore((state) => state.membersDelete);
 ### Update
 src/stores/membersStore.js
 ```js
-membersSet: (members) => set(() => {
-  return {
-    members
-  };
-}),
-membersUpdate: (index, member) => set((state) => {
-  state.members[index] = member;
-  return {
-    members: [...state.members]
-  };
-})
+membersSet: (members) => {
+  set(() => ({ members }));
+},
+membersUpdate: (index, member) => {
+  set((state) => {
+    state.members[index] = member;
+    return {
+      members: [...state.members]
+    };
+  });
+}
 ```
 
 src/components/contents/Members.js
