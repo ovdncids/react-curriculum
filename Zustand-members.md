@@ -87,6 +87,7 @@ membersCreate: (member) => set((state) => {
   };
 })
 ```
+* `전개 구조` 설명 하기
 
 src/components/contents/Members.js
 ```js
@@ -168,26 +169,52 @@ useEffect(() => {
 ```
 
 ### Delete
+src/stores/membersStore.js
+```js
+membersDelete: (index) => set((state) => {
+  state.members.splice(index, 1);
+  return {
+    members: [...state.members]
+  };
+})
+```
+
 src/components/contents/Members.js
+```js
+const membersDelete = membersStore((state) => state.membersDelete);
+```
 ```diff
 - <button>Delete</button>
 ```
 ```js
 <button onClick={() => {
-  members.splice(index, 1);
-  setMembers(members);
+  membersDelete(index);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
 
-```diff
-- const [members, setMembers] = useRecoilState(membersState);
-+ const [[...members], setMembers] = useRecoilState(membersState);
-```
-* `전개 구조` 설명 하기
-
 ### Update
+src/stores/membersStore.js
+```js
+membersSet: (members) => set(() => {
+  return {
+    members
+  };
+}),
+membersUpdate: (index, member) => set((state) => {
+  state.members[index] = member;
+  return {
+    members: [...state.members]
+  };
+})
+```
+
 src/components/contents/Members.js
+```diff
+- const members = membersStore((state) => state.members);
+const members = JSON.parse(JSON.stringify(membersStore((state) => state.members)));
+const membersUpdate = membersStore((state) => state.membersUpdate);
+```
 ```diff
 - <td>{member.name}</td>
 - <td>{member.age}</td>
@@ -198,8 +225,7 @@ src/components/contents/Members.js
     type="text" placeholder="Name" value={member.name}
     onChange={event => {
       member.name = event.target.value;
-      members[index] = member;
-      setMembers(members);
+      membersSet(members);
     }}
   />
 </td>
@@ -208,19 +234,27 @@ src/components/contents/Members.js
     type="text" placeholder="Age" value={member.age}
     onChange={event => {
       member.age = event.target.value;
-      members[index] = member;
-      setMembers(members);
+      membersSet(members);
     }}
   />
+</td>
+<td>
+  <button onClick={() => {
+    membersUpdate(index, member);
+  }}>Update</button>
+  <button onClick={() => {
+    membersDelete(index);
+  }}>Delete</button>
 </td>
 ```
 * `Input box` 수정 해보기
 
 ```diff
-- {members.map((member, index) => (
-+ {members.map(({...member}, index) => (
+- <button>Update</button>
+<button onClick={() => {
+  membersUpdate(index, member);
+}}>Update</button>
 ```
-* `전개 구조` 설명 하기
 
 ## Backend Server
 * [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
