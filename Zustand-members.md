@@ -96,7 +96,7 @@ membersCreate: (member) => {
 
 ### Zustand 특징
 * `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
-* `redux`와 다르게 `state`가 readonly 아님
+* `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
 
 src/components/contents/Members.js
 ```js
