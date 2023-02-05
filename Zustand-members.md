@@ -9,27 +9,30 @@ npm install zustand
 ```
 
 ### Members Store 생성
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```js
 import { create } from 'zustand';
 
-export const membersStore = create((set) => ({
+const MembersStore = create((set) => ({
   members: [],
   member: {
     name: '',
     age: ''
   }
 }));
+
+export default MembersStore;
 ```
 
 ## Members Component Store inject
 src/components/contents/Members.js
 ```js
-import { membersStore } from '../../stores/membersStore.js';
+import MembersStore from '../../stores/MembersStore.js';
 
 function Members() {
-  const member = membersStore((state) => state.member);
-  const members = membersStore((state) => state.members);
+  const membersStore = MembersStore((state) => state);
+  const member = membersStore.member;
+  const members = membersStore.members;
   console.log(member, members);
   return (
     <div>
@@ -73,49 +76,51 @@ export default Members;
 
 ## Members Store CRUD
 ### Create
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```js
 memberSet: (member) => {
   set(() => ({ member }));
 },
 membersCreate: (member) => {
   set((state) => {
-    state.members.push(member);
+    state.members.push({
+      ...member
+    });
     return {
-      members: [...state.members]
+      members: state.members
     };
   });
 }
 ```
 * `전개 구조` 설명 하기
 
+### Zustand 특징
+* `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
+* `redux`와 다르게 `state`가 readonly 아님
+
 src/components/contents/Members.js
-```js
-const memberSet = membersStore((state) => state.memberSet);
-const membersCreate = membersStore((state) => state.membersCreate);
-```
 ```js
 <input
   type="text" placeholder="Name" value={member.name}
   onChange={event => {
     member.name = event.target.value;
-    memberSet(member);
+    membersStore.memberSet(member);
   }}
 />
 <input
   type="text" placeholder="Age" value={member.age}
   onChange={event => {
     member.age = event.target.value;
-    memberSet(member);
+    membersStore.memberSet(member);
   }}
 />
 <button onClick={() => {
-  membersCreate(member);
+  membersStore.membersCreate(member);
 }}>Create</button>
 ```
 
 ### Read
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```js
 membersRead: () => {
   set((state) => {
@@ -127,7 +132,7 @@ membersRead: () => {
       age: 16
     });
     return {
-      members: [...state.members]
+      members: state.members
     };
   });
 }
@@ -137,7 +142,8 @@ src/components/contents/Members.js
 ```js
 import { useEffect } from 'react';
 
-const membersRead = membersStore((state) => state.membersRead);
+const memberSet = membersStore.memberSet;
+const membersRead = membersStore.membersRead;
 useEffect(() => {
   memberSet({
     name: '',
@@ -171,34 +177,31 @@ useEffect(() => {
 ```
 
 ### Delete
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```js
 membersDelete: (index) => {
   set((state) => {
     state.members.splice(index, 1);
     return {
-      members: [...state.members]
+      members: state.members
     };
   });
 }
 ```
 
 src/components/contents/Members.js
-```js
-const membersDelete = membersStore((state) => state.membersDelete);
-```
 ```diff
 - <button>Delete</button>
 ```
 ```js
 <button onClick={() => {
-  membersDelete(index);
+  membersDelete.membersDelete(index);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
 
 ### Update
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```js
 membersSet: (members) => {
   set(() => ({ members }));
@@ -207,18 +210,13 @@ membersUpdate: (index, member) => {
   set((state) => {
     state.members[index] = member;
     return {
-      members: [...state.members]
+      members: state.members
     };
   });
 }
 ```
 
 src/components/contents/Members.js
-```diff
-- const members = membersStore((state) => state.members);
-const members = JSON.parse(JSON.stringify(membersStore((state) => state.members)));
-const membersUpdate = membersStore((state) => state.membersUpdate);
-```
 ```diff
 - <td>{member.name}</td>
 - <td>{member.age}</td>
@@ -229,7 +227,7 @@ const membersUpdate = membersStore((state) => state.membersUpdate);
     type="text" placeholder="Name" value={member.name}
     onChange={event => {
       member.name = event.target.value;
-      membersSet(members);
+      membersStore.membersSet(members);
     }}
   />
 </td>
@@ -238,17 +236,9 @@ const membersUpdate = membersStore((state) => state.membersUpdate);
     type="text" placeholder="Age" value={member.age}
     onChange={event => {
       member.age = event.target.value;
-      membersSet(members);
+      membersStore.membersSet(members);
     }}
   />
-</td>
-<td>
-  <button onClick={() => {
-    membersUpdate(index, member);
-  }}>Update</button>
-  <button onClick={() => {
-    membersDelete(index);
-  }}>Delete</button>
 </td>
 ```
 * `Input box` 수정 해보기
@@ -285,7 +275,7 @@ export const axiosError = (error) => {
 ```
 
 ### Read
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```js
 import axios from 'axios';
 import { axiosError } from './common.js';
@@ -306,10 +296,10 @@ membersRead: async () => {
 ```
 
 ### Create
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```diff
-- export const membersStore = create((set) => ({
-export const membersStore = create((set, get) => ({
+- const MembersStore = create((set) => ({
+const MembersStore = create((set, get) => ({
 ```
 ```diff
 - membersCreate: (member) => {
@@ -327,7 +317,7 @@ membersCreate: async (member) => {
 ```
 
 ### Delete
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```diff
 - membersDelete: (index) => {
 ```
@@ -344,7 +334,7 @@ membersDelete: async (index) => {
 ```
 
 ### Update
-src/stores/membersStore.js
+src/stores/MembersStore.js
 ```diff
 - membersUpdate: async (index, member) => {
 ```
