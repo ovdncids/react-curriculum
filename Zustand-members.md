@@ -287,7 +287,7 @@ import { axiosError } from './common.js';
 membersRead: async () => {
   try {
     const response = await axios.get('http://localhost:3100/api/v1/members');
-    console.log('Done membersCreate', response);
+    console.log('Done membersRead', response);
     set({ members: response.data.members });
   } catch(error) {
     axiosError(error);
@@ -308,7 +308,7 @@ const MembersStore = create((set, get) => ({
 membersCreate: async (member) => {
   try {
     const response = await axios.post('http://localhost:3100/api/v1/members', member);
-    console.log('Done membersRead', response);
+    console.log('Done membersCreate', response);
     get().membersRead();
   } catch(error) {
     axiosError(error);
