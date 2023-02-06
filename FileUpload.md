@@ -6,7 +6,7 @@ App.js
 import axios from "axios";
 
 function App() {
-  const fileUpdate = event => {
+  const fileUpdate = (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append('file', event.target[0].files[0]);
