@@ -256,7 +256,7 @@ export const membersService = {
   create: async (member) => {
     try {
       const response = await axios.post('http://localhost:3100/api/v1/members', member);
-      console.log('Done membersRead', response);
+      console.log('Done membersCreate', response);
       return response.data;
     } catch(error) {
       axiosError(error);
@@ -265,7 +265,7 @@ export const membersService = {
   read: async () => {
     try {
       const response = await axios.get('http://localhost:3100/api/v1/members');
-      console.log('Done membersCreate', response);
+      console.log('Done membersRead', response);
       return response.data.members;
     } catch(error) {
       axiosError(error);
