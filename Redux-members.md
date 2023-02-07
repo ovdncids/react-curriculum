@@ -1,8 +1,7 @@
 # Redux members
+* https://redux-toolkit.js.org
 
-## Members Store 만들기
-
-### 설치
+## Redux Tookit 설치
 ```sh
 npm install react-redux @reduxjs/toolkit
 ```
@@ -20,7 +19,7 @@ jsconfig.json
 }
 ```
 
-### Members 리듀서 생성
+## Members 리듀서 생성
 src/store/members/membersSlice.js
 ```js
 import { createSlice } from '@reduxjs/toolkit';
