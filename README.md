@@ -803,9 +803,9 @@ axios.patch('http://localhost:3100/api/v1/members/' + index, member).then((respo
 src/stores/SearchStore.js
 ```js
 import { makeAutoObservable } from 'mobx';
+import { membersStore } from './MembersStore.js';
 import axios from 'axios';
 import { axiosError } from './common.js';
-import { membersStore } from './MembersStore.js';
 
 export default class SearchStore {
   constructor() {
