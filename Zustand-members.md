@@ -349,3 +349,148 @@ membersUpdate: async (index, member) => {
   }
 }
 ```
+
+## Search Store 만들기
+src/stores/SearchStore.js
+```js
+import { create } from 'zustand';
+import MembersStore from './MembersStore.js';
+import axios from 'axios';
+import { axiosError } from './common.js';
+
+const SearchStore = create(() => ({
+  searchRead: async (q) => {
+    try {
+      const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
+      console.log('Done searchRead', response);
+      MembersStore.setState({ members: response.data.members });
+    } catch(error) {
+      axiosError(error);
+    }
+  }
+}));
+
+export default SearchStore;
+```
+
+### Search Component Store inject
+src/components/contents/Search.js
+```js
+import { useEffect } from 'react';
+import MembersStore from '../../stores/MembersStore.js';
+import SearchStore from '../../stores/SearchStore.js';
+
+function Search() {
+  const members = MembersStore((state) => state).members;
+  const searchStore = SearchStore((state) => state);
+  console.log(members);
+  useEffect(() => {
+    searchStore.searchRead('');
+  }, [searchStore]);
+  return (
+    <div>
+      <h3>Search</h3>
+      <hr className="d-block" />
+      <div>
+        <form>
+          <input type="text" placeholder="Search" />
+          <button>Search</button>
+        </form>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <table className="table-search">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+          {members.map((member, index) => (
+            <tr key={index}>
+              <td>{member.name}</td>
+              <td>{member.age}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default Search;
+```
+
+## Search Component에서만 사용 가능한 state값 적용
+src/components/contents/Search.js
+```diff
+- import { useEffect } from 'react';
++ import { useState, useEffect } from 'react';
+```
+```js
+const [ q, setQ ] = useState('');
+const searchRead = (event) => {
+  event.preventDefault();
+  searchStore.searchRead(q);
+};
+```
+```diff
+- <form>
+-   <input type="text" placeholder="Search" />
+-   <button>Search</button>
+- </form>
+```
+```js
+<form onSubmit={(event) => {searchRead(event)}}>
+  <input
+    type="text" placeholder="Search"
+    value={q}
+    onChange={event => {setQ(event.target.value)}}
+  />
+  <button>Search</button>
+</form>
+```
+
+## Search Component 쿼리스트링 변경
+src/components/contents/Search.js
+```diff
+- function Search(props) {
+```
+```js
+import { useLocation, useNavigate } from 'react-router-dom';
+
+function Search() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const _q = searchParams.get('q') || '';
+  console.log(_q);
+```
+```diff
+- searchStore.searchRead(q);
++ navigate('/search?q=' + q);
+```
+`검색`, `뒤로가기` 해보기
+
+## Search Component 새로고침 적용
+```diff
+- useEffect(() => {
+-   searchStore.searchRead('');
+- }, [searchStore]);
+```
+```js
+useEffect(() => {
+  searchStore.searchRead(_q);
+  setQ(_q);
+}, [searchStore, _q]);
+```
+* ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
+* <details><summary>정답</summary>
+
+  ```diff
+  - const [ q, setQ ] = useState('');
+  + const [ q, setQ ] = useState(_q);
+  ```
+</details>
