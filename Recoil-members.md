@@ -1,14 +1,12 @@
 # Recoil members
 * https://recoiljs.org
 
-## Members Store 만들기
-
-### 설치
+## Recoil 설치
 ```sh
 npm install recoil
 ```
 
-### Members Store 생성
+## Members Store 생성
 src/stores/membersStore.js
 ```js
 import { atom } from 'recoil';
