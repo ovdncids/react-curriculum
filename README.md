@@ -373,74 +373,38 @@ Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽�
 
 Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한다.
 
-### MobX 설치
-https://github.com/mobxjs/mobx
+## Zustand 설치
+https://github.com/pmndrs/zustand
 ```sh
-npm install mobx mobx-react
+npm install zustand
 ```
 
+## Members Store 생성
 src/stores/MembersStore.js
 ```js
-import { configure, makeAutoObservable } from 'mobx';
+import { create } from 'zustand';
 
-configure({
-  // enforceActions: 'never',
-  // useProxies: 'never'
-});
-
-export default class MembersStore {
-  constructor() {
-    makeAutoObservable(this);
-  }
-
-  members = [];
-  member = {
+const MembersStore = create((set) => ({
+  members: [],
+  member: {
     name: '',
     age: ''
-  };
-}
-
-export const membersStore = new MembersStore();
-```
-
-<!-- ## VSCode experimentalDecorators 에러 발생시
-tsconfig.json
-```json
-{
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "allowJs": true
   }
-}
-``` -->
+}));
 
-**Members Store 등록**
-
-src/index.js
-```js
-import { Provider } from 'mobx-react';
-import { membersStore } from './stores/MembersStore.js';
-```
-```diff
-- <App />
-```
-```js
-<Provider
-  membersStore={membersStore}
->
-  <App />
-</Provider>
+export default MembersStore;
 ```
 
-### Members Component Store inject
+## Members Component Store inject
 src/components/contents/Members.js
 ```js
-import { inject, observer } from 'mobx-react';
+import MembersStore from '../../stores/MembersStore.js';
 
-function Members(props) {
-  const { membersStore } = props;
-  const { member } = membersStore;
-  console.log(props, member);
+function Members() {
+  const membersStore = MembersStore((state) => state);
+  const member = membersStore.member;
+  const members = membersStore.members;
+  console.log(member, members);
   return (
     <div>
       <h3>Members</h3>
@@ -478,94 +442,88 @@ function Members(props) {
   );
 }
 
-export default inject('membersStore')(observer(Members));
-```
-
-**enforceActions 설명**
-
-**useProxies 설명**
-
-src/stores/MembersStore.js (enforceActions 주석 풀기)
-```js
-enforceActions: 'never'
-```
-
-**render에 대한 설명**
-
-**debugger 설명**
-```js
-debugger;
-```
-**Unexpected 'debugger' statement 발생할 경우**
-
-package.json
-```json
-"eslintConfig": {
-  "rules": {
-    "no-debugger": 1
-  }
-}
-// 0 = off, 1 = warn, 2 = error
-```
-**또는**
-```js
-debugger; // eslint-disable-line no-debugger
+export default Members;
 ```
 
 ## Members Store CRUD
 ### Create
 src/stores/MembersStore.js
 ```js
-membersCreate(member) {
-  this.members.push({
-    name: member.name,
-    age: member.age
+memberSet: (member) => {
+  set(() => ({ member }));
+},
+membersCreate: (member) => {
+  set((state) => {
+    state.members.push({
+      ...member
+    });
+    return {
+      members: state.members
+    };
   });
-  console.log('Done membersCreate', this.members);
 }
 ```
+* `전개 구조` 설명 하기
+
+### Zustand 특징
+* `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
+* `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
 
 src/components/contents/Members.js
 ```js
 <input
   type="text" placeholder="Name" value={member.name}
-  onChange={event => {member.name = event.target.value}}
+  onChange={event => {
+    member.name = event.target.value;
+    membersStore.memberSet(member);
+  }}
 />
 <input
   type="text" placeholder="Age" value={member.age}
-  onChange={event => {member.age = event.target.value}}
+  onChange={event => {
+    member.age = event.target.value;
+    membersStore.memberSet(member);
+  }}
 />
-<button onClick={() => membersStore.membersCreate(member)}>Create</button>
+<button onClick={() => {
+  membersStore.membersCreate(member);
+}}>Create</button>
 ```
 
 ### Read
 src/stores/MembersStore.js
 ```js
-membersRead() {
-  this.members = [{
-    name: '홍길동',
-    age: 20
-  }, {
-    name: '춘향이',
-    age: 16
-  }];
-  console.log('Done membersRead', this.members);
+membersRead: () => {
+  set((state) => {
+    state.members.push({
+      name: '홍길동',
+      age: 20
+    }, {
+      name: '춘향이',
+      age: 16
+    });
+    return {
+      members: state.members
+    };
+  });
 }
 ```
 
 src/components/contents/Members.js
 ```js
 import { useEffect } from 'react';
-```
-```diff
-- const { member } = membersStore;
-```
-```js
-const { members, member } = membersStore;
+
+const memberSet = membersStore.memberSet;
+const membersRead = membersStore.membersRead;
 useEffect(() => {
-  membersStore.membersRead();
-}, [membersStore]);
+  memberSet({
+    name: '',
+    age: ''
+  });
+  membersRead();
+}, [memberSet, membersRead]);
 ```
+
 ```diff
 - <tr>
 -   <td>홍길동</td>
@@ -588,27 +546,17 @@ useEffect(() => {
   </tr>
 ))}
 ```
-<!--
-#### members가 object인 경우
-```diff
-- {members.map((member, index) => (
-+ {Object.entries(members).map(([index, member]) => (
-```
--->
-
-<!-- Hook exhaustive-deps 경고
-https://www.npmjs.com/package/eslint-plugin-react-hooks#installation
-
-또는 마지막 줄에
-// eslint-disable-next-line
-추가 -->
 
 ### Delete
 src/stores/MembersStore.js
 ```js
-membersDelete(index) {
-  this.members.splice(index, 1);
-  console.log('Done membersDelete', this.members);
+membersDelete: (index) => {
+  set((state) => {
+    state.members.splice(index, 1);
+    return {
+      members: state.members
+    };
+  });
 }
 ```
 
@@ -617,15 +565,25 @@ src/components/contents/Members.js
 - <button>Delete</button>
 ```
 ```js
-<button onClick={() => membersStore.membersDelete(index)}>Delete</button>
+<button onClick={() => {
+  membersDelete.membersDelete(index);
+}}>Delete</button>
 ```
+* `Delete` 버튼 눌러 보기
 
 ### Update
 src/stores/MembersStore.js
 ```js
-membersUpdate(index, member) {
-  this.members[index] = member;
-  console.log('Done membersUpdate', this.members);
+membersSet: (members) => {
+  set(() => ({ members }));
+},
+membersUpdate: (index, member) => {
+  set((state) => {
+    state.members[index] = member;
+    return {
+      members: state.members
+    };
+  });
 }
 ```
 
@@ -638,21 +596,29 @@ src/components/contents/Members.js
 <td>
   <input
     type="text" placeholder="Name" value={member.name}
-    onChange={event => {member.name = event.target.value}}
+    onChange={event => {
+      member.name = event.target.value;
+      membersStore.membersSet(members);
+    }}
   />
 </td>
 <td>
   <input
     type="text" placeholder="Age" value={member.age}
-    onChange={event => {member.age = event.target.value}}
+    onChange={event => {
+      member.age = event.target.value;
+      membersStore.membersSet(members);
+    }}
   />
 </td>
 ```
+* `Input box` 수정 해보기
+
 ```diff
 - <button>Update</button>
-```
-```js
-<button onClick={() => membersStore.membersUpdate(index, member)}>Update</button>
+<button onClick={() => {
+  membersUpdate(index, member);
+}}>Update</button>
 ```
 
 ## Backend Server
@@ -679,170 +645,116 @@ export const axiosError = (error) => {
 };
 ```
 
-### Create
+### Read
 src/stores/MembersStore.js
 ```js
 import axios from 'axios';
 import { axiosError } from './common.js';
 ```
 ```diff
-membersCreate(member) {
-- this.members.push({
--   name: member.name,
--   age: member.age
-- })
-- console.log('Done membersCreate', this.members);
+- membersRead: () => {
 ```
 ```js
-axios.post('http://localhost:3100/api/v1/members', member).then((response) => {
-  console.log('Done membersCreate', response);
-  this.membersRead();
-}).catch((error) => {
-  axiosError(error);
-});
+membersRead: async () => {
+  try {
+    const response = await axios.get('http://localhost:3100/api/v1/members');
+    console.log('Done membersRead', response);
+    set({ members: response.data.members });
+  } catch(error) {
+    axiosError(error);
+  }
+},
 ```
 
-<details><summary>class method 안에서 this에 대한 function과 화살표 함수 비교</summary>
-
-```js
-const C = class {
-  method() {
-    const f1 = function() {
-      console.log('f1: ', this);
-      // f1:  undefined
-    };
-    const f2 = () => {
-      console.log('f2: ', this);
-      // f2: C {}
-    };
-    f1();
-    f2();
-  }
-};
-const c = new C();
-c.method();
-```
-</details>
-
-<!-- ```js
-const C = class {
-  method() {
-    const object = {
-      f1: function() {
-        console.log('f1: ', this);
-        // f1: 부모 {}
-      },
-      f2: () => {
-        console.log('f2: ', this);
-        // f2: C {} (부모 object가 무시 되고 자신의 class가 this가 된다)
-      }
-    };
-    object.f1();
-    object.f2();
-  }
-};
-const c = new C();
-c.method();
-``` -->
-
-### Read
+### Create
 src/stores/MembersStore.js
 ```diff
-membersRead() {
-- this.members = [{
--   name: '홍길동',
--   age: 20
-- }, {
--   name: '춘향이',
--   age: 16
-- }];
-- console.log('Done membersRead', this.members);
+- const MembersStore = create((set) => ({
+const MembersStore = create((set, get) => ({
+```
+```diff
+- membersCreate: (member) => {
 ```
 ```js
-axios.get('http://localhost:3100/api/v1/members').then((response) => {
-  console.log('Done membersRead', response);
-  this.members = response.data.members;
-}).catch((error) => {
-  axiosError(error);
-});
+membersCreate: async (member) => {
+  try {
+    const response = await axios.post('http://localhost:3100/api/v1/members', member);
+    console.log('Done membersCreate', response);
+    get().membersRead();
+  } catch(error) {
+    axiosError(error);
+  }
+},
 ```
 
 ### Delete
 src/stores/MembersStore.js
 ```diff
-membersDelete(index) {
-- this.members.splice(index, 1);
-- console.log('Done membersDelete', this.members);
+- membersDelete: (index) => {
 ```
 ```js
-axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
-  console.log('Done membersDelete', response);
-  this.membersRead();
-}).catch((error) => {
-  axiosError(error);
-});
+membersDelete: async (index) => {
+  try {
+    const response = await axios.delete('http://localhost:3100/api/v1/members/' + index);
+    console.log('Done membersDelete', response);
+    get().membersRead();
+  } catch(error) {
+    axiosError(error);
+  }
+},
 ```
 
 ### Update
 src/stores/MembersStore.js
 ```diff
-membersUpdate(index, member) {
-- this.members[index] = member;
-- console.log('Done membersUpdate', this.members);
+- membersUpdate: async (index, member) => {
 ```
 ```js
-axios.patch('http://localhost:3100/api/v1/members/' + index, member).then((response) => {
-  console.log('Done membersUpdate', response);
-  this.membersRead();
-}).catch((error) => {
-  axiosError(error);
-});
+membersUpdate: async (index, member) => {
+  try {
+    const response = await axios.patch('http://localhost:3100/api/v1/members/' + index, member);
+    console.log('Done membersUpdate', response);
+    get().membersRead();
+  } catch(error) {
+    axiosError(error);
+  }
+}
 ```
 
 ## Search Store 만들기
 src/stores/SearchStore.js
 ```js
-import { makeAutoObservable } from 'mobx';
-import { membersStore } from './MembersStore.js';
+import { create } from 'zustand';
+import MembersStore from './MembersStore.js';
 import axios from 'axios';
 import { axiosError } from './common.js';
 
-export default class SearchStore {
-  constructor() {
-    makeAutoObservable(this);
-  }
-
-  searchRead(q) {
-    const url = 'http://localhost:3100/api/v1/search?q=' + q;
-    axios.get(url).then((response) => {
+const SearchStore = create(() => ({
+  searchRead: async (q) => {
+    try {
+      const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
       console.log('Done searchRead', response);
-      membersStore.members = response.data.members;
-    }).catch((error) => {
+      MembersStore.setState({ members: response.data.members });
+    } catch(error) {
       axiosError(error);
-    });
+    }
   }
-}
+}));
 
-export const searchStore = new SearchStore();
-```
-
-### Search Store 등록
-src/index.js
-```js
-import { searchStore } from './stores/SearchStore';
-
-searchStore={searchStore}
+export default SearchStore;
 ```
 
 ### Search Component Store inject
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
-import { inject, observer } from 'mobx-react';
+import MembersStore from '../../stores/MembersStore.js';
+import SearchStore from '../../stores/SearchStore.js';
 
-function Search(props) {
-  const { membersStore, searchStore } = props;
-  const { members } = membersStore;
+function Search() {
+  const members = MembersStore((state) => state).members;
+  const searchStore = SearchStore((state) => state);
+  console.log(members);
   useEffect(() => {
     searchStore.searchRead('');
   }, [searchStore]);
@@ -879,7 +791,7 @@ function Search(props) {
   );
 }
 
-export default inject('membersStore', 'searchStore')(observer(Search));
+export default Search;
 ```
 
 ## Search Component에서만 사용 가능한 state값 적용
@@ -920,7 +832,7 @@ src/components/contents/Search.js
 ```js
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function Search(props) {
+function Search() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
