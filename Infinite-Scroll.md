@@ -17,7 +17,7 @@ class InfiniteStore {
     utils.nProgress.start();
     axios.get(`/api/v1/infinite/${++this.page}`).then(response => {
       console.log(response);
-      this.members = _.concat(this.members, response.data.members);
+      this.users = _.concat(this.users, response.data.users);
       utils.nProgress.done();
     }).catch(error => {
       utils.apiCommonError(error);
@@ -53,14 +53,14 @@ router.get('/:page', (req, res) => {
   console.log(startPage, endPage);
   res.status(200).send({
     result: 'Success',
-    members: members.slice(startPage, endPage)
+    users: users.slice(startPage, endPage)
   });
 });
 ```
 
 ### Mock 데이터 생성
 
-/mock/member.json
+/mock/user.json
 ```json
 [
   {

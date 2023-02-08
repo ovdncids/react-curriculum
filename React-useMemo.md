@@ -9,30 +9,30 @@ index.js
 import { useState } from 'react';
 
 function App() {
-  const [members, setMembers] = useState([]);
-  const [member, setMember] = useState('');
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState('');
   return (
     <div>
-      <Members members={members}></Members>
+      <Users users={users}></Users>
       <input
-        type="text" placeholder="Member" value={member}
-        onChange={event => setMember(event.target.value)}
+        type="text" placeholder="User" value={user}
+        onChange={event => setUser(event.target.value)}
       />
-      <button onClick={() => setMembers([...members, member])}>Create</button>
+      <button onClick={() => setUsers([...users, user])}>Create</button>
     </div>
   );
 }
 
-function Members(props) {
-  const fMembers = () => {
-    console.log('fMembers');
-    return props.members;
+function Users(props) {
+  const fUsers = () => {
+    console.log('fUsers');
+    return props.users;
   };
-  const cMembers = fMembers();
+  const cUsers = fUsers();
   return (
     <div>
-    {cMembers.map((member, index) => (
-      <div key={index}>{member}</div>
+    {cUsers.map((user, index) => (
+      <div key={index}>{user}</div>
     ))}
     </div>
   );
@@ -47,8 +47,8 @@ index.js
 - import { useState } from 'react';
 + import { useState, useMemo } from 'react';
 
-- const cMembers = fMembers();
-+ const cMembers = useMemo(fMembers, [props.members]);
+- const cUsers = fUsers();
++ const cUsers = useMemo(fUsers, [props.users]);
 ```
 
 # useRef

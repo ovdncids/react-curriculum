@@ -197,8 +197,8 @@ module.exports = {
 </details>
 
 ```ts
-<ActiveLink activeClassName="active" href="/members">
-  <a>Members</a>
+<ActiveLink activeClassName="active" href="/users">
+  <a>Users</a>
 </ActiveLink>
 ```
 
@@ -230,27 +230,27 @@ const nextConfig = {
 ```
 -->
 
-/page/api/members.ts
+/page/api/users.ts
 ```ts
 import { setCookie } from 'cookies-next'
 
-setCookie("member_pk", 1, { req, res, maxAge: 60 * 60 * 24 })
+setCookie("user_pk", 1, { req, res, maxAge: 60 * 60 * 24 })
 ```
 
-/page/members.ts
+/page/users.ts
 ```ts
 import { getCookie } from 'cookies-next'
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  const member_pk = getCookie('member_pk', { req: context.req, res: context.res })
-  const response = await axios.get('http://localhost:3000/api/members', {
+  const user_pk = getCookie('user_pk', { req: context.req, res: context.res })
+  const response = await axios.get('http://localhost:3000/api/users', {
     headers: {
-      Cookie: `member_pk=${member_pk}`
+      Cookie: `user_pk=${user_pk}`
     }
   })
   return {
     props: {
-      members: response.data
+      users: response.data
     }
   }
 }

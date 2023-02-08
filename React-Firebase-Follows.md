@@ -14,7 +14,7 @@ export default class FollowsStore {
 
   follows = [];
   follow = {
-    member: null,
+    user: null,
     following: null
   };
 
@@ -44,12 +44,12 @@ import { useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
 
 function Follows(props) {
-  const { membersStore, followsStore } = props;
-  const { members } = membersStore;
+  const { usersStore, followsStore } = props;
+  const { users } = usersStore;
   const { follow } = followsStore;
   useEffect(() => {
-    membersStore.membersRead();
-  }, [membersStore]);
+    usersStore.usersRead();
+  }, [usersStore]);
   return (
     <div>
       <h3>Follow</h3>
@@ -63,15 +63,15 @@ function Follows(props) {
               </tr>
             </thead>
             <tbody>
-            {members.map((member, index) => (
+            {users.map((user, index) => (
               <tr key={index}>
                 <td>
-                  <input type="radio" name="follow-member" value={member.key}
-                    onChange={event => {follow.member = event.target.value}}
+                  <input type="radio" name="follow-user" value={user.key}
+                    onChange={event => {follow.user = event.target.value}}
                   />
-                  {member.name}
+                  {user.name}
                 </td>
-                <td>{member.age}</td>
+                <td>{user.age}</td>
               </tr>
             ))}
             </tbody>
@@ -86,15 +86,15 @@ function Follows(props) {
               </tr>
             </thead>
             <tbody>
-            {members.map((member, index) => (
+            {users.map((user, index) => (
               <tr key={index}>
                 <td>
-                  <input type="radio" name="follow-following" value={member.key}
+                  <input type="radio" name="follow-following" value={user.key}
                     onChange={event => {follow.following = event.target.value}}
                   />
-                  {member.name}
+                  {user.name}
                 </td>
-                <td>{member.age}</td>
+                <td>{user.age}</td>
               </tr>
             ))}
             </tbody>
@@ -108,7 +108,7 @@ function Follows(props) {
   );
 }
 
-export default inject('membersStore', 'followsStore')(observer(Follows));
+export default inject('usersStore', 'followsStore')(observer(Follows));
 ```
 
 src/App.js
@@ -151,17 +151,17 @@ src/components/contents/Follows.js
 ```
 ```js
 useEffect(() => {
-  membersStore.membersRead();
+  usersStore.usersRead();
   followsStore.followsRead();
-}, [membersStore, followsStore]);
-const getMemberName = (key) => {
-  return members.map(member => {
-    return member.key === key ? member.name : '';
+}, [usersStore, followsStore]);
+const getUserName = (key) => {
+  return users.map(user => {
+    return user.key === key ? user.name : '';
   })
 }
 ```
 ```js
-{follows.length && members.length ? (
+{follows.length && users.length ? (
 <div>
   <hr className="d-block" />
   <h3>Follows</h3>
@@ -175,8 +175,8 @@ const getMemberName = (key) => {
     <tbody>
     {follows.map((follow, index) => (
       <tr key={index}>
-        <td>{getMemberName(follow.member)}</td>
-        <td>{getMemberName(follow.following)}</td>
+        <td>{getUserName(follow.user)}</td>
+        <td>{getUserName(follow.following)}</td>
       </tr>
     ))}
     </tbody>

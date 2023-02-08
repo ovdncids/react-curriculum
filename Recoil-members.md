@@ -1,4 +1,4 @@
-# Recoil members
+# Recoil users
 * https://recoiljs.org
 
 ## Recoil 설치
@@ -6,21 +6,21 @@
 npm install recoil
 ```
 
-## Members Store 생성
-src/stores/membersStore.js
+## Users Store 생성
+src/stores/usersStore.js
 ```js
 import { atom } from 'recoil';
 
-export const memberState = atom({
-  key: 'memberState',
+export const userState = atom({
+  key: 'userState',
   default: {
     name: '',
     age: ''
   }
 });
 
-export const membersState = atom({
-  key: 'membersState',
+export const usersState = atom({
+  key: 'usersState',
   default: []
 });
 ```
@@ -39,19 +39,19 @@ import { RecoilRoot } from 'recoil';
 </RecoilRoot>
 ```
 
-## Members Component Store inject
-src/components/contents/Members.js
+## Users Component Store inject
+src/components/contents/Users.js
 ```js
 import { useRecoilState } from 'recoil';
-import { memberState, membersState } from '../../stores/membersStore.js';
+import { userState, usersState } from '../../stores/usersStore.js';
 
-function Members() {
-  const [member] = useRecoilState(memberState);
-  const [members] = useRecoilState(membersState);
-  console.log(member, members);
+function Users() {
+  const [user] = useRecoilState(userState);
+  const [users] = useRecoilState(usersState);
+  console.log(user, users);
   return (
     <div>
-      <h3>Members</h3>
+      <h3>Users</h3>
       <hr className="d-block" />
       <div>
         <h4>Read</h4>
@@ -86,48 +86,48 @@ function Members() {
   );
 }
 
-export default Members;
+export default Users;
 ```
 
-## Members Store CRUD
+## Users Store CRUD
 ### Create
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
-- const [member] = useRecoilState(memberState);
-- const [members] = useRecoilState(membersState);
+- const [user] = useRecoilState(userState);
+- const [users] = useRecoilState(usersState);
 ```
 ```js
-const [member, setMember] = useRecoilState(memberState);
-const [members, setMembers] = useRecoilState(membersState);
+const [user, setUser] = useRecoilState(userState);
+const [users, setUsers] = useRecoilState(usersState);
 ```
 ```js
 <input
-  type="text" placeholder="Name" value={member.name}
+  type="text" placeholder="Name" value={user.name}
   onChange={event => {
-    setMember({
-      ...member,
+    setUser({
+      ...user,
       name: event.target.value
     });
   }}
 />
 <input
-  type="text" placeholder="Age" value={member.age}
+  type="text" placeholder="Age" value={user.age}
   onChange={event => {
-    setMember({
-      ...member,
+    setUser({
+      ...user,
       age: event.target.value
     });
   }}
 />
 <button onClick={() => {
-  setMembers(members.concat({
-    ...member
+  setUsers(users.concat({
+    ...user
   }))
 }}>Create</button>
 ```
 
 ### Read
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
 - <tr>
 -   <td>홍길동</td>
@@ -139,10 +139,10 @@ src/components/contents/Members.js
 - </tr>
 ```
 ```js
-{members.map((member, index) => (
+{users.map((user, index) => (
   <tr key={index}>
-    <td>{member.name}</td>
-    <td>{member.age}</td>
+    <td>{user.name}</td>
+    <td>{user.age}</td>
     <td>
       <button>Update</button>
       <button>Delete</button>
@@ -152,48 +152,48 @@ src/components/contents/Members.js
 ```
 
 ### Delete
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
 - <button>Delete</button>
 ```
 ```js
 <button onClick={() => {
-  members.splice(index, 1);
-  setMembers(members);
+  users.splice(index, 1);
+  setUsers(users);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
 
 ```diff
-- const [members, setMembers] = useRecoilState(membersState);
-+ const [[...members], setMembers] = useRecoilState(membersState);
+- const [users, setUsers] = useRecoilState(usersState);
++ const [[...users], setUsers] = useRecoilState(usersState);
 ```
 * `전개 구조` 설명 하기
 
 ### Update
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
-- <td>{member.name}</td>
-- <td>{member.age}</td>
+- <td>{user.name}</td>
+- <td>{user.age}</td>
 ```
 ```js
 <td>
   <input
-    type="text" placeholder="Name" value={member.name}
+    type="text" placeholder="Name" value={user.name}
     onChange={event => {
-      member.name = event.target.value;
-      members[index] = member;
-      setMembers(members);
+      user.name = event.target.value;
+      users[index] = user;
+      setUsers(users);
     }}
   />
 </td>
 <td>
   <input
-    type="text" placeholder="Age" value={member.age}
+    type="text" placeholder="Age" value={user.age}
     onChange={event => {
-      member.age = event.target.value;
-      members[index] = member;
-      setMembers(members);
+      user.age = event.target.value;
+      users[index] = user;
+      setUsers(users);
     }}
   />
 </td>
@@ -201,8 +201,8 @@ src/components/contents/Members.js
 * `Input box` 수정 해보기
 
 ```diff
-- {members.map((member, index) => (
-+ {members.map(({...member}, index) => (
+- {users.map((user, index) => (
++ {users.map(({...user}, index) => (
 ```
 * `전개 구조` 설명 하기
 
@@ -231,30 +231,30 @@ export const axiosError = (error) => {
 ```
 
 ### Read
-src/stores/membersStore.js
+src/stores/usersStore.js
 ```js
 import { atom, selector } from 'recoil';
 import axios from 'axios';
 import { axiosError } from './common.js';
 
-export const memberState = atom({
-  key: 'memberState',
+export const userState = atom({
+  key: 'userState',
   default: {
     name: '',
     age: ''
   }
 });
 
-export const membersState = atom({
-  key: 'membersState',
+export const usersState = atom({
+  key: 'usersState',
   default: []
 });
 
-export const membersService = {
-  create: async (member) => {
+export const usersService = {
+  create: async (user) => {
     try {
-      const response = await axios.post('http://localhost:3100/api/v1/members', member);
-      console.log('Done membersCreate', response);
+      const response = await axios.post('http://localhost:3100/api/v1/users', user);
+      console.log('Done usersCreate', response);
       return response.data;
     } catch(error) {
       axiosError(error);
@@ -262,26 +262,26 @@ export const membersService = {
   },
   read: async () => {
     try {
-      const response = await axios.get('http://localhost:3100/api/v1/members');
-      console.log('Done membersRead', response);
-      return response.data.members;
+      const response = await axios.get('http://localhost:3100/api/v1/users');
+      console.log('Done usersRead', response);
+      return response.data.users;
     } catch(error) {
       axiosError(error);
     }
   },
   delete: async (index) => {
     try {
-      const response = await axios.delete('http://localhost:3100/api/v1/members/' + index);
-      console.log('Done membersDelete', response);
+      const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
+      console.log('Done usersDelete', response);
       return response.data;
     } catch(error) {
       axiosError(error);
     }
   },
-  update: async (index, member) => {
+  update: async (index, user) => {
     try {
-      const response = await axios.patch('http://localhost:3100/api/v1/members/' + index, member);
-      console.log('Done membersUpdate', response);
+      const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
+      console.log('Done usersUpdate', response);
       return response.data;
     } catch(error) {
       axiosError(error);
@@ -289,27 +289,27 @@ export const membersService = {
   }
 };
 
-export const membersRead = selector({
-  key: 'membersRead',
-  get: membersService.read
+export const usersRead = selector({
+  key: 'usersRead',
+  get: usersService.read
 });
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
 - import { useRecoilState } from 'recoil';
-- import { memberState, membersState } from '../../stores/membersStore.js';
+- import { userState, usersState } from '../../stores/usersStore.js';
 ```
 ```js
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { memberState, membersState, membersRead } from '../../stores/membersStore.js';
+import { userState, usersState, usersRead } from '../../stores/usersStore.js';
 ```
 ```js
-const _membersRead = useRecoilValue(membersRead);
+const _usersRead = useRecoilValue(usersRead);
 useEffect(() => {
-  setMembers(_membersRead);
-}, [setMembers, _membersRead]);
+  setUsers(_usersRead);
+}, [setUsers, _usersRead]);
 ```
 * 확인 해보기
 
@@ -324,93 +324,93 @@ index.js
 ```
 
 ### Create
-src/stores/membersStore.js
+src/stores/usersStore.js
 ```js
-export const membersCreate = ({set}) => async (member) => {
-  await membersService.create(member);
-  const members = await membersService.read();
-  set(membersState, members)
+export const usersCreate = ({set}) => async (user) => {
+  await usersService.create(user);
+  const users = await usersService.read();
+  set(usersState, users)
 };
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
 - import { useRecoilState, useRecoilValue } from 'recoil';
-- import { memberState, membersState, membersRead } from '../../stores/membersStore.js';
+- import { userState, usersState, usersRead } from '../../stores/usersStore.js';
 ```
 ```js
 import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
-import { memberState, membersState, membersRead, membersCreate } from '../../stores/membersStore.js';
+import { userState, usersState, usersRead, usersCreate } from '../../stores/usersStore.js';
 ```
 ```js
-const _membersCreate = useRecoilCallback(membersCreate);
+const _usersCreate = useRecoilCallback(usersCreate);
 ```
 ```diff
 - <button onClick={() => {
--   setMembers(members.concat({
--     ...member
+-   setUsers(users.concat({
+-     ...user
 -   }));
 - }}>Create</button>
 ```
 ```js
 <button onClick={() => {
-  _membersCreate(member);
+  _usersCreate(user);
 }}>Create</button>
 ```
 
 ### Delete
-src/stores/membersStore.js
+src/stores/usersStore.js
 ```js
-export const membersDelete = ({set}) => async (index) => {
-  await membersService.delete(index);
-  const members = await membersService.read();
-  set(membersState, members)
+export const usersDelete = ({set}) => async (index) => {
+  await usersService.delete(index);
+  const users = await usersService.read();
+  set(usersState, users)
 };
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
-- import { memberState, membersState, membersRead, membersCreate } from '../../stores/membersStore.js';
-+ import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/membersStore.js';
+- import { userState, usersState, usersRead, usersCreate } from '../../stores/usersStore.js';
++ import { userState, usersState, usersRead, usersCreate, usersDelete } from '../../stores/usersStore.js';
 ```
 ```js
-const _membersDelete = useRecoilCallback(membersDelete);
+const _usersDelete = useRecoilCallback(usersDelete);
 ```
 ```diff
 - <button onClick={() => {
--   members.splice(index, 1);
--   setMembers(members);
+-   users.splice(index, 1);
+-   setUsers(users);
 - }}>Delete</button>
 ```
 ```js
 <button onClick={() => {
-  _membersDelete(index);
+  _usersDelete(index);
 }}>Delete</button>
 ```
 
 ### Update
-src/stores/membersStore.js
+src/stores/usersStore.js
 ```js
-export const membersUpdate = ({set}) => async (index, member) => {
-  await membersService.update(index, member);
-  const members = await membersService.read();
-  set(membersState, members)
+export const usersUpdate = ({set}) => async (index, user) => {
+  await usersService.update(index, user);
+  const users = await usersService.read();
+  set(usersState, users)
 };
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
-- import { memberState, membersState, membersRead, membersCreate, membersDelete } from '../../stores/membersStore.js';
-+ import { memberState, membersState, membersRead, membersCreate, membersDelete, membersUpdate } from '../../stores/membersStore.js';
+- import { userState, usersState, usersRead, usersCreate, usersDelete } from '../../stores/usersStore.js';
++ import { userState, usersState, usersRead, usersCreate, usersDelete, usersUpdate } from '../../stores/usersStore.js';
 ```
 ```js
-const _membersUpdate = useRecoilCallback(membersUpdate);
+const _usersUpdate = useRecoilCallback(usersUpdate);
 ```
 ```diff
 - <button>Update</button>
 ```
 ```js
 <button onClick={() => {
-  _membersUpdate(index, member);
+  _usersUpdate(index, user);
 }}>Update</button>
 ```

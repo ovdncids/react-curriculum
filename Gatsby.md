@@ -31,14 +31,14 @@ export default function Index() {
       <div className="container">
         <nav className="nav">
           <ul>
-            <li><h2>Members</h2></li>
+            <li><h2>Users</h2></li>
             <li><h2>Search</h2></li>
           </ul>
         </nav>
         <hr />
         <section className="contents">
           <div>
-            <h3>Members</h3>
+            <h3>Users</h3>
             <p>Contents</p>
           </div>
         </section>
@@ -132,7 +132,7 @@ export default function Layout({ children }) {
       <div className="container">
         <nav className="nav">
           <ul>
-            <li><h2>Members</h2></li>
+            <li><h2>Users</h2></li>
             <li><h2>Search</h2></li>
           </ul>
         </nav>
@@ -156,7 +156,7 @@ export default function Index() {
   return (
     <Layout>
       <div>
-        <h3>Members</h3>
+        <h3>Users</h3>
         <p>Contents</p>
       </div>
     </Layout>
@@ -184,11 +184,11 @@ export default function Search() {
 
 src/components/layout.js
 ```diff
-- <li><h2>Members</h2></li>
+- <li><h2>Users</h2></li>
 - <li><h2>Search</h2></li>
 ```
 ```js
-<li><h2><Link to="/" activeClassName='active'>Members</Link></h2></li>
+<li><h2><Link to="/" activeClassName='active'>Users</Link></h2></li>
 <li><h2><Link to="/search" activeClassName='active'>Search</Link></h2></li>
 ```
 
@@ -204,12 +204,12 @@ export default function Page404() {
 }
 ```
 
-## Members Store 만들기
+## Users Store 만들기
 ### MobX 설치
 ```sh
 npm install mobx mobx-react
 ```
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
 import { configure, makeAutoObservable } from 'mobx'
 
@@ -218,27 +218,27 @@ configure({
   // useProxies: 'never'
 })
 
-export default class MembersStore {
+export default class UsersStore {
   constructor() {
     makeAutoObservable(this)
   }
 
-  members = []
-  member = {
+  users = []
+  user = {
     name: '',
     age: ''
   }
 
-  membersCreate() {
-    this.members.push({
-      name: this.member.name,
-      age: this.member.age
+  usersCreate() {
+    this.users.push({
+      name: this.user.name,
+      age: this.user.age
     })
-    console.log('Done membersCreate', this.members)
+    console.log('Done usersCreate', this.users)
   }
 }
 
-export const membersStore = new MembersStore()
+export const usersStore = new UsersStore()
 ```
 
 ### Provide 등록
@@ -246,11 +246,11 @@ provide-stores.js
 ```js
 import React from 'react'
 import { Provider } from 'mobx-react'
-import { membersStore } from './src/stores/MembersStore'
+import { usersStore } from './src/stores/UsersStore'
 
 export default function Stores({ element }) {
   return (
-    <Provider membersStore={membersStore}>{element}</Provider>
+    <Provider usersStore={usersStore}>{element}</Provider>
   );
 }
 ```
@@ -263,7 +263,7 @@ import provideStores from './provide-stores'
 export const wrapRootElement = provideStores
 ```
 
-### Members Component Store inject
+### Users Component Store inject
 src/pages/index.js
 ```diff
 - export default function Index() {
@@ -272,12 +272,12 @@ src/pages/index.js
 import { inject, observer } from 'mobx-react'
 
 function Index(props) {
-  const { membersStore } = props
-  const { member } = membersStore
+  const { usersStore } = props
+  const { user } = usersStore
   return (
     <Layout>
       <div>
-        <h3>Members</h3>
+        <h3>Users</h3>
         <hr className="d-block" />
         <div>
           <h4>Read</h4>
@@ -305,36 +305,36 @@ function Index(props) {
         <div>
           <h4>Create</h4>
           <input
-            type="text" placeholder="Name" value={member.name}
-            onChange={event => {member.name = event.target.value}}
+            type="text" placeholder="Name" value={user.name}
+            onChange={event => {user.name = event.target.value}}
           />
           <input
-            type="text" placeholder="Age" value={member.age}
-            onChange={event => {member.age = event.target.value}}
+            type="text" placeholder="Age" value={user.age}
+            onChange={event => {user.age = event.target.value}}
           />
-          <button onClick={() => membersStore.membersCreate()}>Create</button>
+          <button onClick={() => usersStore.usersCreate()}>Create</button>
         </div>
       </div>
     </Layout>
   );
 }
 
-export default inject('membersStore')(observer(Index))
+export default inject('usersStore')(observer(Index))
 ```
 
-### Members Store CRUD
+### Users Store CRUD
 ### Read
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-membersRead() {
-  this.members = [{
+usersRead() {
+  this.users = [{
     name: '홍길동',
     age: 20
   }, {
     name: '춘향이',
     age: 16
   }]
-  console.log('Done membersRead', this.members)
+  console.log('Done usersRead', this.users)
 }
 ```
 
@@ -344,13 +344,13 @@ src/pages/index.js
 + import React, { useEffect } from 'react'
 ```
 ```diff
-- const { member } = membersStore
+- const { user } = usersStore
 ```
 ```js
-const { members, member } = membersStore
+const { users, user } = usersStore
 useEffect(() => {
-  membersStore.membersRead()
-}, [membersStore])
+  usersStore.usersRead()
+}, [usersStore])
 ```
 ```diff
 - <tr>
@@ -358,40 +358,40 @@ useEffect(() => {
 -   <td>20</td>
 ```
 ```js
-{members.map((member, index) => (
+{users.map((user, index) => (
   <tr key={index}>
-    <td>{member.name}</td>
-    <td>{member.age}</td>
+    <td>{user.name}</td>
+    <td>{user.age}</td>
     ...
   </tr>
 ))}
 ```
 
 ### Update
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-membersUpdate(index, member) {
-  this.members[index] = member
-  console.log('Done membersUpdate', this.members)
+usersUpdate(index, user) {
+  this.users[index] = user
+  console.log('Done usersUpdate', this.users)
 }
 ```
 
 src/pages/index.js
 ```diff
-- <td>{member.name}</td>
-- <td>{member.age}</td>
+- <td>{user.name}</td>
+- <td>{user.age}</td>
 ```
 ```js
 <td>
   <input
-    type="text" placeholder="Name" value={member.name}
-    onChange={event => {member.name = event.target.value}}
+    type="text" placeholder="Name" value={user.name}
+    onChange={event => {user.name = event.target.value}}
   />
 </td>
 <td>
   <input
-    type="text" placeholder="Age" value={member.age}
-    onChange={event => {member.age = event.target.value}}
+    type="text" placeholder="Age" value={user.age}
+    onChange={event => {user.age = event.target.value}}
   />
 </td>
 ```
@@ -399,15 +399,15 @@ src/pages/index.js
 - <button>Update</button>
 ```
 ```js
-<button onClick={() => membersStore.membersUpdate(index, member)}>Update</button>
+<button onClick={() => usersStore.usersUpdate(index, user)}>Update</button>
 ```
 
 ### Delete
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-membersDelete(index) {
-  this.members.splice(index, 1)
-  console.log('Done membersDelete', this.members)
+usersDelete(index) {
+  this.users.splice(index, 1)
+  console.log('Done usersDelete', this.users)
 }
 ```
 
@@ -436,81 +436,81 @@ export const axiosError = (error) => {
 ```
 
 ### Create
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
 import axios from 'axios'
 import { axiosError } from './common.js'
 ```
 ```diff
-membersCreate() {
-- this.members.push({
--   name: this.member.name,
--   age: this.member.age
+usersCreate() {
+- this.users.push({
+-   name: this.user.name,
+-   age: this.user.age
 - })
-- console.log('Done membersCreate', this.members)
+- console.log('Done usersCreate', this.users)
 ```
 ```js
-axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
-  console.log('Done membersCreate', response)
-  this.membersRead()
+axios.post('http://localhost:3100/api/v1/users', this.user).then((response) => {
+  console.log('Done usersCreate', response)
+  this.usersRead()
 }).catch((error) => {
   axiosError(error)
 })
 ```
 
 ### Read
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```diff
-membersRead() {
-- this.members = [{
+usersRead() {
+- this.users = [{
 -   name: '홍길동',
 -   age: 20
 - }, {
 -   name: '춘향이',
 -   age: 16
 - }]
-- console.log('Done membersRead', this.members)
+- console.log('Done usersRead', this.users)
 ```
 ```js
-axios.get('http://localhost:3100/api/v1/members').then((response) => {
-  console.log('Done membersRead', response)
-  this.members = response.data.members
+axios.get('http://localhost:3100/api/v1/users').then((response) => {
+  console.log('Done usersRead', response)
+  this.users = response.data.users
 }).catch((error) => {
   axiosError(error)
 })
 ```
 
 ### Update
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```diff
-membersUpdate(index, member) {
-- this.members[index] = member
-- console.log('Done membersUpdate', this.members)
+usersUpdate(index, user) {
+- this.users[index] = user
+- console.log('Done usersUpdate', this.users)
 ```
 ```js
-const memberUpdate = {
+const userUpdate = {
   index: index,
-  member: member,
+  user: user,
 }
-axios.patch('http://localhost:3100/api/v1/members', memberUpdate).then((response) => {
-  console.log('Done membersUpdate', response)
-  this.membersRead()
+axios.patch('http://localhost:3100/api/v1/users', userUpdate).then((response) => {
+  console.log('Done usersUpdate', response)
+  this.usersRead()
 }).catch((error) => {
   axiosError(error)
 })
 ```
 
 ### Delete
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```diff
-membersDelete(index) {
-- this.members.splice(index, 1)
-- console.log('Done membersDelete', this.members)
+usersDelete(index) {
+- this.users.splice(index, 1)
+- console.log('Done usersDelete', this.users)
 ```
 ```js
-axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
-  console.log('Done membersDelete', response)
-  this.membersRead()
+axios.delete('http://localhost:3100/api/v1/users/' + index).then((response) => {
+  console.log('Done usersDelete', response)
+  this.usersRead()
 }).catch((error) => {
   axiosError(error)
 })
@@ -522,7 +522,7 @@ src/stores/SearchStore.js
 import { makeAutoObservable } from 'mobx'
 import axios from 'axios'
 import { axiosError } from './common.js'
-import { membersStore } from './MembersStore.js'
+import { usersStore } from './UsersStore.js'
 
 export default class SearchStore {
   constructor() {
@@ -533,7 +533,7 @@ export default class SearchStore {
     const url = `http://localhost:3100/api/v1/search?q=${q}`
     axios.get(url).then((response) => {
       console.log('Done searchRead', response)
-      membersStore.members = response.data.members
+      usersStore.users = response.data.users
     }).catch((error) => {
       axiosError(error)
     })
@@ -549,11 +549,11 @@ provide-stores.js
 import { searchStore } from './src/stores/SearchStore'
 ```
 ```diff
-- <Provider membersStore={membersStore}>{element}</Provider>
+- <Provider usersStore={usersStore}>{element}</Provider>
 ```
 ```js
 <Provider
-  membersStore={membersStore}
+  usersStore={usersStore}
   searchStore={searchStore}
 >{element}</Provider>
 ```
@@ -566,8 +566,8 @@ import Layout from '../components/layout.js'
 import { inject, observer } from 'mobx-react'
 
 function Search(props) {
-  const { membersStore, searchStore } = props
-  const { members } = membersStore
+  const { usersStore, searchStore } = props
+  const { users } = usersStore
   const [ q, setQ ] = useState('')
   const searchRead = (event) => {
     searchStore.searchRead(q)
@@ -601,10 +601,10 @@ function Search(props) {
               </tr>
             </thead>
             <tbody>
-            {members.map((member, index) => (
+            {users.map((user, index) => (
               <tr key={index}>
-                <td>{member.name}</td>
-                <td>{member.age}</td>
+                <td>{user.name}</td>
+                <td>{user.age}</td>
               </tr>
             ))}
             </tbody>
@@ -615,18 +615,18 @@ function Search(props) {
   );
 }
 
-export default inject('membersStore', 'searchStore')(observer(Search))
+export default inject('usersStore', 'searchStore')(observer(Search))
 ```
 
 ## Search Component 쿼리스트링 변경과 새로고침 적용
 src/pages/search.js
 ```diff
-- const { membersStore, searchStore } = props
+- const { usersStore, searchStore } = props
 ```
 ```js
 const url = new URL(props.location.href || 'http://localhost')
 const spSearch = url.searchParams.get('q') || ''
-const { membersStore, searchStore, navigate } = props
+const { usersStore, searchStore, navigate } = props
 ```
 ```diff
 - searchStore.searchRead(q)

@@ -21,13 +21,13 @@ function App() {
 }
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```js
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-function Members(props) {
-  const result = useQuery('members', async () => await axios.get('http://localhost:3100/api/v1/members'), {
+function Users(props) {
+  const result = useQuery('users', async () => await axios.get('http://localhost:3100/api/v1/users'), {
     // 통신중에 오류가 발생 하면 재시도 회수  
     retry: 0,
     // 화면이 blur 상태에서 focus 상태이면 통신을 다시 요청 한다. (기본 true)
@@ -38,6 +38,6 @@ function Members(props) {
   // status값은 통신 오류 재시도 회수가 끝나기 전에는 'loading' 끝나면 'error'가 된다.
   const { data, isLoading, error, status } = result;
   
-  // {data && data.data.members.map((member, index) => (
+  // {data && data.data.users.map((user, index) => (
 }
 ```

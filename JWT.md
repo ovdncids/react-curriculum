@@ -19,8 +19,8 @@ const jwt = require('jsonwebtoken');
 const privateKey = 'privateKey';
 // privateKey를 바탕으로 JWT가 암호환된 토큰을 생성한다.
 
-const tokenCreate = function(request, response, member) {
-  jwt.sign(member, privateKey, {
+const tokenCreate = function(request, response, user) {
+  jwt.sign(user, privateKey, {
     expiresIn: '1d',
     subject: 'login'
   }, function (error, token) {
@@ -54,7 +54,7 @@ module.exports = {
 ```
 
 ### 라우터에 JWT 미들웨어 적용
-routers/members.js
+routers/users.js
 ```js
 const jwtAuth = require('../middlewares/jwtAuth.js');
 
@@ -92,10 +92,10 @@ swagger.json
 ```
 "paths": {
 ```json
-"/members/login": {
+"/users/login": {
   "post": {
     "tags": [
-      "members/login"
+      "users/login"
     ],
     "summary": "Login",
     "parameters": [
@@ -104,7 +104,7 @@ swagger.json
         "name": "body",
         "required": true,
         "schema": {
-          "$ref": "#/definitions/member"
+          "$ref": "#/definitions/user"
         }
       }
     ],
@@ -121,7 +121,7 @@ swagger.json
       }
     ],
     "tags": [
-      "members/login"
+      "users/login"
     ],
     "summary": "Login check",
     "headers": [
@@ -130,7 +130,7 @@ swagger.json
         "name": "body",
         "required": true,
         "schema": {
-          "$ref": "#/definitions/member"
+          "$ref": "#/definitions/user"
         }
       }
     ],
@@ -166,17 +166,17 @@ const axiosDefaultsHeaders = function(token) {
 };
 axiosDefaultsHeaders();
 
-const member = {
+const user = {
   name: '홍길동',
   age: 20
 };
-axios.post('/api/v1/members/login', member).then(function(response) {
+axios.post('/api/v1/users/login', user).then(function(response) {
   axiosDefaultsHeaders(response.data.token);
   // TODO: 로그인 구현
   // Store의 state값 수정 (token: localStorage.getItem('x-jwt-token'))
 });
 
-axios.get('/api/v1/members/login').then(function(response) {
+axios.get('/api/v1/users/login').then(function(response) {
   console.log(response.data.decoded);
 });
 ```

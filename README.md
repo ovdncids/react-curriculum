@@ -147,14 +147,14 @@ src/App.js
   <div className="container">
     <nav className="nav">
       <ul>
-        <li><h2>Members</h2></li>
+        <li><h2>Users</h2></li>
         <li><h2>Search</h2></li>
       </ul>
     </nav>
     <hr />
     <section className="contents">
       <div>
-        <h3>Members</h3>
+        <h3>Users</h3>
         <p>Contents</p>
       </div>
     </section>
@@ -272,7 +272,7 @@ src/App.js
 
 - <nav className="nav">
 -   <ul>
--     <li><h2>Members</h2></li>
+-     <li><h2>Users</h2></li>
 -     <li><h2>Search</h2></li>
 -   </ul>
 - </nav>
@@ -295,42 +295,42 @@ npm install react-router-dom
 src/App.js
 ```js
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Members from './components/contents/Members.js';
+import Users from './components/contents/Users.js';
 import Search from './components/contents/Search.js';
 ```
 ```diff
 - <div>
--   <h3>Members</h3>
+-   <h3>Users</h3>
 -   <p>Contents</p>
 - </div>
 ```
 ```js
 <BrowserRouter>
   <Routes>
-    <Route path="/members" element={<Members />} />
+    <Route path="/users" element={<Users />} />
     <Route path="/search" element={<Search />} />
-    <Route path="*" element={<Navigate replace to="/members" />} />
+    <Route path="*" element={<Navigate replace to="/users" />} />
   </Routes>
 </BrowserRouter>
 ```
 <!--
-<Route exact={true} path="/members" render={props => <Members {...props} testProps={true} />} />
-render는 render={Members} 이렇게 사용할 수 없다.
+<Route exact={true} path="/users" render={props => <Users {...props} testProps={true} />} />
+render는 render={Users} 이렇게 사용할 수 없다.
 -->
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```js
-function Members(props) {
+function Users(props) {
   console.log(props);
   return (
     <div>
-      <h3>Members</h3>
+      <h3>Users</h3>
       <p>Contents</p>
     </div>
   );
 }
 
-export default Members;
+export default Users;
 ```
 
 src/components/contents/Search.js (동일)
@@ -341,7 +341,7 @@ src/components/Nav.js
 ```js
 import { NavLink } from 'react-router-dom';
 
-<li><h2><NavLink to="members" className={({ isActive }) => isActive ? 'active' : ''}>Members</NavLink></h2></li>
+<li><h2><NavLink to="users" className={({ isActive }) => isActive ? 'active' : ''}>Users</NavLink></h2></li>
 <li><h2><NavLink to="search" className={({ isActive }) => isActive ? 'active' : ''}>Search</NavLink></h2></li>
 ```
 **You should not use `<Link>` outside a `<Router>` 설명**
@@ -363,7 +363,7 @@ function A1(props) {
 
 **여기 까지가 Markup 개발자 분들이 할일 입니다.**
 
-## Members Store 만들기
+## Users Store 만들기
 
 **Store 개념 설명**
 
@@ -379,35 +379,35 @@ https://github.com/pmndrs/zustand
 npm install zustand
 ```
 
-## Members Store 생성
-src/stores/MembersStore.js
+## Users Store 생성
+src/stores/UsersStore.js
 ```js
 import { create } from 'zustand';
 
-const MembersStore = create((set) => ({
-  members: [],
-  member: {
+const UsersStore = create((set) => ({
+  users: [],
+  user: {
     name: '',
     age: ''
   }
 }));
 
-export default MembersStore;
+export default UsersStore;
 ```
 
-## Members Component Store inject
-src/components/contents/Members.js
+## Users Component Store inject
+src/components/contents/Users.js
 ```js
-import MembersStore from '../../stores/MembersStore.js';
+import UsersStore from '../../stores/UsersStore.js';
 
-function Members() {
-  const membersStore = MembersStore((state) => state);
-  const member = membersStore.member;
-  const members = membersStore.members;
-  console.log(member, members);
+function Users() {
+  const usersStore = UsersStore((state) => state);
+  const user = usersStore.user;
+  const users = usersStore.users;
+  console.log(user, users);
   return (
     <div>
-      <h3>Members</h3>
+      <h3>Users</h3>
       <hr className="d-block" />
       <div>
         <h4>Read</h4>
@@ -442,23 +442,23 @@ function Members() {
   );
 }
 
-export default Members;
+export default Users;
 ```
 
-## Members Store CRUD
+## Users Store CRUD
 ### Create
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-memberSet: (member) => {
-  set(() => ({ member }));
+userSet: (user) => {
+  set(() => ({ user }));
 },
-membersCreate: (member) => {
+usersCreate: (user) => {
   set((state) => {
-    state.members.push({
-      ...member
+    state.users.push({
+      ...user
     });
     return {
-      members: state.members
+      users: state.users
     };
   });
 }
@@ -469,33 +469,33 @@ membersCreate: (member) => {
 * `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
 * `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```js
 <input
-  type="text" placeholder="Name" value={member.name}
+  type="text" placeholder="Name" value={user.name}
   onChange={event => {
-    member.name = event.target.value;
-    membersStore.memberSet(member);
+    user.name = event.target.value;
+    usersStore.userSet(user);
   }}
 />
 <input
-  type="text" placeholder="Age" value={member.age}
+  type="text" placeholder="Age" value={user.age}
   onChange={event => {
-    member.age = event.target.value;
-    membersStore.memberSet(member);
+    user.age = event.target.value;
+    usersStore.userSet(user);
   }}
 />
 <button onClick={() => {
-  membersStore.membersCreate(member);
+  usersStore.usersCreate(user);
 }}>Create</button>
 ```
 
 ### Read
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-membersRead: () => {
+usersRead: () => {
   set((state) => {
-    state.members.push({
+    state.users.push({
       name: '홍길동',
       age: 20
     }, {
@@ -503,25 +503,25 @@ membersRead: () => {
       age: 16
     });
     return {
-      members: state.members
+      users: state.users
     };
   });
 }
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```js
 import { useEffect } from 'react';
 
-const memberSet = membersStore.memberSet;
-const membersRead = membersStore.membersRead;
+const userSet = usersStore.userSet;
+const usersRead = usersStore.usersRead;
 useEffect(() => {
-  memberSet({
+  userSet({
     name: '',
     age: ''
   });
-  membersRead();
-}, [memberSet, membersRead]);
+  usersRead();
+}, [userSet, usersRead]);
 ```
 
 ```diff
@@ -535,10 +535,10 @@ useEffect(() => {
 - </tr>
 ```
 ```js
-{members.map((member, index) => (
+{users.map((user, index) => (
   <tr key={index}>
-    <td>{member.name}</td>
-    <td>{member.age}</td>
+    <td>{user.name}</td>
+    <td>{user.age}</td>
     <td>
       <button>Update</button>
       <button>Delete</button>
@@ -548,66 +548,66 @@ useEffect(() => {
 ```
 
 ### Delete
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-membersDelete: (index) => {
+usersDelete: (index) => {
   set((state) => {
-    state.members.splice(index, 1);
+    state.users.splice(index, 1);
     return {
-      members: state.members
+      users: state.users
     };
   });
 }
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
 - <button>Delete</button>
 ```
 ```js
 <button onClick={() => {
-  membersDelete.membersDelete(index);
+  usersDelete.usersDelete(index);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
 
 ### Update
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
-membersSet: (members) => {
-  set(() => ({ members }));
+usersSet: (users) => {
+  set(() => ({ users }));
 },
-membersUpdate: (index, member) => {
+usersUpdate: (index, user) => {
   set((state) => {
-    state.members[index] = member;
+    state.users[index] = user;
     return {
-      members: state.members
+      users: state.users
     };
   });
 }
 ```
 
-src/components/contents/Members.js
+src/components/contents/Users.js
 ```diff
-- <td>{member.name}</td>
-- <td>{member.age}</td>
+- <td>{user.name}</td>
+- <td>{user.age}</td>
 ```
 ```js
 <td>
   <input
-    type="text" placeholder="Name" value={member.name}
+    type="text" placeholder="Name" value={user.name}
     onChange={event => {
-      member.name = event.target.value;
-      membersStore.membersSet(members);
+      user.name = event.target.value;
+      usersStore.usersSet(users);
     }}
   />
 </td>
 <td>
   <input
-    type="text" placeholder="Age" value={member.age}
+    type="text" placeholder="Age" value={user.age}
     onChange={event => {
-      member.age = event.target.value;
-      membersStore.membersSet(members);
+      user.age = event.target.value;
+      usersStore.usersSet(users);
     }}
   />
 </td>
@@ -617,7 +617,7 @@ src/components/contents/Members.js
 ```diff
 - <button>Update</button>
 <button onClick={() => {
-  membersUpdate(index, member);
+  usersUpdate(index, user);
 }}>Update</button>
 ```
 
@@ -646,20 +646,20 @@ export const axiosError = (error) => {
 ```
 
 ### Read
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```js
 import axios from 'axios';
 import { axiosError } from './common.js';
 ```
 ```diff
-- membersRead: () => {
+- usersRead: () => {
 ```
 ```js
-membersRead: async () => {
+usersRead: async () => {
   try {
-    const response = await axios.get('http://localhost:3100/api/v1/members');
-    console.log('Done membersRead', response);
-    set({ members: response.data.members });
+    const response = await axios.get('http://localhost:3100/api/v1/users');
+    console.log('Done usersRead', response);
+    set({ users: response.data.users });
   } catch(error) {
     axiosError(error);
   }
@@ -667,20 +667,20 @@ membersRead: async () => {
 ```
 
 ### Create
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```diff
-- const MembersStore = create((set) => ({
-const MembersStore = create((set, get) => ({
+- const UsersStore = create((set) => ({
+const UsersStore = create((set, get) => ({
 ```
 ```diff
-- membersCreate: (member) => {
+- usersCreate: (user) => {
 ```
 ```js
-membersCreate: async (member) => {
+usersCreate: async (user) => {
   try {
-    const response = await axios.post('http://localhost:3100/api/v1/members', member);
-    console.log('Done membersCreate', response);
-    get().membersRead();
+    const response = await axios.post('http://localhost:3100/api/v1/users', user);
+    console.log('Done usersCreate', response);
+    get().usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -688,16 +688,16 @@ membersCreate: async (member) => {
 ```
 
 ### Delete
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```diff
-- membersDelete: (index) => {
+- usersDelete: (index) => {
 ```
 ```js
-membersDelete: async (index) => {
+usersDelete: async (index) => {
   try {
-    const response = await axios.delete('http://localhost:3100/api/v1/members/' + index);
-    console.log('Done membersDelete', response);
-    get().membersRead();
+    const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
+    console.log('Done usersDelete', response);
+    get().usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -705,16 +705,16 @@ membersDelete: async (index) => {
 ```
 
 ### Update
-src/stores/MembersStore.js
+src/stores/UsersStore.js
 ```diff
-- membersUpdate: async (index, member) => {
+- usersUpdate: async (index, user) => {
 ```
 ```js
-membersUpdate: async (index, member) => {
+usersUpdate: async (index, user) => {
   try {
-    const response = await axios.patch('http://localhost:3100/api/v1/members/' + index, member);
-    console.log('Done membersUpdate', response);
-    get().membersRead();
+    const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
+    console.log('Done usersUpdate', response);
+    get().usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -725,7 +725,7 @@ membersUpdate: async (index, member) => {
 src/stores/SearchStore.js
 ```js
 import { create } from 'zustand';
-import MembersStore from './MembersStore.js';
+import UsersStore from './UsersStore.js';
 import axios from 'axios';
 import { axiosError } from './common.js';
 
@@ -734,7 +734,7 @@ const SearchStore = create(() => ({
     try {
       const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
       console.log('Done searchRead', response);
-      MembersStore.setState({ members: response.data.members });
+      UsersStore.setState({ users: response.data.users });
     } catch(error) {
       axiosError(error);
     }
@@ -748,13 +748,13 @@ export default SearchStore;
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
-import MembersStore from '../../stores/MembersStore.js';
+import UsersStore from '../../stores/UsersStore.js';
 import SearchStore from '../../stores/SearchStore.js';
 
 function Search() {
-  const members = MembersStore((state) => state).members;
+  const users = UsersStore((state) => state).users;
   const searchStore = SearchStore((state) => state);
-  console.log(members);
+  console.log(users);
   useEffect(() => {
     searchStore.searchRead('');
   }, [searchStore]);
@@ -778,10 +778,10 @@ function Search() {
             </tr>
           </thead>
           <tbody>
-          {members.map((member, index) => (
+          {users.map((user, index) => (
             <tr key={index}>
-              <td>{member.name}</td>
-              <td>{member.age}</td>
+              <td>{user.name}</td>
+              <td>{user.age}</td>
             </tr>
           ))}
           </tbody>
