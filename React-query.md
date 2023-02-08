@@ -1,5 +1,6 @@
 # React-query
-* https://velog.io/@kimhyo_0218/React-Query-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%BF%BC%EB%A6%AC-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-useQuery
+* https://react-query-v3.tanstack.com
+* https://tech.kakaopay.com/post/react-query-1
 
 ## 설치
 ```sh
