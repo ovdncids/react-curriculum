@@ -39,7 +39,7 @@ import { RecoilRoot } from 'recoil';
 </RecoilRoot>
 ```
 
-## Users Component Store inject
+## Users Component Recoil Store 주입
 src/components/contents/Users.js
 ```js
 import { useRecoilState } from 'recoil';
