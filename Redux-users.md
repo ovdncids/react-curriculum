@@ -72,7 +72,7 @@ import store from './store/index.js';
 </Provider>
 ```
 
-### Users Component Store inject
+### Users Component Redux Store 주입
 src/components/contents/Users.js
 ```js
 import { useSelector } from 'react-redux';
@@ -794,7 +794,7 @@ import { searchTakeEvery } from './search/searchSaga.js';
 ```
 </details>
 
-### Search Component Store inject
+### Search Component Redux Store 주입
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
