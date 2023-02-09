@@ -746,7 +746,7 @@ const SearchStore = create(() => ({
 export default SearchStore;
 ```
 
-### Search Component Store inject
+### Search Component Justand Store 주입
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
