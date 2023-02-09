@@ -60,7 +60,7 @@ import { usersStore } from './stores/UsersStore.js';
 </Provider>
 ```
 
-### Users Component Store inject
+### Users Component MobX Store 주입
 src/components/contents/Users.js
 ```js
 import { inject, observer } from 'mobx-react';
@@ -462,7 +462,7 @@ import { searchStore } from './stores/SearchStore';
 searchStore={searchStore}
 ```
 
-### Search Component Store inject
+### Search Component MobX Store 주입
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
