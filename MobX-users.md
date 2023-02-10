@@ -307,24 +307,27 @@ export const axiosError = (error) => {
 };
 ```
 
-### Create
+### Read
 src/stores/UsersStore.js
 ```js
 import axios from 'axios';
 import { axiosError } from './common.js';
 ```
 ```diff
-usersCreate(user) {
-- this.users.push({
--   name: user.name,
--   age: user.age
-- })
-- console.log('Done usersCreate', this.users);
+usersRead() {
+- this.users = [{
+-   name: '홍길동',
+-   age: 20
+- }, {
+-   name: '춘향이',
+-   age: 16
+- }];
+- console.log('Done usersRead', this.users);
 ```
 ```js
-axios.post('http://localhost:3100/api/v1/users', user).then((response) => {
-  console.log('Done usersCreate', response);
-  this.usersRead();
+axios.get('http://localhost:3100/api/v1/users').then((response) => {
+  console.log('Done usersRead', response);
+  this.users = response.data.users;
 }).catch((error) => {
   axiosError(error);
 });
@@ -373,23 +376,20 @@ const c = new C();
 c.method();
 ``` -->
 
-### Read
+### Create
 src/stores/UsersStore.js
 ```diff
-usersRead() {
-- this.users = [{
--   name: '홍길동',
--   age: 20
-- }, {
--   name: '춘향이',
--   age: 16
-- }];
-- console.log('Done usersRead', this.users);
+usersCreate(user) {
+- this.users.push({
+-   name: user.name,
+-   age: user.age
+- })
+- console.log('Done usersCreate', this.users);
 ```
 ```js
-axios.get('http://localhost:3100/api/v1/users').then((response) => {
-  console.log('Done usersRead', response);
-  this.users = response.data.users;
+axios.post('http://localhost:3100/api/v1/users', user).then((response) => {
+  console.log('Done usersCreate', response);
+  this.usersRead();
 }).catch((error) => {
   axiosError(error);
 });
