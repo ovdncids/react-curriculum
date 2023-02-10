@@ -422,26 +422,12 @@ export const axiosError = function(error) {
 };
 ```
 
-### Create
+### Read
 src/store/users/usersThunks.js
 ```js
 import axios from 'axios';
 import { axiosError } from '../common.js';
 ```
-```diff
-- thunkAPI.dispatch(usersActions.usersCreate(user));
-```
-```js
-axios.post('http://localhost:3100/api/v1/users', user).then((response) => {
-  console.log('Done usersCreate', response);
-  thunkAPI.dispatch(usersThunks.usersRead());
-}).catch((error) => {
-  axiosError(error);
-});
-```
-
-### Read
-src/store/users/usersSlice.js
 ```diff
 - thunkAPI.dispatch(usersActions.usersRead());
 ```
@@ -454,7 +440,6 @@ return axios.get('http://localhost:3100/api/v1/users').then((response) => {
   axiosError(error);
 });
 ```
-
 ```js
 reducers: {
   ...
@@ -465,6 +450,20 @@ extraReducers: (builder) => {
     state.users = action.payload;
   })
 }
+```
+
+### Create
+src/store/users/usersSlice.js
+```diff
+- thunkAPI.dispatch(usersActions.usersCreate(user));
+```
+```js
+axios.post('http://localhost:3100/api/v1/users', user).then((response) => {
+  console.log('Done usersCreate', response);
+  thunkAPI.dispatch(usersThunks.usersRead());
+}).catch((error) => {
+  axiosError(error);
+});
 ```
 
 ### Delete
