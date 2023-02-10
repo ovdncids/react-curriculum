@@ -659,7 +659,7 @@ export const axiosError = function(error) {
 };
 ```
 
-### Create
+### Read
 src/store/users/usersSaga.js
 ```diff
 - import { put, takeEvery } from 'redux-saga/effects';
@@ -670,22 +670,6 @@ import axios from 'axios';
 import { axiosError } from '../common.js';
 ```
 ```diff
-yield takeEvery(usersCreate, function* (action) {
-- yield put(usersActions.usersCreate(action.payload))
-```
-```js
-try {
-  const response = yield call(() => axios.post('http://localhost:3100/api/v1/users', action.payload));
-  console.log('Done usersCreate', response);
-  yield usersRead$();
-} catch(error) {
-  axiosError(error);
-}
-```
-
-### Read
-src/store/users/usersActions.js
-```diff
 const usersRead$ = function* () {
 - yield put(usersActions.usersRead());
 ```
@@ -694,6 +678,22 @@ try {
   const response = yield call(() => axios.get('http://localhost:3100/api/v1/users'));
   console.log('Done usersRead', response);
   yield put(usersActions.usersSet(response.data.users));
+} catch(error) {
+  axiosError(error);
+}
+```
+
+### Create
+src/store/users/usersActions.js
+```diff
+yield takeEvery(usersCreate, function* (action) {
+- yield put(usersActions.usersCreate(action.payload))
+```
+```js
+try {
+  const response = yield call(() => axios.post('http://localhost:3100/api/v1/users', action.payload));
+  console.log('Done usersCreate', response);
+  yield usersRead$();
 } catch(error) {
   axiosError(error);
 }
