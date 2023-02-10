@@ -397,7 +397,7 @@ const UsersStore = create((set) => ({
 export default UsersStore;
 ```
 
-## Users Component Justand Store 주입
+## Users Component Zustand Store 주입
 src/components/contents/Users.js
 ```js
 import UsersStore from '../../stores/UsersStore.js';
@@ -746,7 +746,7 @@ const SearchStore = create(() => ({
 export default SearchStore;
 ```
 
-### Search Component Justand Store 주입
+### Search Component Zustand Store 주입
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
