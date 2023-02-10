@@ -74,3 +74,10 @@ form.reset({
 const { formState: {isDirty} } = form;
 ```
 * `value`가 수정 되면 `true`, 수정 후 다시 처음과 같아지면 `false`
+
+## Clone
+```js
+const formClone = useForm({
+  defaultValues: {...form.getValues()}
+});
+```
