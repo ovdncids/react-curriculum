@@ -184,6 +184,63 @@ const usersDelete = useMutation((index) => {
 ```
 * `Delete` 버튼 눌러 보기
 
+## Update
+src/components/contents/Users.js
+```js
+const [users, setUsers] = useState([]);
+```
+```diff
+- return res.data.users;
+```
+```js
+setUsers(res.data.users);
+return res.data.users;
+```
+
+```diff
+- <td>{user.name}</td>
+- <td>{user.age}</td>
+```
+```js
+<td>
+  <input
+    type="text" placeholder="Name" value={user.name}
+    onChange={event => {
+      user.name = event.target.value;
+      setUsers(JSON.parse(JSON.stringify(users)));
+    }}
+  />
+</td>
+<td>
+  <input
+    type="text" placeholder="Age" value={user.age}
+    onChange={event => {
+      user.age = event.target.value;
+      setUsers(JSON.parse(JSON.stringify(users)));
+    }}
+  />
+</td>
+```
+* `Input box` 수정 해보기
+
+```js
+const usersUpdate = useMutation(({index, user}) => {
+  return axios.path('http://localhost:3100/api/v1/users/' + index, user);
+}, {
+  onSuccess: () => {
+    queryClient.invalidateQueries('usersRead');
+  }
+});
+```
+```diff
+- <button>Update</button>
+```
+```js
+<button onClick={() => {
+  usersUpdate.mutate({index, user});
+}}>Update</button>
+```
+
 ## React Query 설정
 ```js
 import { useQuery } from 'react-query';
