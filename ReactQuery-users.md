@@ -5,6 +5,7 @@
 ## React Query 설치와 등록
 ```sh
 npm install react-query
+npm install axios
 ```
 
 src/index.js
@@ -84,6 +85,91 @@ function Users() {
 }
 
 export default Users;
+```
+
+## Query Users CRUD
+### Read
+src/components/contents/Users.js
+```js
+const users = result.data?.data.users || [];
+```
+
+```diff
+- <tr>
+-   <td>홍길동</td>
+-   <td>20</td>
+-   <td>
+-     <button>Update</button>
+-     <button>Delete</button>
+-   </td>
+- </tr>
+```
+```js
+{users.map((user, index) => (
+  <tr key={index}>
+    <td>{user.name}</td>
+    <td>{user.age}</td>
+    <td>
+      <button>Update</button>
+      <button>Delete</button>
+    </td>
+  </tr>
+))}
+```
+
+## Create
+src/components/contents/Users.js
+```js
+import { useState } from 'react';
+
+const [user, setUser] = useState({
+  name: '',
+  age: ''
+});
+```
+```js
+<input
+  type="text" placeholder="Name" value={user.name}
+  onChange={event => {
+    setUser({
+      ...user,
+      name: event.target.value
+    });
+  }}
+/>
+<input
+  type="text" placeholder="Age" value={user.age}
+  onChange={event => {
+    setUser({
+      ...user,
+      age: event.target.value
+    });
+  }}
+/>
+```
+
+src/quires/UsersQuery.js
+```js
+UsersCreate: (user) => {
+  return axios.post('http://localhost:3100/api/v1/users', user);
+}
+```
+
+src/components/contents/Users.js
+```js
+import { useQueryClient, useMutation } from 'react-query';
+
+const queryClient = useQueryClient();
+const UsersCreate = useMutation(UsersQuery.UsersCreate, {
+  onSuccess: () => {
+    queryClient.invalidateQueries('UsersRead');
+  }
+});
+```
+```js
+<button onClick={() => {
+  UsersCreate.mutate(user);
+}}>Create</button>
 ```
 
 ## React Query 설정
