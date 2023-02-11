@@ -618,6 +618,8 @@ src/components/contents/Users.js
 
 ```diff
 - <button>Update</button>
+```
+```js
 <button onClick={() => {
   usersStore.usersUpdate(index, user);
 }}>Update</button>
