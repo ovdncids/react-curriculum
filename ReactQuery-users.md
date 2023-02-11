@@ -22,30 +22,16 @@ const queryClient = new QueryClient();
 </QueryClientProvider>
 ```
 
-## Users query 생성
-src/quires/UsersQuery.js
+## Users Component React Query 주입
+src/components/contents/Users.js
 ```js
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-export const UsersQuery = {
-  UsersRead: () => {
-    return useQuery('UsersRead', () => {
-      return axios.get('http://localhost:3100/api/v1/users');
-    });
-  }
-};
-
-export default UsersQuery;
-```
-
-### Users Component React Query 주입
-src/components/contents/Users.js
-```js
-import UsersQuery from '../../quires/UsersQuery.js';
-
 function Users() {
-  const result = UsersQuery.UsersRead();
+  const result = useQuery('usersRead', () => {
+    return axios.get('http://localhost:3100/api/v1/users');
+  });
   console.log(result);
   return (
     <div>
@@ -90,8 +76,18 @@ export default Users;
 ## Query Users CRUD
 ### Read
 src/components/contents/Users.js
+```diff
+- const result = useQuery('usersRead', () => {
+-   return axios.get('http://localhost:3100/api/v1/users');
+- });
+```
 ```js
-const users = result.data?.data.users || [];
+const result = useQuery('usersRead', () => {
+  return axios.get('http://localhost:3100/api/v1/users').then((res) => {
+    return res.data.users;
+  });
+});
+const users = result.data;
 ```
 
 ```diff
@@ -105,7 +101,7 @@ const users = result.data?.data.users || [];
 - </tr>
 ```
 ```js
-{users.map((user, index) => (
+{users && users.map((user, index) => (
   <tr key={index}>
     <td>{user.name}</td>
     <td>{user.age}</td>
@@ -147,30 +143,46 @@ const [user, setUser] = useState({
   }}
 />
 ```
+* `Input box` 수정 해보기
 
-src/quires/UsersQuery.js
-```js
-UsersCreate: (user) => {
-  return axios.post('http://localhost:3100/api/v1/users', user);
-}
-```
-
-src/components/contents/Users.js
 ```js
 import { useQueryClient, useMutation } from 'react-query';
 
 const queryClient = useQueryClient();
-const UsersCreate = useMutation(UsersQuery.UsersCreate, {
+const usersCreate = useMutation((user) => {
+  return axios.post('http://localhost:3100/api/v1/users', user);
+}, {
   onSuccess: () => {
-    queryClient.invalidateQueries('UsersRead');
+    queryClient.invalidateQueries('usersRead');
   }
 });
 ```
 ```js
 <button onClick={() => {
-  UsersCreate.mutate(user);
+  usersCreate.mutate(user);
 }}>Create</button>
 ```
+
+## Delete
+src/components/contents/Users.js
+```js
+const usersDelete = useMutation((index) => {
+  return axios.delete('http://localhost:3100/api/v1/users/' + index);
+}, {
+  onSuccess: () => {
+    queryClient.invalidateQueries('usersRead');
+  }
+});
+```
+```diff
+- <button>Delete</button>
+```
+```js
+<button onClick={() => {
+  usersDelete.mutate(index);
+}}>Delete</button>
+```
+* `Delete` 버튼 눌러 보기
 
 ## React Query 설정
 ```js
