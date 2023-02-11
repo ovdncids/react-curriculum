@@ -568,7 +568,7 @@ src/components/contents/Users.js
 ```
 ```js
 <button onClick={() => {
-  usersDelete.usersDelete(index);
+  usersStore.usersDelete(index);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
@@ -619,7 +619,7 @@ src/components/contents/Users.js
 ```diff
 - <button>Update</button>
 <button onClick={() => {
-  usersUpdate(index, user);
+  usersStore.usersUpdate(index, user);
 }}>Update</button>
 ```
 
