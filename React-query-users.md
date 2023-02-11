@@ -73,6 +73,19 @@ function Users() {
 export default Users;
 ```
 
+### React Query 설정
+```js
+const result = useQuery('usersRead', () => {
+  return axios.get('http://localhost:3100/api/v1/users');
+}, {
+  // 통신중에 오류가 발생 하면 재시도 회수  
+  retry: 0,
+  // 화면이 blur 상태에서 focus 상태이면 통신을 다시 요청 한다. (기본 true)
+  refetchOnWindowFocus: false
+});
+const { data, isLoading, error, status } = result;
+```
+
 ## Query Users CRUD
 ### Read
 src/components/contents/Users.js
@@ -242,24 +255,3 @@ const usersUpdate = useMutation(({index, user}) => {
 ```
 
 * `axios` 부분을 `services`로 만들기
-
-## React Query 설정
-```js
-import { useQuery } from 'react-query';
-import axios from 'axios';
-
-function Users(props) {
-  const result = useQuery('users', async () => await axios.get('http://localhost:3100/api/v1/users'), {
-    // 통신중에 오류가 발생 하면 재시도 회수  
-    retry: 0,
-    // 화면이 blur 상태에서 focus 상태이면 통신을 다시 요청 한다. (기본 true)
-    refetchOnWindowFocus: true,
-    // stale 시간 동안은 focus와 상관 없이 통신을 다시 요청 하지 않는다.
-    staleTime: 1000 * 10
-  });
-  // status값은 통신 오류 재시도 회수가 끝나기 전에는 'loading' 끝나면 'error'가 된다.
-  const { data, isLoading, error, status } = result;
-  
-  // {data && data.data.users.map((user, index) => (
-}
-```
