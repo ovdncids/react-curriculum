@@ -241,6 +241,8 @@ const usersUpdate = useMutation(({index, user}) => {
 }}>Update</button>
 ```
 
+* `axios` 부분을 `services`로 만들기
+
 ## React Query 설정
 ```js
 import { useQuery } from 'react-query';
