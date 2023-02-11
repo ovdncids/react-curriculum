@@ -81,10 +81,13 @@ const result = useQuery('usersRead', () => {
   // 통신중에 오류가 발생 하면 재시도 회수  
   retry: 0,
   // 화면이 blur 상태에서 focus 상태이면 통신을 다시 요청 한다. (기본 true)
-  refetchOnWindowFocus: false
+  refetchOnWindowFocus: true,
+  // stale 시간 동안은 focus와 상관 없이 통신을 다시 요청 하지 않는다.
+  staleTime: 1000 * 3
 });
 const { data, isLoading, error, status } = result;
 ```
+* `isLoading`과 `debugger`로 로딩 상황 설명
 
 ## Query Users CRUD
 ### Read
@@ -99,6 +102,9 @@ const result = useQuery('usersRead', () => {
   return axios.get('http://localhost:3100/api/v1/users').then((res) => {
     return res.data.users;
   });
+}, {
+  retry: 0,
+  refetchOnWindowFocus: false,
 });
 const users = result.data;
 ```
