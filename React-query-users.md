@@ -87,7 +87,7 @@ const result = useQuery('usersRead', () => {
 });
 const { data, isLoading, error, status } = result;
 ```
-* `isLoading`과 `debugger`로 로딩 상황 설명
+* `isLoading`을 `Breakpoint`로 로딩 상황 설명
 
 ## Query Users CRUD
 ### Read
@@ -106,7 +106,7 @@ const result = useQuery('usersRead', () => {
   retry: 0,
   refetchOnWindowFocus: false,
 });
-const users = result.data;
+const users = result.data || [];
 ```
 
 ```diff
@@ -120,7 +120,7 @@ const users = result.data;
 - </tr>
 ```
 ```js
-{users && users.map((user, index) => (
+{users.map((user, index) => (
   <tr key={index}>
     <td>{user.name}</td>
     <td>{user.age}</td>
@@ -141,6 +141,10 @@ const [user, setUser] = useState({
   name: '',
   age: ''
 });
+```
+```diff
+- <input type="text" placeholder="Name" />
+- <input type="text" placeholder="Age" />
 ```
 ```js
 <input
@@ -175,6 +179,9 @@ const usersCreate = useMutation((user) => {
     queryClient.invalidateQueries('usersRead');
   }
 });
+```
+```diff
+- <button>Create</button>
 ```
 ```js
 <button onClick={() => {
@@ -244,7 +251,7 @@ return res.data.users;
 
 ```js
 const usersUpdate = useMutation(({index, user}) => {
-  return axios.path('http://localhost:3100/api/v1/users/' + index, user);
+  return axios.patch('http://localhost:3100/api/v1/users/' + index, user);
 }, {
   onSuccess: () => {
     queryClient.invalidateQueries('usersRead');
@@ -259,5 +266,6 @@ const usersUpdate = useMutation(({index, user}) => {
   usersUpdate.mutate({index, user});
 }}>Update</button>
 ```
+* `통신 회수`와 `렌더링 회수` 비교
 
-* `axios` 부분을 `services`로 만들기
+## `axios` 부분을 `src/services/usersService.js` 파일로 만들기
