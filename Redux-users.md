@@ -315,7 +315,7 @@ Redux Toolkit Thunk: 설정도 없고, 간단 하고 쉽게 만들 수 있다.
 
 Redux Saga: 설정이 복잡하지만 다양한 기능을 사용할 수 있다. 다양한 기능을 사용하기 위한 러닝 커브가 크다.
 
-<details><summary>Redux Toolkit Thunk (추천)</summary>
+# Redux Toolkit Thunk (추천)
 
 * https://redux-toolkit.js.org/api/createAsyncThunk
 
@@ -540,7 +540,6 @@ export const searchThunks = {
   )
 };
 ```
-</details>
 
 <details><summary>Redux Saga</summary>
 
