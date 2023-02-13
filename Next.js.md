@@ -256,6 +256,33 @@ export const getServerSideProps = async (context: NextPageContext) => {
 }
 ```
 
+## getServerSideProps에서 redirect 시키키
+```ts
+if (!user.name) {
+  apiRedirectAuthPage(content)
+}
+
+export const apiRedirectAuthPage = (context: NextPageContext) => {
+  // `/_next/data/development/list.json` 이런 형식의 `context.req?.url` 처리
+  let url = context.req?.url?.split('/').pop()
+  url = url?.split('?').map((u, index) => {
+    if (index === 0) {
+      return u.replace('.json', '')
+    } else {
+      return u
+    }
+  }).join('?')
+  const scheme = context.req?.headers.host?.includes('local') ? 'http' : 'https'
+  const redirectUrl = encodeURIComponent(`${scheme}://${context.req?.headers.host}/${url}`)
+  const destination = `${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/login?redirect_url=${redirectUrl}`
+  return {
+    redirect: {
+      destination
+    }
+  }
+}
+```
+
 ## Next.js - Typescript 환경에서만 발생 하는 문제
 ```ts
 const funny = async () => {
