@@ -452,7 +452,7 @@ export default Users;
 src/stores/UsersStore.js
 ```js
 userSet: (user) => {
-  set(() => ({ user }));
+  set({ user });
 },
 usersCreate: (user) => {
   set((state) => {
@@ -577,7 +577,7 @@ src/components/contents/Users.js
 src/stores/UsersStore.js
 ```js
 usersSet: (users) => {
-  set(() => ({ users }));
+  set({ users });
 },
 usersUpdate: (index, user) => {
   set((state) => {
