@@ -382,7 +382,7 @@ npm install zustand
 ```
 
 ## Users Store 생성
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```js
 import { create } from 'zustand';
 
@@ -398,7 +398,7 @@ export const usersStore = create(() => ({
 ## Users Component Zustand Store 주입
 src/components/contents/Users.js
 ```js
-import { usersStore } from '../../stores/UsersStore.js';
+import { usersStore } from '../../stores/usersStore.js';
 
 function Users() {
   const usersState = usersStore((state) => state);
@@ -447,7 +447,7 @@ export default Users;
 
 ## Users Store CRUD
 ### Create
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```js
 export const usersAction = {
   userSet: (user) => {
@@ -473,8 +473,8 @@ export const usersAction = {
 
 src/components/contents/Users.js
 ```diff
-- import { usersStore } from '../../stores/UsersStore.js';
-+ import { usersStore, usersAction } from '../../stores/UsersStore.js';
+- import { usersStore } from '../../stores/usersStore.js';
++ import { usersStore, usersAction } from '../../stores/usersStore.js';
 ```
 ```js
 <input
@@ -497,7 +497,7 @@ src/components/contents/Users.js
 ```
 
 ### Read
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```js
 usersRead: () => {
   usersStore.setState((state) => {
@@ -552,7 +552,7 @@ useEffect(() => {
 ```
 
 ### Delete
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```js
 usersDelete: (index) => {
   usersStore.setState((state) => {
@@ -576,7 +576,7 @@ src/components/contents/Users.js
 * `Delete` 버튼 눌러 보기
 
 ### Update
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```js
 usersSet: (users) => {
   usersStore.setState({ users });
@@ -654,7 +654,7 @@ export const axiosError = (error) => {
 ```
 
 ### Read
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```js
 import axios from 'axios';
 import { axiosError } from './common.js';
@@ -675,7 +675,7 @@ usersRead: async () => {
 ```
 
 ### Create
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```diff
 - usersCreate: (user) => {
 ```
@@ -692,7 +692,7 @@ usersCreate: async (user) => {
 ```
 
 ### Delete
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```diff
 - usersDelete: (index) => {
 ```
@@ -709,7 +709,7 @@ usersDelete: async (index) => {
 ```
 
 ### Update
-src/stores/UsersStore.js
+src/stores/usersStore.js
 ```diff
 - usersUpdate: async (index, user) => {
 ```
@@ -726,9 +726,9 @@ usersUpdate: async (index, user) => {
 ```
 
 ## Search Store 만들기
-src/stores/SearchStore.js
+src/stores/searchStore.js
 ```js
-import { usersAction } from './UsersStore.js';
+import { usersAction } from './usersStore.js';
 import axios from 'axios';
 import { axiosError } from './common.js';
 
@@ -749,8 +749,8 @@ export const searchAction = {
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
-import { usersStore } from '../../stores/UsersStore.js';
-import { searchAction } from '../../stores/SearchStore.js';
+import { usersStore } from '../../stores/usersStore.js';
+import { searchAction } from '../../stores/searchStore.js';
 
 function Search() {
   const users = usersStore((state) => state).users;
