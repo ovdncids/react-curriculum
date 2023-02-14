@@ -386,26 +386,24 @@ src/stores/UsersStore.js
 ```js
 import { create } from 'zustand';
 
-const UsersStore = create((set) => ({
+export const usersStore = create(() => ({
   users: [],
   user: {
     name: '',
     age: ''
   }
 }));
-
-export default UsersStore;
 ```
 
 ## Users Component Zustand Store 주입
 src/components/contents/Users.js
 ```js
-import UsersStore from '../../stores/UsersStore.js';
+import { usersStore } from '../../stores/UsersStore.js';
 
 function Users() {
-  const usersStore = UsersStore((state) => state);
-  const user = usersStore.user;
-  const users = usersStore.users;
+  const usersState = usersStore((state) => state);
+  const user = usersState.user;
+  const users = usersState.users;
   console.log(user, users);
   return (
     <div>
@@ -451,19 +449,21 @@ export default Users;
 ### Create
 src/stores/UsersStore.js
 ```js
-userSet: (user) => {
-  set({ user });
-},
-usersCreate: (user) => {
-  set((state) => {
-    state.users.push({
-      ...user
+export const usersAction = {
+  userSet: (user) => {
+    usersStore.setState({ user });
+  },
+  usersCreate: (user) => {
+    usersStore.setState((state) => {
+      state.users.push({
+        ...user
+      });
+      return {
+        users: state.users
+      };
     });
-    return {
-      users: state.users
-    };
-  });
-}
+  }
+};
 ```
 * `전개 구조` 설명 하기
 
@@ -472,23 +472,27 @@ usersCreate: (user) => {
 * `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
 
 src/components/contents/Users.js
+```diff
+- import { usersStore } from '../../stores/UsersStore.js';
++ import { usersStore, usersAction } from '../../stores/UsersStore.js';
+```
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
   onChange={event => {
     user.name = event.target.value;
-    usersStore.userSet(user);
+    usersAction.userSet(user);
   }}
 />
 <input
   type="text" placeholder="Age" value={user.age}
   onChange={event => {
     user.age = event.target.value;
-    usersStore.userSet(user);
+    usersAction.userSet(user);
   }}
 />
 <button onClick={() => {
-  usersStore.usersCreate(user);
+  usersAction.usersCreate(user);
 }}>Create</button>
 ```
 
@@ -496,7 +500,7 @@ src/components/contents/Users.js
 src/stores/UsersStore.js
 ```js
 usersRead: () => {
-  set((state) => {
+  usersStore.setState((state) => {
     state.users.push({
       name: '홍길동',
       age: 20
@@ -515,15 +519,13 @@ src/components/contents/Users.js
 ```js
 import { useEffect } from 'react';
 
-const userSet = usersStore.userSet;
-const usersRead = usersStore.usersRead;
 useEffect(() => {
-  userSet({
+  usersAction.userSet({
     name: '',
     age: ''
   });
-  usersRead();
-}, [userSet, usersRead]);
+  usersAction.usersRead();
+}, []);
 ```
 
 ```diff
@@ -553,7 +555,7 @@ useEffect(() => {
 src/stores/UsersStore.js
 ```js
 usersDelete: (index) => {
-  set((state) => {
+  usersStore.setState((state) => {
     state.users.splice(index, 1);
     return {
       users: state.users
@@ -568,7 +570,7 @@ src/components/contents/Users.js
 ```
 ```js
 <button onClick={() => {
-  usersStore.usersDelete(index);
+  usersAction.usersDelete(index);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
@@ -577,10 +579,12 @@ src/components/contents/Users.js
 src/stores/UsersStore.js
 ```js
 usersSet: (users) => {
-  set({ users });
+  usersStore.setState({ users });
 },
+```
+```js
 usersUpdate: (index, user) => {
-  set((state) => {
+  usersStore.setState((state) => {
     state.users[index] = user;
     return {
       users: state.users
@@ -600,7 +604,7 @@ src/components/contents/Users.js
     type="text" placeholder="Name" value={user.name}
     onChange={event => {
       user.name = event.target.value;
-      usersStore.usersSet(users);
+      usersAction.usersSet(users);
     }}
   />
 </td>
@@ -609,7 +613,7 @@ src/components/contents/Users.js
     type="text" placeholder="Age" value={user.age}
     onChange={event => {
       user.age = event.target.value;
-      usersStore.usersSet(users);
+      usersAction.usersSet(users);
     }}
   />
 </td>
@@ -621,7 +625,7 @@ src/components/contents/Users.js
 ```
 ```js
 <button onClick={() => {
-  usersStore.usersUpdate(index, user);
+  usersAction.usersUpdate(index, user);
 }}>Update</button>
 ```
 
@@ -663,7 +667,7 @@ usersRead: async () => {
   try {
     const response = await axios.get('http://localhost:3100/api/v1/users');
     console.log('Done usersRead', response);
-    set({ users: response.data.users });
+    usersAction.usersSet(response.data.users);
   } catch(error) {
     axiosError(error);
   }
@@ -673,10 +677,6 @@ usersRead: async () => {
 ### Create
 src/stores/UsersStore.js
 ```diff
-- const UsersStore = create((set) => ({
-const UsersStore = create((set, get) => ({
-```
-```diff
 - usersCreate: (user) => {
 ```
 ```js
@@ -684,7 +684,7 @@ usersCreate: async (user) => {
   try {
     const response = await axios.post('http://localhost:3100/api/v1/users', user);
     console.log('Done usersCreate', response);
-    get().usersRead();
+    usersAction.usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -701,7 +701,7 @@ usersDelete: async (index) => {
   try {
     const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
     console.log('Done usersDelete', response);
-    get().usersRead();
+    usersAction.usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -718,7 +718,7 @@ usersUpdate: async (index, user) => {
   try {
     const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
     console.log('Done usersUpdate', response);
-    get().usersRead();
+    usersAction.usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -728,40 +728,36 @@ usersUpdate: async (index, user) => {
 ## Search Store 만들기
 src/stores/SearchStore.js
 ```js
-import { create } from 'zustand';
-import UsersStore from './UsersStore.js';
+import { usersAction } from './UsersStore.js';
 import axios from 'axios';
 import { axiosError } from './common.js';
 
-const SearchStore = create(() => ({
+export const searchAction = {
   searchRead: async (q) => {
     try {
       const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
       console.log('Done searchRead', response);
-      UsersStore.setState({ users: response.data.users });
+      usersAction.usersSet(response.data.users);
     } catch(error) {
       axiosError(error);
     }
   }
-}));
-
-export default SearchStore;
+};
 ```
 
 ### Search Component Zustand Store 주입
 src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
-import UsersStore from '../../stores/UsersStore.js';
-import SearchStore from '../../stores/SearchStore.js';
+import { usersStore } from '../../stores/UsersStore.js';
+import { searchAction } from '../../stores/SearchStore.js';
 
 function Search() {
-  const users = UsersStore((state) => state).users;
-  const searchStore = SearchStore((state) => state);
+  const users = usersStore((state) => state).users;
   console.log(users);
   useEffect(() => {
-    searchStore.searchRead('');
-  }, [searchStore]);
+    searchAction.searchRead('');
+  }, []);
   return (
     <div>
       <h3>Search</h3>
@@ -808,7 +804,7 @@ src/components/contents/Search.js
 const [ q, setQ ] = useState('');
 const searchRead = (event) => {
   event.preventDefault();
-  searchStore.searchRead(q);
+  searchAction.searchRead(q);
 };
 ```
 ```diff
@@ -844,7 +840,7 @@ function Search() {
   console.log(_q);
 ```
 ```diff
-- searchStore.searchRead(q);
+- searchAction.searchRead(q);
 + navigate('/search?q=' + q);
 ```
 `검색`, `뒤로가기` 해보기
@@ -852,14 +848,14 @@ function Search() {
 ## Search Component 새로고침 적용
 ```diff
 - useEffect(() => {
--   searchStore.searchRead('');
-- }, [searchStore]);
+-   searchAction.searchRead('');
+- }, []);
 ```
 ```js
 useEffect(() => {
-  searchStore.searchRead(_q);
+  searchAction.searchRead(_q);
   setQ(_q);
-}, [searchStore, _q]);
+}, [_q]);
 ```
 * ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
 * <details><summary>정답</summary>
