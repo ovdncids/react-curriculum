@@ -449,7 +449,7 @@ export default Users;
 ### Create
 src/stores/usersStore.js
 ```js
-export const usersAction = {
+export const usersActions = {
   userSet: (user) => {
     usersStore.setState({ user });
   },
@@ -474,25 +474,25 @@ export const usersAction = {
 src/components/contents/Users.js
 ```diff
 - import { usersStore } from '../../stores/usersStore.js';
-+ import { usersStore, usersAction } from '../../stores/usersStore.js';
++ import { usersStore, usersActions } from '../../stores/usersStore.js';
 ```
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
   onChange={event => {
     user.name = event.target.value;
-    usersAction.userSet(user);
+    usersActions.userSet(user);
   }}
 />
 <input
   type="text" placeholder="Age" value={user.age}
   onChange={event => {
     user.age = event.target.value;
-    usersAction.userSet(user);
+    usersActions.userSet(user);
   }}
 />
 <button onClick={() => {
-  usersAction.usersCreate(user);
+  usersActions.usersCreate(user);
 }}>Create</button>
 ```
 
@@ -520,11 +520,11 @@ src/components/contents/Users.js
 import { useEffect } from 'react';
 
 useEffect(() => {
-  usersAction.userSet({
+  usersActions.userSet({
     name: '',
     age: ''
   });
-  usersAction.usersRead();
+  usersActions.usersRead();
 }, []);
 ```
 
@@ -570,7 +570,7 @@ src/components/contents/Users.js
 ```
 ```js
 <button onClick={() => {
-  usersAction.usersDelete(index);
+  usersActions.usersDelete(index);
 }}>Delete</button>
 ```
 * `Delete` 버튼 눌러 보기
@@ -604,7 +604,7 @@ src/components/contents/Users.js
     type="text" placeholder="Name" value={user.name}
     onChange={event => {
       user.name = event.target.value;
-      usersAction.usersSet(users);
+      usersActions.usersSet(users);
     }}
   />
 </td>
@@ -613,7 +613,7 @@ src/components/contents/Users.js
     type="text" placeholder="Age" value={user.age}
     onChange={event => {
       user.age = event.target.value;
-      usersAction.usersSet(users);
+      usersActions.usersSet(users);
     }}
   />
 </td>
@@ -625,7 +625,7 @@ src/components/contents/Users.js
 ```
 ```js
 <button onClick={() => {
-  usersAction.usersUpdate(index, user);
+  usersActions.usersUpdate(index, user);
 }}>Update</button>
 ```
 
@@ -667,7 +667,7 @@ usersRead: async () => {
   try {
     const response = await axios.get('http://localhost:3100/api/v1/users');
     console.log('Done usersRead', response);
-    usersAction.usersSet(response.data.users);
+    usersActions.usersSet(response.data.users);
   } catch(error) {
     axiosError(error);
   }
@@ -684,7 +684,7 @@ usersCreate: async (user) => {
   try {
     const response = await axios.post('http://localhost:3100/api/v1/users', user);
     console.log('Done usersCreate', response);
-    usersAction.usersRead();
+    usersActions.usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -701,7 +701,7 @@ usersDelete: async (index) => {
   try {
     const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
     console.log('Done usersDelete', response);
-    usersAction.usersRead();
+    usersActions.usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -718,7 +718,7 @@ usersUpdate: async (index, user) => {
   try {
     const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
     console.log('Done usersUpdate', response);
-    usersAction.usersRead();
+    usersActions.usersRead();
   } catch(error) {
     axiosError(error);
   }
@@ -728,16 +728,16 @@ usersUpdate: async (index, user) => {
 ## Search Store 만들기
 src/stores/searchStore.js
 ```js
-import { usersAction } from './usersStore.js';
+import { usersActions } from './usersStore.js';
 import axios from 'axios';
 import { axiosError } from './common.js';
 
-export const searchAction = {
+export const searchActions = {
   searchRead: async (q) => {
     try {
       const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
       console.log('Done searchRead', response);
-      usersAction.usersSet(response.data.users);
+      usersActions.usersSet(response.data.users);
     } catch(error) {
       axiosError(error);
     }
@@ -750,13 +750,13 @@ src/components/contents/Search.js
 ```js
 import { useEffect } from 'react';
 import { usersStore } from '../../stores/usersStore.js';
-import { searchAction } from '../../stores/searchStore.js';
+import { searchActions } from '../../stores/searchStore.js';
 
 function Search() {
   const users = usersStore((state) => state).users;
   console.log(users);
   useEffect(() => {
-    searchAction.searchRead('');
+    searchActions.searchRead('');
   }, []);
   return (
     <div>
@@ -804,7 +804,7 @@ src/components/contents/Search.js
 const [ q, setQ ] = useState('');
 const searchRead = (event) => {
   event.preventDefault();
-  searchAction.searchRead(q);
+  searchActions.searchRead(q);
 };
 ```
 ```diff
@@ -840,7 +840,7 @@ function Search() {
   console.log(_q);
 ```
 ```diff
-- searchAction.searchRead(q);
+- searchActions.searchRead(q);
 + navigate('/search?q=' + q);
 ```
 `검색`, `뒤로가기` 해보기
@@ -848,12 +848,12 @@ function Search() {
 ## Search Component 새로고침 적용
 ```diff
 - useEffect(() => {
--   searchAction.searchRead('');
+-   searchActions.searchRead('');
 - }, []);
 ```
 ```js
 useEffect(() => {
-  searchAction.searchRead(_q);
+  searchActions.searchRead(_q);
   setQ(_q);
 }, [_q]);
 ```
