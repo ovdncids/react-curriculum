@@ -439,9 +439,77 @@ export const getServerSideProps = async (context) => {
   }
 }
 ```
-* `페이지 소스 보기`에서 `홍길동` 다시 검색
 * ❕ `getServerSideProps`는 `서버 사이드`이므로 `Endpoint`를 절대 경로로 넣어야 한다.
+* `페이지 소스 보기`에서 `홍길동` 다시 검색
 
+### Create
+pages/api/users.js
+```diff
+- handler
+```
+```js
+const handler = (req, res) => {
+  if (req.method === 'GET') {
+    res.status(200).json(users)
+  } else if (req.method === 'POST') {
+    users.push(req.body)
+    res.status(200).json({
+      result: 'Created'
+    })
+  }
+}
+```
+
+pages/users.js
+```js
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+```
+```js
+const [user, setUser] = useState({
+  name: '',
+  age: ''
+})
+const router = useRouter()
+const usersCreate = async () => {
+  await axios.post('/api/users', user)
+  router.push('')
+}
+```
+```diff
+```
+```js
+<input
+  type="text" placeholder="Name" value={user.name}
+  onChange={event => {
+    setUser({
+      ...user,
+      name: event.target.value
+    })
+  }}
+/>
+<input
+  type="text" placeholder="Age" value={user.age}
+  onChange={event => {
+    setUser({
+      ...user,
+      age: event.target.value
+    })
+  }}
+/>
+<button onClick={() => {
+  usersCreate(user);
+}}>Create</button>
+```
+
+
+
+
+
+
+
+
+# etc.
 ## Antd
 ```sh
 npm install antd
