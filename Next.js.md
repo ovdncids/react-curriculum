@@ -304,6 +304,144 @@ export default Users
  </li>
 ```
 
+## getServerSideProps
+pages/users.js
+```js
+import Layout from '../components/layouts/layout'
+
+const Users = (props) => {
+  console.log(props.users)
+  return (
+    <Layout>
+      <div>
+        <h3>Users</h3>
+        <hr className="d-block" />
+        <div>
+          <h4>Read</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Modify</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>홍길동</td>
+                <td>20</td>
+                <td>
+                  <button>Update</button>
+                  <button>Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr className="d-block" />
+        <div>
+          <h4>Create</h4>
+          <input type="text" placeholder="Name" />
+          <input type="text" placeholder="Age" />
+          <button>Create</button>
+        </div>
+      </div>
+    </Layout>
+  )
+}
+
+export const getServerSideProps = (context) => {
+  console.log(context.query)
+  return {
+    props: {
+      users: [{
+        name: '홍길동',
+        age: 20
+      }, {
+        name: '춘향이',
+        age: 16
+      }]
+    }
+  }
+}
+
+export default Users
+```
+* `getServerSideProps` 안에서 `console.log` 설명
+* 개발자 도구 > Elements > `__NEXT_DATA__` 확인
+* TS: `(context: NextPageContext)`
+* TS: `const { query } = context as unknown as { query: any }`
+
+```diff
+- <tr>
+-   <td>홍길동</td>
+-   <td>20</td>
+-   <td>
+-     <button>Update</button>
+-     <button>Delete</button>
+-   </td>
+- </tr>
+```
+```js
+{users.map((user, index) => (
+  <tr key={index}>
+    <td>{user.name}</td>
+    <td>{user.age}</td>
+    <td>
+      <button>Update</button>
+      <button>Delete</button>
+    </td>
+  </tr>
+))}
+```
+* `페이지 소스 보기`에서 `홍길동` 검색 (SEO 최적화)
+* export const getServerSideProps에서 export 빼보기
+
+## Users API CRUD
+### Read
+```sh
+npm install axios
+```
+
+pages/api/users.js
+```js
+const users = []
+
+const handler = (req, res) => {
+  console.log(req.method)
+  users.push({
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  })
+  res.status(200).json(users)
+}
+
+export default handler
+```
+* http://localhost:3000/api/users
+* TS: `(req: NextApiRequest, res: NextApiResponse<Data>)`
+
+pages/users.js
+```diff
+- export const getServerSideProps = (context) => {
+```
+```js
+export const getServerSideProps = async (context) => {
+  console.log(context.query)
+  const response = await axios('http://localhost:3000/api/users')
+  return {
+    props: {
+      users: response.data
+    }
+  }
+}
+```
+* `페이지 소스 보기`에서 `홍길동` 다시 검색
+* ❕ `getServerSideProps`는 `서버 사이드`이므로 `Endpoint`를 절대 경로로 넣어야 한다.
+
 ## Antd
 ```sh
 npm install antd
