@@ -405,7 +405,7 @@ npm install axios
 
 pages/api/users.js
 ```js
-const users = []
+export const users = []
 
 const handler = (req, res) => {
   console.log(req.method)
@@ -502,10 +502,38 @@ const usersCreate = async () => {
 }}>Create</button>
 ```
 
+### Delete
+pages/api/users/[index].js
+```js
+import { users } from '../users'
 
+const handler = (req, res) => {
+  if (req.method === 'DELETE') {
+    users.splice(req.query.index, 1)
+    res.status(200).json({
+      result: 'Deleted'
+    })
+  }
+}
 
+export default handler
+```
 
-
+pages/users.js
+```js
+const usersDelete = async (index) => {
+  await axios.delete('/api/users/' + index)
+  router.push('')
+}
+```
+```diff
+- <button>Delete</button>
+```
+```js
+<button onClick={() => {
+  usersDelete(index);
+}}>Delete</button>
+```
 
 
 
