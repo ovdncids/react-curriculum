@@ -3,7 +3,7 @@
 ## Install
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
-npx create-next-app@latest 프로젝트명 --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
+npx create-next-app@latest {프로젝트명} --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
 ```
 
 ## typescript
@@ -12,16 +12,85 @@ npx create-next-app@latest 프로젝트명 --use-npm --example "https://github.c
 npx create-next-app@latest --ts
 ```
 
+## 실행
+```sh
+cd {프로젝트명}
+code .
+npm run dev
+```
+
 ## Scss
 * https://nextjs.org/docs/basic-features/built-in-css-support#sass-support
 ```sh
-npm install --save-dev sass
+npm install -D sass
 ```
 
+## 필요 없는 파일 지우기
+```diff
+- styles/*
+```
+
+## Markup
 styles/global.scss
 ```scss
-body {
-  background-color: red;
+* {
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+a:link, a:visited {
+  text-decoration: none;
+  color: black;
+}
+a.active {
+  color: white;
+}
+h1, footer, .nav ul {
+  padding: 0.5rem;
+}
+h4, li {
+  margin: 0.5rem 0;
+}
+hr {
+  display: none;
+  margin: 1rem 0;
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+input[type=text] {
+  width: 120px;
+}
+
+.d-block {
+  display: block;
+}
+.container {
+  display: flex;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+.nav {
+  min-height: 300px;
+  background-color: #4285F4;
+}
+.nav ul {
+  list-style: none;
+}
+.contents {
+  flex: 1;
+  padding: 1rem;
+}
+
+.table-search {
+  border: 1px solid rgb(118, 118, 118);
+  border-collapse: collapse;
+  text-align: center;
+}
+.table-search th, .table-search td {
+  padding: 0.2rem;
+}
+.table-search td {
+  border-top: 1px solid rgb(118, 118, 118);
+  min-width: 100px;
 }
 ```
 
@@ -34,6 +103,122 @@ export default function App({ Component, pageProps }) {
 }
 ```
 * TS: `{ Component, pageProps }: AppProps`
+
+pages/users.js
+```js
+const Users = () => {
+  return (
+    <div>
+      <header>
+        <h1>React study</h1>
+      </header>
+      <hr />
+      <div className="container">
+        <nav className="nav">
+          <ul>
+            <li><h2>Users</h2></li>
+            <li><h2>Search</h2></li>
+          </ul>
+        </nav>
+        <hr />
+        <section className="contents">
+          <div>
+            <h3>Users</h3>
+            <p>Contents</p>
+          </div>
+        </section>
+        <hr />
+      </div>
+      <footer>Copyright</footer>
+    </div>
+  )
+}
+
+export default Users
+```
+
+## Redirect / to users
+pages/index.js
+```js
+const Home = () => {
+  return <></>
+}
+
+export const getServerSideProps = () => {
+  return {
+    redirect: {
+      destination: '/users'
+    }
+  }
+}
+
+export default Home
+```
+
+## Layouts
+* https://nextjs.org/docs/basic-features/layouts
+
+components/layouts/layout.js
+```js
+import Header from './header'
+import Nav from './nav'
+import Footer from './footer'
+
+const Layout = ({ children }) => {
+  return (
+    <div>
+      <Header></Header>
+      <hr />
+      <div className="container">
+        <nav className="nav">
+          <ul>
+            <li><h2>Users</h2></li>
+            <li><h2>Search</h2></li>
+          </ul>
+        </nav>
+        <hr />
+        <section className="contents">{children}</section>
+        <hr />
+      </div>
+      <footer>Copyright</footer>
+    </div>
+  )
+}
+
+export default Layout
+```
+* TS: `{ children }: { children: React.ReactNode }`
+
+components/layouts/header.js
+```js
+const Header = () => {
+  return (
+    <header>
+      <h1>Next.js study</h1>
+    </header>
+  )
+}
+
+export default Header
+```
+
+pages/users.js
+```js
+import Layout from '../components/layouts/layout'
+
+const Users = () => {
+  return (
+    <Layout>
+      <div>
+        <h3>Users</h3>
+        <p>Contents</p>
+      </div>
+    </Layout>
+  )
+}
+
+export default Users
+```
 
 ## Antd
 ```sh
@@ -51,9 +236,6 @@ import { Button } from 'antd'
 
 <Button type="primary">button</Button>
 ```
-
-## Layouts
-* https://nextjs.org/docs/basic-features/layouts
 
 ## 404
 pages/404.js
