@@ -65,18 +65,15 @@ git clone https://github.com/ovdncids/react-curriculum.git
 
 ## Git .gitignore
 ```sh
-# npm or yarn
-package-lock.json
-yarn.lock
-
-# .idea
+# Editor directories and files
 .idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 ```
-
-**lock 파일**: 가끔 이 파일 때문에 클라이언트와 서버 사이에 버전이 안 맞아서 오류가 발생한다.
-용량도 크고 npm install 할때 마다 생성되는 파일이니 .gitignore 목록에 넣는다.
-
-**package-lock.json, yarn.lock 파일 삭제**
 
 **Git push**
 ```sh
