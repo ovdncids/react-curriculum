@@ -557,7 +557,7 @@ const usersSet = (users) => {
   setUsers(JSON.parse(JSON.stringify(users)))
 }
 useEffect(() => {
-  console.log('랜더링')
+  console.log('props.users 다시 받음')
   usersSet(props.users)
 }, [props.users])
 ```
