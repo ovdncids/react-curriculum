@@ -410,7 +410,7 @@ export const users = [{
   age: 20
 }]
 
-const handler = (req, res) => {
+const handler = async (req, res) => {
   console.log(req.method)
   users.push({
     name: '춘향이',
@@ -448,7 +448,7 @@ pages/api/users.js
 - handler
 ```
 ```js
-const handler = (req, res) => {
+const handler = async (req, res) => {
   if (req.method === 'GET') {
     res.status(200).json(users)
   } else if (req.method === 'POST') {
@@ -505,7 +505,7 @@ pages/api/users/[index].js
 ```js
 import { users } from '../users'
 
-const handler = (req, res) => {
+const handler = async (req, res) => {
   if (req.method === 'DELETE') {
     users.splice(req.query.index, 1)
     res.status(200).json({
@@ -641,17 +641,15 @@ pages/api/users.js
 import mysql from '../../libraries/mysqlPool'
 ```
 ```diff
-- const handler = (req, res) => {
--   if (req.method === 'GET') {
--     res.status(200).json(users)
+- res.status(200).json(users)
 ```
 ```js
-const handler = async (req, res) => {
-  if (req.method === 'GET') {
-    const [rows] = await mysql.execute(`
-      select * from users
-    `)
-    res.status(200).json(rows)
+const [rows] = await mysql.execute(`
+  select
+    user_pk as userPk, name, age
+  from users
+`)
+res.status(200).json(rows)
 ```
 
 ### Create
@@ -668,7 +666,7 @@ console.log(rows)
 ```
 
 ### Delete
-pages/api/users/[index].js to pages/api/users/[user_pk].js
+pages/api/users/[index].js to pages/api/users/[userPk].js
 ```js
 import mysql from '../../libraries/mysqlPool'
 ```
@@ -679,18 +677,39 @@ import mysql from '../../libraries/mysqlPool'
 const [rows] = await mysql.execute(`
   delete from users
   where user_pk = ?
-`, [req.query.user_pk])
+`, [req.query.userPk])
 console.log(rows)
 ```
 
 pages/users.js
+* `usersDelete`에 관련된 `index`만 `user.userPk`로 바꾸기
+
+### Update
+pages/api/users/[userPk].js
 ```diff
-- usersDelete(index)
-usersDelete(user.user_pk)
+- users[req.query.index] = req.body
+```
+```js
+const [rows] = await mysql.execute(`
+  update users
+  set name = ?, age = ?
+  where user_pk = ?
+`, [req.body.name, req.body.age, req.query.userPk])
 ```
 
+pages/users.js
+* `usersUpdate`에 관련된 `index`만 `user.userPk`로 바꾸기
+* `key`에 사용되는 `index`를 `user.userPk`로 바꾸기
 
+pages/api/users/[userPk].js
+```diff
+- import { users } from '../users'
+```
 
+pages/api/users.js
+```diff
+- export const users = [{
+```
 
 # etc.
 ## Antd
