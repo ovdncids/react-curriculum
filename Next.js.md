@@ -647,6 +647,7 @@ const [rows] = await mysql.execute(`
     user_pk as userPk, name, age
   from users
 `)
+console.log(rows)
 res.status(200).json(rows)
 ```
 
