@@ -405,14 +405,14 @@ npm install axios
 
 pages/api/users.js
 ```js
-export const users = []
+export const users = [{
+  name: '홍길동',
+  age: 20
+}]
 
 const handler = (req, res) => {
   console.log(req.method)
   users.push({
-    name: '홍길동',
-    age: 20
-  }, {
     name: '춘향이',
     age: 16
   })
@@ -534,6 +534,84 @@ const usersDelete = async (index) => {
   usersDelete(index);
 }}>Delete</button>
 ```
+
+### Update
+pages/api/users/[index].js
+```js
+} else if (req.method === 'PATCH') {
+  users[req.query.index] = req.body
+  res.status(200).json({
+    result: 'Updated'
+  })
+}
+```
+
+pages/users.js
+```diff
+- const users = props.users
+```
+```js
+const [users, setUsers] = useState(props.users)
+
+const usersSet = (users) => {
+  setUsers(JSON.parse(JSON.stringify(users)))
+}
+useEffect(() => {
+  console.log('랜더링')
+  usersSet(props.users)
+}, [props.users])
+```
+```diff
+- <td>{user.name}</td>
+- <td>{user.age}</td>
+```
+```js
+<td>
+  <input
+    type="text" placeholder="Name" value={user.name}
+    onChange={event => {
+      user.name = event.target.value;
+      usersSet(users);
+    }}
+  />
+</td>
+<td>
+  <input
+    type="text" placeholder="Age" value={user.age}
+    onChange={event => {
+      user.age = event.target.value;
+      usersSet(users);
+    }}
+  />
+</td>
+```
+* `Input box` 수정 해보기
+
+```js
+const usersUpdate = async (index, user) => {
+  await axios.patch('/api/users/' + index, user)
+  router.push('')
+}
+```
+```diff
+- <button>Update</button>
+```
+```js
+<button onClick={() => {
+  usersUpdate(index, user);
+}}>Update</button>
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
