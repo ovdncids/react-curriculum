@@ -397,7 +397,7 @@ export default Users
 * `페이지 소스 보기`에서 `홍길동` 검색 (SEO 최적화)
 * export const getServerSideProps에서 export 빼보기
 
-## Users API CRUD
+## API Users CRUD
 ### Read
 ```sh
 npm install axios
@@ -476,8 +476,6 @@ const usersCreate = async () => {
   router.push('')
 }
 ```
-```diff
-```
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
@@ -498,7 +496,7 @@ const usersCreate = async () => {
   }}
 />
 <button onClick={() => {
-  usersCreate(user);
+  usersCreate(user)
 }}>Create</button>
 ```
 
@@ -531,7 +529,7 @@ const usersDelete = async (index) => {
 ```
 ```js
 <button onClick={() => {
-  usersDelete(index);
+  usersDelete(index)
 }}>Delete</button>
 ```
 
@@ -570,8 +568,8 @@ useEffect(() => {
   <input
     type="text" placeholder="Name" value={user.name}
     onChange={event => {
-      user.name = event.target.value;
-      usersSet(users);
+      user.name = event.target.value
+      usersSet(users)
     }}
   />
 </td>
@@ -579,8 +577,8 @@ useEffect(() => {
   <input
     type="text" placeholder="Age" value={user.age}
     onChange={event => {
-      user.age = event.target.value;
-      usersSet(users);
+      user.age = event.target.value
+      usersSet(users)
     }}
   />
 </td>
@@ -598,19 +596,98 @@ const usersUpdate = async (index, user) => {
 ```
 ```js
 <button onClick={() => {
-  usersUpdate(index, user);
+  usersUpdate(index, user)
 }}>Update</button>
 ```
 
+## MySQL CRUD
+### MySQL 연결
+```sh
+npm install mysql2
+```
+next.config.js
+```js
+const mysql2 = require('mysql2/promise')
 
+global.mysql2 = {
+  connection: null
+}
+const mysql2Init = async () => {
+  const connection = await mysql2.createConnection({
+    host: 'localhost',
+    user: 'user',
+    password: 'password',
+    database: 'database'
+  })
+  const [rows, fields] = await connection.execute(`
+    select 'MySQL Connected' as Result
+  `)
+  console.log(rows)
+  global.mysql2.connection = connection
+}
+mysql2Init()
+```
 
+libraries/mysqlPool.js
+```js
+export default global.mysql2.connection
+```
 
+* TODO: libraries/mysqlPool.ts
 
+### Read
+pages/api/users.js
+```js
+import mysql from '../../libraries/mysqlPool'
+```
+```diff
+- const handler = (req, res) => {
+-   if (req.method === 'GET') {
+-     res.status(200).json(users)
+```
+```js
+const handler = async (req, res) => {
+  if (req.method === 'GET') {
+    const [rows] = await mysql.execute(`
+      select * from users
+    `)
+    res.status(200).json(rows)
+```
 
+### Create
+pages/api/users.js
+```diff
+- users.push(req.body)
+```
+```js
+const [rows] = await mysql.execute(`
+  insert into users(name, age)
+  values (?, ?)
+`, [req.body.name, req.body.age])
+console.log(rows)
+```
 
+### Delete
+pages/api/users/[index].js to pages/api/users/[user_pk].js
+```js
+import mysql from '../../libraries/mysqlPool'
+```
+```diff
+- users.splice(req.query.index, 1)
+```
+```js
+const [rows] = await mysql.execute(`
+  delete from users
+  where user_pk = ?
+`, [req.query.user_pk])
+console.log(rows)
+```
 
-
-
+pages/users.js
+```diff
+- usersDelete(index)
+usersDelete(user.user_pk)
+```
 
 
 
