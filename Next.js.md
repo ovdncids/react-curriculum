@@ -350,8 +350,8 @@ const Users = (props) => {
   )
 }
 
-export const getServerSideProps = (context) => {
-  console.log(context.query)
+export const getServerSideProps = () => {
+  console.log('서버 사이드 우선 작업')
   return {
     props: {
       users: [{
@@ -367,10 +367,8 @@ export const getServerSideProps = (context) => {
 
 export default Users
 ```
-* `getServerSideProps` 안에서 `console.log` 설명
+* `getServerSideProps` 설명
 * 개발자 도구 > Elements > `__NEXT_DATA__` 확인
-* TS: `(context: NextPageContext)`
-* TS: `const { query } = context as unknown as { query: any }`
 
 ```diff
 - <tr>
@@ -710,6 +708,24 @@ pages/api/users.js
 ```diff
 - export const users = [{
 ```
+
+## Search
+```js
+export const getServerSideProps = (context) => {
+  console.log(context.query)
+```
+* TS: `(context: NextPageContext)`
+* TS: `const { query } = context as unknown as { query: any }`
+
+
+
+
+
+
+
+
+
+
 
 # etc.
 ## Antd
