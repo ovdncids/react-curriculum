@@ -835,7 +835,7 @@ import { useRouter } from 'next/router'
 
 const [q, setQ] = useState(props.q)
 const router = useRouter()
-const searchRead = async (event) => {
+const searchRead = (event) => {
   event.preventDefault()
   router.push(`?q=${q}`)
 }
@@ -847,7 +847,7 @@ const searchRead = async (event) => {
 - </form>
 ```
 ```js
-<form onSubmit={(event) => {searchRead(event)}}>
+<form onSubmit={searchRead}>
   <input
     type="text" placeholder="Search"
     value={q}
@@ -871,6 +871,7 @@ return {
   }
 }
 ```
+* TS: `const searchRead = (event: React.SyntheticEvent) => {`
 * `검색`, `뒤로가기` 해보기
 * ❔ `뒤로가기` 하면 검색창이 변하지 않는다. `useEffect`를 사용해서 검색창이 변하게 하려면
 * <details><summary>정답</summary>
