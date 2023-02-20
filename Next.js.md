@@ -1119,7 +1119,7 @@ export const config = {
   }
 }
 
-export default function handler(req, res) {
+const handler = (req, res) => {
   if (req.method === 'POST') {
     const form = new formidable.IncomingForm()
     form.parse(req, (err, fields, files) => {
@@ -1132,6 +1132,8 @@ export default function handler(req, res) {
     })
   }
 }
+
+export default handler
 ```
 
 ## Jimp (이미지 포맷, 크기 변경)
@@ -1139,11 +1141,11 @@ export default function handler(req, res) {
 ```js
 import Jimp from 'jimp'
 
-const reFormatSize = async (file) => {
+const formatSize = async (file) => {
   const image = await Jimp.read(file.filepath)
   const imageFormat = image.write('./uploads/format.jpg')
   const imageResize = imageFormat.resize(1920, Jimp.AUTO)
   imageResize.write('./uploads/1920.jpg')
 }
-await reFormatSize(files.file)
+await formatSize(files.file)
 ```
