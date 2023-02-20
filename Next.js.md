@@ -625,13 +625,20 @@ const mysql2Init = async () => {
 }
 mysql2Init()
 ```
+* ❕ `npm run dev` 실행시 `next.config.js` 안에 `async await`가 완료 되어야 `로컬 서버` 응답을 받을 수 있다.
 
 libraries/mysqlPool.js
 ```js
 export default global.mysql2.connection
 ```
 
-* TODO: libraries/mysqlPool.ts
+libraries/mysqlPool.ts
+```ts
+import type { Connection } from "mysql2"
+
+export const { mysql2: { connection } } = global as unknown as { mysql2: { connection: Connection } }
+export default connection
+```
 
 ### Read
 pages/api/users.js
