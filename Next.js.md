@@ -634,7 +634,7 @@ export default global.mysql2.connection
 
 libraries/mysqlPool.ts
 ```ts
-import type { Connection } from "mysql2"
+import type { Connection } from 'mysql2'
 
 export const { mysql2: { connection } } = global as unknown as { mysql2: { connection: Connection } }
 export default connection
