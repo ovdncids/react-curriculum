@@ -304,7 +304,7 @@ export default Users
  </li>
 ```
 
-## getServerSideProps
+## getServerSideProps Users
 pages/users.js
 ```js
 import Layout from '../components/layouts/layout'
@@ -600,6 +600,7 @@ const usersUpdate = async (index, user) => {
 
 ## MySQL CRUD
 ### MySQL 연결
+* https://www.simplenextjs.com/posts/next-mysql
 ```sh
 npm install mysql2
 ```
@@ -717,23 +718,169 @@ pages/api/users.js
 - export const users = [{
 ```
 
-## Search
+## getServerSideProps Search
+pages/search.js
 ```js
-export const getServerSideProps = (context) => {
+import Layout from '../components/layouts/layout'
+import axios from 'axios'
+
+const Search = (props) => {
+  const users = props.users
+  return (
+    <Layout>
+      <div>
+        <h3>Search</h3>
+        <hr className="d-block" />
+        <div>
+          <form>
+            <input type="text" placeholder="Search" />
+            <button>Search</button>
+          </form>
+        </div>
+        <hr className="d-block" />
+        <div>
+          <table className="table-search">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+              </tr>
+            </thead>
+            <tbody>
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td>{user.name}</td>
+                <td>{user.age}</td>
+              </tr>
+            ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Layout>
+  )
+}
+
+export const getServerSideProps = async (context) => {
   console.log(context.query)
+  const response = await axios('http://localhost:3000/api/search')
+  return {
+    props: {
+      users: response.data
+    }
+  }
+}
+
+export default Search
 ```
 * TS: `(context: NextPageContext)`
 * TS: `const { query } = context as unknown as { query: any }`
 
+pages/api/search.js
+```js
+import mysql from '../../libraries/mysqlPool'
 
+const handler = async (req, res) => {
+  if (req.method === 'GET') {
+    const [rows] = await mysql.execute(`
+      select
+        user_pk as userPk, name, age
+      from users
+    `)
+    console.log(rows)
+    res.status(200).json(rows)
+  }
+}
 
+export default handler
+```
+* http://localhost:3000/search?q=홍
 
+### Search q값 넘기기
+pages/search.js
+```diff
+- const response = await axios('http://localhost:3000/api/users')
+```
+```js
+const response = await axios('http://localhost:3000/api/search', {
+  params: context.query
+})
+``
 
+pages/api/search.js
+```diff
+- const [rows] = await mysql.execute(`
+-   select
+-     user_pk as userPk, name, age
+-   from users
+- `)
+```
+```js
+const q = req.query.q || ''
+console.log(q)
+const [rows] = await mysql.execute(`
+  select
+    user_pk as userPk, name, age
+  from users
+  where
+    name like concat('%', ?, '%')
+`, [q])
+```
 
+### Search 검색
+pages/search.js
+```js
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 
+const [q, setQ] = useState(props.q)
+const router = useRouter()
+const searchRead = async (event) => {
+  event.preventDefault()
+  router.push(`?q=${q}`)
+}
+```
+```diff
+- <form>
+-   <input type="text" placeholder="Search" />
+-   <button>Search</button>
+- </form>
+```
+```js
+<form onSubmit={(event) => {searchRead(event)}}>
+  <input
+    type="text" placeholder="Search"
+    value={q}
+    onChange={event => {setQ(event.target.value)}}
+  />
+  <button>Search</button>
+</form>
+```
+```diff
+- return {
+-   props: {
+-     users: response.data
+-   }
+- }
+```
+```js
+return {
+  props: {
+    users: response.data,
+    q: context.query.q || ''
+  }
+}
+```
+* `검색`, `뒤로가기` 해보기
+* ❔ `뒤로가기` 하면 검색창이 변하지 않는다. `useEffect`를 사용해서 검색창이 변하게 하려면
+* <details><summary>정답</summary>
 
-
-
+  ```js
+  useEffect(() => {
+    setQ(props.q)
+  }, [props.q])
+  ```
+</details>
 
 # etc.
 ## Antd
@@ -920,9 +1067,6 @@ const funny = async () => {
 funny()
 ```
 * async 함수에서 `for문`을 사용하면 동일한 object가 push 된다. `[].forEach문`을 사용하면 문제 없다.
-
-## serverless-mysql
-* https://www.simplenextjs.com/posts/next-mysql
 
 ## Next.js 13에서 12로 버전 내리기
 ```sh
