@@ -837,7 +837,7 @@ const [q, setQ] = useState(props.q)
 const router = useRouter()
 const searchRead = (event) => {
   event.preventDefault()
-  router.push(`?q=${q}`)
+  router.push({query: {q}})
 }
 ```
 ```diff
