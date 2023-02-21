@@ -15,14 +15,16 @@ function App() {
     defaultValues: {
       title: '',
       buckets: [
-        { show: true },
-        { show: false },
-        { show: false }
+        { id: 0, show: true },
+        { id: 1, show: false },
+        { id: 2, show: false }
       ]
     }
   });
   const { control, register } = form;
   const { fields } = useFieldArray({ control, name: 'buckets' });
+  // ❕ useFieldArray는 buckets를 복사 한다. 하지만 { id: '변경된 아이디 값', show: true } id값을 변경한다. (id가 없으면 생성)
+  // ❕ const { fields } = useFieldArray({ keyName: 'key', control, name: 'buckets' }); 이렇게 key 변경 가능함.
   const buckets = fields;
   const bucketShow = (i) => {
     // form.watch 후에 bucket.show, form.setValue 값을 변경 해주어야 radio 버튼이 정상 클릭 가능
