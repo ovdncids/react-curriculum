@@ -1075,6 +1075,12 @@ funny()
 npm install next@^12.3.2
 ```
 
+## 서버 사이드인지 클라이언트 사이드인지 확인 하는 방법
+* https://stackoverflow.com/questions/49411796/how-do-i-detect-whether-i-am-on-server-on-client-in-next-js
+```js
+type window === 'undefined'
+```
+
 ## File Upload
 * https://codesandbox.io/s/thyb0?file=/package.json:234-244
 
