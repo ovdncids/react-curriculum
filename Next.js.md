@@ -293,6 +293,7 @@ export default Users
   ```
 </details>
 
+components/layouts/nav.js
 ```diff
 - <li><h2>Users</h2></li>
 ```
