@@ -421,7 +421,7 @@ const handler = async (req, res) => {
 export default handler
 ```
 * http://localhost:3000/api/users
-* TS: `(req: NextApiRequest, res: NextApiResponse<Data>)`
+* TS: `(req: NextApiRequest, res: NextApiResponse<Users[]>)`
 
 pages/users.js
 ```diff
@@ -438,6 +438,7 @@ export const getServerSideProps = async (context) => {
   }
 }
 ```
+* TS: `(context: NextPageContext)`
 * ❕ `getServerSideProps`는 `서버 사이드`이므로 `Endpoint`를 절대 경로로 넣어야 한다.
 * `페이지 소스 보기`에서 `홍길동` 다시 검색
 
@@ -495,7 +496,7 @@ const usersCreate = async () => {
   }}
 />
 <button onClick={() => {
-  usersCreate(user)
+  usersCreate()
 }}>Create</button>
 ```
 
@@ -774,7 +775,6 @@ export const getServerSideProps = async (context) => {
 
 export default Search
 ```
-* TS: `(context: NextPageContext)`
 * TS: `const { query } = context as unknown as { query: any }`
 
 pages/api/search.js
