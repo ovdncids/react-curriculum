@@ -26,17 +26,22 @@ https://github.com/nvm-sh/nvm
 https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
 ```sh
 # 설치
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 # vi 에디터 실행
-vi ~/.bash_profile
+vi ~/.zshrc
 
 # 해당 경로 적용 시키키
+# nvm
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-# ~/.bash_profile 재 실행 시키기
-source ~/.bash_profile
+# ~/.zshrc 재 실행 시키기
+source ~/.zshrc
+
+# .bash인 경우
+# vi ~/.bash_profile
+# source ~/.bash_profile
 ```
 
 ## Windows
@@ -48,14 +53,14 @@ https://github.com/coreybutler/nvm-windows/releases
 nvm ls
 
 # 해당 버전을 설치 한다.
-nvm install 14.15.5
+nvm install 16.18.1
 
 # 해당 버전을 삭제 한다.
-nvm uninstall 14.15.5
+nvm uninstall 16.18.1
 
 # 해당 버전을 사용 한다.
-nvm use 14.15.5
+nvm use 16.18.1
 
 # 기본 버전 변경 한다.
-nvm alias default 14.15.5
+nvm alias default 16.18.1
 ```
