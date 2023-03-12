@@ -33,7 +33,8 @@ app.use('/api/v1/files', require('./routes/files.js'));
 
 routes/files.js
 ```js
-const router = global.express.Router();
+const express = require('express');
+const router = express.Router();
 const fs = require('fs');
 
 router.post('/', function(request, response) {
