@@ -21,3 +21,15 @@ npm install react-syntax-highlighter
 ```sh
 npm install xml2js
 ```
+```js
+const parseString = require('xml2js').parseString;
+const xml = `
+<user>
+  <name>홍길동</name>
+  <age>39</age>
+</user>
+`;
+parseString(xml, function (err, result) {
+  console.log(result);
+});
+```
