@@ -41,6 +41,8 @@ antlr4-parse Expr.g4 prog -tree
 ```sh
 cd antlr4
 antlr4 -Dlanguage=JavaScript Expr.g4
+
+npm install antlr4
 ```
 
 ### 1번 방법
@@ -60,7 +62,7 @@ const tree = parser.expr();
 
 class Visitor {
   visitChildren(ctx) {
-    console.log(ctx)
+    console.log(ctx);
     if (!ctx) {
       return;
     }
