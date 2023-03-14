@@ -77,7 +77,10 @@ class Visitor {
     }
   }
 }
-tree.accept(new Visitor());
+const accept = tree.accept(new Visitor());
+console.log(accept);
+// 결과를 볼 수 있다.
+// [["10"],"+",[["20"],"*",["30"]]]
 ```
 
 ### 2번 방법 (좀더 정교한 확인)
