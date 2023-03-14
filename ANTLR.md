@@ -5,7 +5,7 @@
 ```sh
 pip3 install antlr4-tools
 
-# PATH 정의 없다는 경고가 발생하면
+# PATH 없다는 경고 발생하면
 vi ~/.zshrc
 
 # python3
@@ -43,7 +43,43 @@ cd antlr4
 antlr4 -Dlanguage=JavaScript Expr.g4
 ```
 
-test.js
+### 1번 방법
+test1.js
+```js
+import antlr4 from 'antlr4';
+import ExprLexer from '../antlr4/ExprLexer.js';
+import ExprParser from '../antlr4/ExprParser.js';
+
+const input = '10+20*30';
+const chars = new antlr4.InputStream(input);
+const lexer = new ExprLexer(chars);
+const tokens = new antlr4.CommonTokenStream(lexer);
+const parser = new ExprParser(tokens);
+parser.buildParseTrees = true;
+const tree = parser.expr();
+
+class Visitor {
+  visitChildren(ctx) {
+    console.log(ctx)
+    if (!ctx) {
+      return;
+    }
+    if (ctx.children) {
+      return ctx.children.map(child => {
+        if (child.children && child.children.length != 0) {
+          return child.accept(this);
+        } else {
+          return child.getText();
+        }
+      });
+    }
+  }
+}
+tree.accept(new Visitor());
+```
+
+### 2번 방법 (좀더 정교한 확인)
+test2.js
 ```js
 import antlr4 from 'antlr4';
 import ExprLexer from '../antlr4/ExprLexer.js';
