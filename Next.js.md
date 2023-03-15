@@ -950,7 +950,7 @@ package.json
 }
 ```
 * local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
-* `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자
+* `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자.
 
 ## Proxy
 next.config.js
