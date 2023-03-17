@@ -38,9 +38,11 @@ antlr4-parse Expr.g4 prog -tree
 
 ## Javascript로 만들기
 * https://github.com/antlr/antlr4/blob/master/doc/javascript-target.md
+* https://github.com/antlr/antlr4/blob/master/doc/typescript-target.md
 ```sh
 cd antlr4
 antlr4 -Dlanguage=JavaScript Expr.g4
+# antlr4 -Dlanguage=TypeScript Expr.g4
 
 npm install antlr4
 ```
