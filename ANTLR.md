@@ -16,15 +16,35 @@ export PATH="/Users/{사용자}/Library/Python/3.9/bin:$PATH"
 antlr4/Expr.g4
 ```g4
 grammar Expr;
-prog:    expr EOF ;
+prog:    expr EOF;
 expr:    expr ('*'|'/') expr
     |    expr ('+'|'-') expr
     |    INT
     |    '(' expr ')'
     ;
-NEWLINE : [\r\n]+ -> skip;
-INT     : [0-9]+ ;
+NEWLINE: [\r\n]+ -> skip;
+INT: [0-9]+;
 ```
+
+* https://www.antlr3.org/pipermail/antlr-interest/2006-August/017207.html
+```g4
+grammar Expr;
+prog:    expr EOF;
+expr:    expr ('AND'|'OR') expr
+    |    '(' expr ')'
+    |    'A' '=' ('x'|'y')
+    |    'B' OPERATOR VERSION
+    |    'C' '(' STRINGLITERAL ')' '=' ('TRUE'|'FALSE')
+    |    'D' '(' INT ')'
+    ;
+WS: [ \t\r\n]+ -> skip;
+INT: [0-9]+;
+OPERATOR: ('='|'>'|'<'|'>='|'<=');
+VERSION: [0-9.]+;
+STRINGLITERAL: '\'' (~'\'')* '\'';
+```
+* `VERSION` = `1.0.0`, `STRINGLITERAL` = `'문자'`
+* `(A=x AND B >= 1.0.0) OR (C('abc')=TRUE AND D(50))`
 
 ### 테스트
 ```sh
