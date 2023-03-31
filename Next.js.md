@@ -1156,3 +1156,14 @@ const formatSize = async (file) => {
 }
 await formatSize(files.file)
 ```
+
+## Head
+* https://nextjs.org/docs/api-reference/next/head
+```js
+import Head from 'next/head';
+
+<Head>
+  <title>홈 {'}'} 목록</title>
+  <meta keywords={'keywords'} />
+</Head>
+```
