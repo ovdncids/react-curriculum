@@ -8,21 +8,6 @@ index.js
 ```js
 import { useState } from 'react';
 
-function App() {
-  const [users, setUsers] = useState([]);
-  const [user, setUser] = useState('');
-  return (
-    <div>
-      <Users users={users}></Users>
-      <input
-        type="text" placeholder="User" value={user}
-        onChange={event => setUser(event.target.value)}
-      />
-      <button onClick={() => setUsers([...users, user])}>Create</button>
-    </div>
-  );
-}
-
 function Users(props) {
   const fUsers = () => {
     console.log('fUsers');
@@ -34,6 +19,21 @@ function Users(props) {
     {cUsers.map((user, index) => (
       <div key={index}>{user}</div>
     ))}
+    </div>
+  );
+}
+
+function App() {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState('');
+  return (
+    <div>
+      <Users users={users}></Users>
+      <input
+        type="text" placeholder="User" value={user}
+        onChange={event => setUser(event.target.value)}
+      />
+      <button onClick={() => setUsers([...users, user])}>Create</button>
     </div>
   );
 }
