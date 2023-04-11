@@ -250,6 +250,7 @@ import Footer from './components/Footer.js';
 src/components/Header.js
 ```js
 function Header(props) {
+  console.log(props);
   return (
     <header>
       <h1>React study</h1>
@@ -317,8 +318,7 @@ render는 render={Users} 이렇게 사용할 수 없다.
 
 src/components/contents/Users.js
 ```js
-function Users(props) {
-  console.log(props);
+function Users() {
   return (
     <div>
       <h3>Users</h3>
@@ -824,7 +824,7 @@ const searchRead = (event) => {
 ## Search Component 쿼리스트링 변경
 src/components/contents/Search.js
 ```diff
-- function Search(props) {
+- function Search() {
 ```
 ```js
 import { useLocation, useNavigate } from 'react-router-dom';
