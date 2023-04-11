@@ -9,14 +9,11 @@ index.js
 import { useState } from 'react';
 
 function Users(props) {
-  const fUsers = () => {
-    console.log('fUsers');
-    return props.users;
-  };
-  const cUsers = fUsers();
+  const { users } = props;
+  console.warn(users);
   return (
     <div>
-    {cUsers.map((user, index) => (
+    {users.map((user, index) => (
       <div key={index}>{user}</div>
     ))}
     </div>
@@ -47,21 +44,41 @@ index.js
 - import { useState } from 'react';
 + import { useState, useMemo } from 'react';
 
-- const fUsers = () => {
--   console.log('fUsers');
--   return props.users;
-- };
-- const cUsers = fUsers();
+- <Users users={users}></Users>
 ```
 ```js
-const cUsers = useMemo(() => {
-  console.log('fUsers');
-  return (props.users.map((user, index) => (
-    <div key={index}>{user}</div>
-  )));
-}, [props.users]);
+{useMemo(() => (
+  <Users users={users}></Users>
+), [users])}
 ```
 * ❕ `useEffect`와 모양은 비슷한 하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
+
+# useCallback
+* ❕ `useMemo`와 비슷하지만 `useCallback`은 함수를 반환, `useMemo` 결과를 반환 한다.
+
+```js
+const apiConnect = () => {};
+useEffect(() => {
+  apiConnect();
+}, [apiConnect]);
+```
+* `React hook` 초기 버전은 이렇게 사용해야 했다. 하지만 렌터링 될때마다 `apiConnect 상수`가 변하므로 경고가 발생한다.
+
+```diff
+- const apiConnect = () => {};
+```
+```js
+const apiConnect = useCallback(() => {}, []);
+```
+
+* `React hook` 최근 버전은 `apiConnect 상수`의 의존성이 필요 없어 졌다.
+```js
+const apiConnect = () => {};
+useEffect(() => {
+  apiConnect();
+}, []);
+```
+* ❕ 따라서 `useCallback` 쓰임이 줄어 들었다.
 
 # useRef
 ```js
