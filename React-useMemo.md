@@ -51,7 +51,7 @@ index.js
   <Users users={users}></Users>
 ), [users])}
 ```
-* ❕ `useEffect`와 모양은 비슷한 하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
+* ❕ `useEffect`와 모양은 비슷하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
 
 # useCallback
 * ❕ `useMemo`와 비슷하지만 `useCallback`은 함수를 반환, `useMemo` 결과를 반환 한다.
@@ -62,7 +62,7 @@ useEffect(() => {
   apiConnect();
 }, [apiConnect]);
 ```
-* `React hook` 초기 버전은 이렇게 사용해야 했다. 하지만 렌터링 될때마다 `apiConnect 상수`가 변하므로 경고가 발생한다.
+* `React hook` 초기 버전은 이렇게 사용해야 했다. 하지만 렌터링 될때마다 `apiConnect 상수`가 변하므로 경고가 발생했다.
 
 ```diff
 - const apiConnect = () => {};
@@ -70,15 +70,15 @@ useEffect(() => {
 ```js
 const apiConnect = useCallback(() => {}, []);
 ```
+* `useCallback` 사용하면 `apiConnect 상수`는 렌터링이 되더라도 변하지 않는다. `[]` 안의 의존성이 변할때만 새로운 함수를 받는다.
 
-* `React hook` 최근 버전은 `apiConnect 상수`의 의존성이 필요 없어 졌다.
 ```js
 const apiConnect = () => {};
 useEffect(() => {
   apiConnect();
 }, []);
 ```
-* ❕ 따라서 `useCallback` 쓰임이 줄어 들었다.
+* `React hook` 최근 버전은 `apiConnect 상수`의 의존성이 필요 없어 졌다. 따라서 `useCallback` 쓰임이 많이 줄어 들었다.
 
 # useRef
 ```js
