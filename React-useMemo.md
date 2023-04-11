@@ -56,10 +56,12 @@ index.js
 ```js
 const cUsers = useMemo(() => {
   console.log('fUsers');
-  return props.users;
+  return (props.users.map((user, index) => (
+    <div key={index}>{user}</div>
+  )));
 }, [props.users]);
 ```
-* ❕ `useEffect`와 모양은 비슷한 하다. 차이점은 `useMemo`는 렌더링 중에 `useEffect`는 렌더링이 완료된 후 실행 한다.
+* ❕ `useEffect`와 모양은 비슷한 하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
 
 # useRef
 ```js
