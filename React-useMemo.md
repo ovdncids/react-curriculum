@@ -47,9 +47,19 @@ index.js
 - import { useState } from 'react';
 + import { useState, useMemo } from 'react';
 
+- const fUsers = () => {
+-   console.log('fUsers');
+-   return props.users;
+- };
 - const cUsers = fUsers();
-+ const cUsers = useMemo(fUsers, [props.users]);
 ```
+```js
+const cUsers = useMemo(() => {
+  console.log('fUsers');
+  return props.users;
+}, [props.users]);
+```
+* ❕ `useEffect`와 모양은 비슷한 하다. 차이점은 `useMemo`는 렌더링 중에 `useEffect`는 렌더링이 완료된 후 실행 한다.
 
 # useRef
 ```js
