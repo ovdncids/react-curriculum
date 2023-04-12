@@ -15,7 +15,10 @@ Stepper: 단계를 표현 할때 사용
 
 ## TextField
 ```js
-<TextField inputProps={{maxLength: 100}}></TextField>
+<TextField
+  inputProps={{maxLength: 100}}
+  InputLabelProps={{shrink: true}}
+></TextField>
 ```
 ```js
 <TextField
