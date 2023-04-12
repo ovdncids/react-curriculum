@@ -120,7 +120,7 @@ function Users() {
           </thead>
           <tbody>
             {usersFieldArray.fields.map((user, index) => (
-              <tr key={index}>
+              <tr key={user.id}>
                 <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.name`)} /></td>
                 <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.age`)} /></td>
                 <td>
