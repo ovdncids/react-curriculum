@@ -89,13 +89,6 @@ const formClone = useForm({
 import { useForm, useFieldArray } from 'react-hook-form';
 
 function Users() {
-  const usersForm = useForm({
-    defaultValues: {
-      users: []
-    }
-  });
-  const usersFieldArray = useFieldArray({ control: usersForm.control, name: 'users' });
-  const { register: usersRegister } = usersForm;
   const userForm = useForm({
     defaultValues: {
       name: '홍길동',
@@ -103,6 +96,13 @@ function Users() {
     }
   });
   const { register: userRegister } = userForm;
+  const usersForm = useForm({
+    defaultValues: {
+      users: []
+    }
+  });
+  const usersFieldArray = useFieldArray({ control: usersForm.control, name: 'users' });
+  const { register: usersRegister } = usersForm;
   console.log(userForm.getValues(), usersFieldArray.fields);
   return (
     <div>
