@@ -83,3 +83,66 @@ const formClone = useForm({
   defaultValues: {...form.getValues()}
 });
 ```
+
+## Users
+```js
+import { useForm, useFieldArray } from 'react-hook-form';
+
+function Users() {
+  const usersForm = useForm({
+    defaultValues: {
+      users: []
+    }
+  });
+  const usersFieldArray = useFieldArray({ control: usersForm.control, name: 'users' });
+  const { register: usersRegister } = usersForm;
+  const userForm = useForm({
+    defaultValues: {
+      name: '홍길동',
+      age: 39
+    }
+  });
+  const { register: userRegister } = userForm;
+  console.log(userForm.getValues(), usersFieldArray.fields);
+  return (
+    <div>
+      <h3>Users</h3>
+      <hr className="d-block" />
+      <div>
+        <h4>Read</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Modify</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usersFieldArray.fields.map((user, index) => (
+              <tr key={index}>
+                <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.name`)} /></td>
+                <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.age`)} /></td>
+                <td>
+                  {/* usersFieldArray.fields[index]으로 update 하면 append 시점의 정보를 받게 된다. */}
+                  <button onClick={() => usersFieldArray.update(index, usersForm.getValues(`users.${index}`))}>Update</button>
+                  <button onClick={() => usersFieldArray.remove(index)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <h4>Create</h4>
+        <input type="text" placeholder="Name" {...userRegister('name')} />
+        <input type="text" placeholder="Age" {...userRegister('age')} />
+        <button onClick={() => usersFieldArray.append(userForm.getValues())}>Create</button>
+      </div>
+    </div>
+  );
+}
+
+export default Users;
+```
