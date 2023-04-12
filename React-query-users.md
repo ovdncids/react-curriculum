@@ -78,7 +78,7 @@ export default Users;
 const result = useQuery('usersRead', () => {
   return axios.get('http://localhost:3100/api/v1/users');
 }, {
-  // 통신중에 오류가 발생 하면 재시도 회수  
+  // 통신중에 오류가 발생하면 재시도 회수  
   retry: 0,
   // 화면이 blur 상태에서 focus 상태이면 통신을 다시 요청 한다. (기본 true)
   refetchOnWindowFocus: true,
