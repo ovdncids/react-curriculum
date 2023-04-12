@@ -7,7 +7,7 @@ Node.js 버전을 관리하는 프로그램, 어느 버전이든 설치, 변경,
 ```sh
 # nvm is not compatible with the npm config "prefix" option: currently set to "/usr/local"
 # Run `npm config delete prefix` or `nvm use --delete-prefix v8.12.0 --silent` to unset it.
-## nvm 설치 전에 npm이 설치되어서 문제가 발생 한다.
+## nvm 설치 전에 npm이 설치되어서 문제가 발생한다.
 ls -la /usr/local/bin | grep npm
 rm -R /usr/local/bin/npm /usr/local/lib/node_modules/npm/bin/npm-cli.js
 ``` -->
