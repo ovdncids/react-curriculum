@@ -1,8 +1,8 @@
 # Infinite Scroll
-* [무한 스크롤](https://github.com/ovdncids/react-curriculum/blob/master/Mui.md#%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-infinite-scroll)
+* [무한 스크롤 - React Hook](https://github.com/ovdncids/react-curriculum/blob/master/Mui.md#%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-infinite-scroll)
 * [Intersection Observer API - 추후](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 
-## React
+## React before Hook
 ### Search를 복사 하여 InfiniteStore, router, component 생성
 
 src/shared/stores/InfiniteStore.js
