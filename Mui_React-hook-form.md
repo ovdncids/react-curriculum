@@ -445,3 +445,26 @@ const usersCreate = async () => {
 <button onClick={usersCreate}>Create</button>
 ```
 * `errors` 처리를 위해 `Material UI`를 사용하자.
+
+### yup
+* https://velog.io/@jamieecode/react-hook-form-yup%EC%9C%BC%EB%A1%9C-%ED%8F%BC-%EB%A7%8C%EB%93%A4%EA%B8%B0
+```sh
+npm install yup @hookform/resolvers
+```
+```js
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const userForm = useForm({
+  defaultValues: {
+    name: '홍길동',
+    age: 39
+  },
+  resolver: yupResolver(yup.object().shape({
+    name: yup.string().min(3).max(8).required("name is required."),
+    age: yup.number().required("age is required.")
+  }))
+});
+
+<input type="text" placeholder="Name" {...userRegister('name')} />
+```
