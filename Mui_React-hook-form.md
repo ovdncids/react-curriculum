@@ -321,6 +321,8 @@ const formClone = useForm({
 ```
 
 ## Users
+### 기본
+Users.js
 ```js
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -332,6 +334,7 @@ function Users() {
     }
   });
   const { register: userRegister } = userForm;
+  const user = userForm.getValues();
   const usersForm = useForm({
     defaultValues: {
       users: []
@@ -339,7 +342,8 @@ function Users() {
   });
   const usersFieldArray = useFieldArray({ control: usersForm.control, name: 'users' });
   const { register: usersRegister } = usersForm;
-  console.log(userForm.getValues(), usersFieldArray.fields);
+  const users = usersForm.getValues('users');
+  console.log(user, users);
   return (
     <div>
       <h3>Users</h3>
@@ -355,12 +359,11 @@ function Users() {
             </tr>
           </thead>
           <tbody>
-            {usersFieldArray.fields.map((user, index) => (
-              <tr key={user.id}>
+            {users.map((user, index) => (
+              <tr key={index}>
                 <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.name`)} /></td>
                 <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.age`)} /></td>
                 <td>
-                  {/* usersFieldArray.fields[index]으로 update 하면 append 시점의 정보를 받게 된다. */}
                   <button onClick={() => usersFieldArray.update(index, usersForm.getValues(`users.${index}`))}>Update</button>
                   <button onClick={() => usersFieldArray.remove(index)}>Delete</button>
                 </td>
@@ -382,3 +385,63 @@ function Users() {
 
 export default Users;
 ```
+
+### FormProvider
+Users.js
+```js
+import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
+import UsersRead from './UsersRead.js';
+
+return (
+  <FormProvider userForm={userForm} usersForm={usersForm}>
+    <div ...
+      <UsersRead />
+  </FormProvider>
+);
+```
+
+UsersRead.js
+```js
+import { useFormContext, useFieldArray } from 'react-hook-form';
+
+function UsersRead() {
+  const { usersForm } = useFormContext();
+  const usersFieldArray = useFieldArray({ control: usersForm.control, name: 'users' });
+  const { register: usersRegister } = usersForm;
+  const users = usersForm.getValues('users');
+  return (
+    <tbody>
+      {/* usersFieldArray.fields.map을 사용하는 경우, 자식 컴포넌트에서는 렌더링이 되지 않는다. */}
+      {users.map((user, index) => (
+        <tr key={index}>
+          <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.name`)} /></td>
+          <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.age`)} /></td>
+          <td>
+            <button onClick={() => usersFieldArray.update(index, usersForm.getValues(`users.${index}`))}>Update</button>
+            <button onClick={() => usersFieldArray.remove(index)}>Delete</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  );
+}
+
+export default UsersRead;
+```
+
+### handleSubmit
+Users.js
+```js
+const userFormSubmit = userForm.handleSubmit(() => {});
+const usersCreate = async () => {
+  userForm.clearErrors();
+  await userFormSubmit();
+  if (Object.keys(userForm.formState.errors).length) return; 
+  usersFieldArray.append(userForm.getValues());
+};
+
+<input type="text" placeholder="Name" {...userRegister('name', { required: true, pattern: /^[a-zA-Z]/ })} />
+{userForm.formState.errors.name ? userForm.formState.errors.name.type : ''}
+<button onClick={usersCreate}>Create</button>
+```
+* `errors` 처리를 위해 `Material UI`를 사용하자.
