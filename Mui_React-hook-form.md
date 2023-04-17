@@ -417,7 +417,8 @@ function UsersRead() {
           <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.name`)} /></td>
           <td><input type="text" placeholder="Name" {...usersRegister(`users.${index}.age`)} /></td>
           <td>
-            <button onClick={() => usersFieldArray.update(index, usersForm.getValues(`users.${index}`))}>Update</button>
+            {/* <button onClick={() => usersFieldArray.update(index, {name: '', age: 0})}>Update</button> */}
+            <button onClick={() => usersForm.setValue(`users.${index}`, {name: '', age: 0})}>Update</button>
             <button onClick={() => usersFieldArray.remove(index)}>Delete</button>
           </td>
         </tr>
@@ -427,6 +428,22 @@ function UsersRead() {
 }
 
 export default UsersRead;
+```
+* ❕ `usersFieldArray.update(index`를 사용하면 부모 컴포넌트는 랜더링되지만 화면이 변하지 않는다.
+* ❕ `usersForm.setValue(`users.${index}`를 사용하면 부모 컴포넌트는 랜더링 안되고 화면이 변한다.
+* TS: `FormProvider`에 여러개 `form` 넘기기
+```ts
+const forms: any = {
+  userForm,
+  usersForm
+};
+<FormProvider {...forms}>
+```
+```ts
+const { userForm, usersForm } = useFormContext() as unknown as {
+  userForm: UseFormReturn<User>,
+  usersForm: UseFormReturn<{users: User[]}>
+};
 ```
 
 ### handleSubmit
