@@ -232,7 +232,7 @@ useEffect(() => {
   paging.categoriesGet();
 }, [location.search]);
 ```
-* 쿼리스트링이 변경 될 경우 `page = 1`
+* 쿼리스트링이 변경될 경우 `page = 1`
 
 # React-hook-form
 * https://react-hook-form.com/get-started
