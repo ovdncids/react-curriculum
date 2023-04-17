@@ -53,7 +53,7 @@ npm start
 npx create-react-app my-app --template redux -->
 
 ## GIT
-소스 관리를 위해 사용한다. 어느 파일이 언제 어떻게 변경 되었는지 쉽게 볼 수 있다.
+소스 관리를 위해 사용한다. 어느 파일이 언제 어떻게 변경되었는지 쉽게 볼 수 있다.
 
 **GIT 설치**
 
