@@ -294,7 +294,7 @@ src/components/contents/Users.js
 - const users = JSON.parse(JSON.stringify(useSelector(usersState).users));
 + const users = useSelector(usersState).users;
 // dispatch 전에 리덕스의 state 값이 바뀐다면 dispatch 할때 오류가 발생한다.
-// 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경 해야 한다.
+// 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경해야 한다.
 ```
 
 ## 비동기 액션 만들기
@@ -308,7 +308,7 @@ setTimeout(() => {
 }, 1000);
 ```
 
-* `setTimeout`, `Promise`등으로 `진행 쓰레드`가 변경 되는 경우 Redux에서 에러를 발생 시키므로 이를 피하기 위해 사용한다.
+* `setTimeout`, `Promise`등으로 `진행 쓰레드`가 변경되는 경우 Redux에서 에러를 발생 시키므로 이를 피하기 위해 사용한다.
 
 ### Redux Thunk VS Redux Saga
 Redux Toolkit Thunk: 설정도 없고, 간단 하고 쉽게 만들 수 있다.
