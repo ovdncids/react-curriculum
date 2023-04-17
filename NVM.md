@@ -52,15 +52,15 @@ https://github.com/coreybutler/nvm-windows/releases
 # 설치 된 node.js 리스트를 본다.
 nvm ls
 
-# 해당 버전을 설치 한다.
+# 해당 버전을 설치한다.
 nvm install 16.18.1
 
-# 해당 버전을 삭제 한다.
+# 해당 버전을 삭제한다.
 nvm uninstall 16.18.1
 
-# 해당 버전을 사용 한다.
+# 해당 버전을 사용한다.
 nvm use 16.18.1
 
-# 기본 버전 변경 한다.
+# 기본 버전 변경한다.
 nvm alias default 16.18.1
 ```
