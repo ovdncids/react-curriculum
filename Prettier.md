@@ -30,7 +30,7 @@ VSCode 재시작
   "arrowParens": "always"
 }
 ```
-* `.prettierrc` 파일을 수정 하면, 바로 다음 저장 부터 포맷이 자동으로 변경 된다.
+* `.prettierrc` 파일을 수정 하면, 바로 다음 저장 부터 포맷이 자동으로 변경된다.
 
 # gts (Google TypeScript Style)
 * https://github.com/google/gts
