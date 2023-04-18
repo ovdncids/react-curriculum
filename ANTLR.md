@@ -117,3 +117,61 @@ enterProg(ctx) {
   console.log('enterProg', ctx);
 }
 ```
+
+<!-- THANOS
+```g4
+grammar ExpressionV1;
+
+expression:
+    PERCENT'('NUMBER')' #percent
+    | OS op=(EQ|NEQ) value=OS_VALUE #os
+    | OS_VER op=(EQ|NEQ|GT|GTE|LT|LTE) value=(NUMBER | NUMBER_WITH_DOT) #osVer
+    | APP op=(EQ|NEQ) value=APP_VALUE #app
+    | APP_VER op=(EQ|NEQ|GT|GTE|LT|LTE) value=(NUMBER | NUMBER_WITH_DOT) #appVer
+    | HQL'('query=SQUOTA_STRING')' op=EQ value=BOOLEAN #hql
+    | PERIOD'('from=TIME_STRING'~'to=TIME_STRING')' #period
+    | HEADER'('key=DQUOTA_STRING')' op=(EQ|NEQ|CONTAINS) value=DQUOTA_STRING #header
+    | expression AND expression #and
+    | expression OR expression #or
+    | left=LEFT_BRACKET expression right=RIGHT_BRACKET #parent
+;
+
+PERCENT: 'PERCENT';
+OS: 'OS';
+OS_VER: 'OS_VER';
+APP: 'APP';
+APP_VER: 'APP_VER';
+HQL: 'HQL';
+PERIOD: 'PERIOD';
+HEADER: 'HEADER';
+
+LEFT_BRACKET: '(';
+RIGHT_BRACKET: ')';
+EQ: '=';
+NEQ: '!=';
+GT: '>';
+GTE: '>=';
+LT: '<';
+LTE: '<=';
+CONTAINS: 'CONTAINS';
+AND: 'AND';
+OR: 'OR';
+
+NUMBER: [0-9]+;
+fragment DIGIT_1: [0-9];
+fragment DIGIT_2: DIGIT_1 DIGIT_1;
+
+BOOLEAN: 'TRUE'|'FALSE';
+TIME_STRING: DIGIT_2':'DIGIT_2;
+SQUOTA_STRING:  '\'' ('\\'. | '\'\'' | ~('\'' | '\\'))* '\'';
+DQUOTA_STRING: '"' ('\\'. | '""' | ~('"' | '\\'))* '"';
+
+NUMBER_WITH_DOT: NUMBER'.'NUMBER'.'?NUMBER?;
+OS_VALUE: 'IOS' | 'ANDROID';
+APP_VALUE: 'KAKAO_TALK' | 'KAKAO_PAY';
+
+s: expression EOF;
+WS: [ \t\r\n]+ -> skip
+;
+```
+-->
