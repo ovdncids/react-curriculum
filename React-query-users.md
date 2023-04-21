@@ -266,6 +266,6 @@ const usersUpdate = useMutation(({index, user}) => {
   usersUpdate.mutate({index, user});
 }}>Update</button>
 ```
-* `통신 회수`와 `렌더링 회수` 비교
+* `통신 횟수`와 `렌더링 횟수` 비교
 
 ### `axios` 부분을 `src/services/usersService.js` 파일로 만들기
