@@ -431,6 +431,7 @@ export default UsersRead;
 ```
 * ❕ `usersFieldArray.update(index`를 사용하면 부모 컴포넌트는 랜더링되지만 화면이 변하지 않는다.
 * ❕ `usersForm.setValue(`users.${index}`를 사용하면 부모 컴포넌트는 랜더링 안되고 화면이 변한다.
+* 에러: `{usersForm.formState.errors.users?.[index]?.name ? usersForm.formState.errors.users?.[index]?.name : ''}`
 * TS: `FormProvider`에 여러개 `form` 넘기기
 ```ts
 const forms: any = {
