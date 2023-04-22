@@ -81,7 +81,7 @@ const result = useQuery('usersRead', () => {
   // 통신중에 오류가 발생하면 재시도 회수  
   retry: 0,
   // 화면이 blur 상태에서 focus 상태이면 통신을 다시 요청 한다. (기본 true)
-  refetchOnWindowFocus: true,
+  refetchOnWindowFocus: true
   // stale 시간 동안은 focus와 상관 없이 통신을 다시 요청 하지 않는다.
   staleTime: 1000 * 3
 });
