@@ -306,6 +306,7 @@ form.reset({
   age: 39
 });
 ```
+* ❕ 모달창의 form을 핸들링하는 경우 close보다는 open할때 `form.reset();` 하는 편이 좋은 경우도 있다.
 
 ## isDirty
 ```js
