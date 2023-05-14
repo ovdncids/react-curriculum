@@ -421,7 +421,7 @@ const handler = async (req, res) => {
 export default handler
 ```
 * http://localhost:3000/api/users
-* TS: `(req: NextApiRequest, res: NextApiResponse<Users[]>)`
+* TS: `(req: NextApiRequest, res: NextApiResponse<User[]>)`
 
 pages/users.js
 ```diff
