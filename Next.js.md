@@ -602,6 +602,7 @@ const usersUpdate = async (index, user) => {
 
 ## MySQL CRUD
 ### MySQL 연결
+* [MariaDB 설치](https://github.com/ovdncids/mysql-curriculum/blob/master/Install.md)
 * https://www.simplenextjs.com/posts/next-mysql
 ```sh
 npm install mysql2
