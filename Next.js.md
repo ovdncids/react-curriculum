@@ -678,7 +678,7 @@ console.log(rows)
 ### Delete
 pages/api/users/[index].js to pages/api/users/[userPk].js
 ```js
-import mysql from '../../libraries/mysqlPool'
+import mysql from '../../../libraries/mysqlPool'
 ```
 ```diff
 - users.splice(req.query.index, 1)
