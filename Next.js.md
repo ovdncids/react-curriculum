@@ -1151,3 +1151,13 @@ import Head from 'next/head';
   <meta keywords={'keywords'} />
 </Head>
 ```
+
+## Next.js 서버에러 페이지
+pages/_error.js
+```js
+const Error = () => {
+  return <div>에러 페이지</div>
+}
+
+export default Error
+```
