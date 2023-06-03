@@ -807,7 +807,7 @@ pages/search.js
 const response = await axios('http://localhost:3000/api/search', {
   params: context.query
 })
-``
+```
 
 pages/api/search.js
 ```diff
