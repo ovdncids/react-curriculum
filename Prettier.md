@@ -89,6 +89,7 @@ package.json
 * `lint` 설정이 맞지 않는 부분을 가능한 것만 자동으로 수정 해준다.
 
 # husky
+* https://typicode.github.io/husky
 * `Git hooks`를 편하게 설정 할 수 있다.
 * `git commit` 할때 `npm run lint` 실행 시켜서 통과 하지 못하면 `git commit`을 중지 시킨다.
 ```sh
