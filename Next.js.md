@@ -913,7 +913,7 @@ export default Page
 ## 환경 설정
 * https://nextjs.org/docs/basic-features/environment-variables
 ```sh
-npm install env-cmd
+npm install -D env-cmd
 ```
 
 .env.development
