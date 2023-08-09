@@ -490,6 +490,8 @@ const userForm = useForm({
 
 ## Material UI & Tailwind & Next.js
 ### 설정
+* https://levelup.gitconnected.com/using-material-ui-with-next-js-13-and-tailwind-css-part-2-72d7e034baa9
+
 tailwind.config.js
 ```js
 {
