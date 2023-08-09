@@ -487,3 +487,25 @@ const userForm = useForm({
 
 <input type="text" placeholder="Name" {...userRegister('name')} />
 ```
+
+## Material UI & Tailwind & Next.js
+### 설정
+tailwind.config.js
+```js
+{
+  corePlugins: {
+    // MUI의 버튼색을 transparent로 덮어씌움 방지
+    preflight: false
+  },
+  // Next.js npm run build 후에 tailwind css 우선순위 낮아지는 문제 해결
+  important: '#___next'
+}
+```
+
+_document.tsx
+```diff
+- <body>
++ <body id="___next">
+```
+* ❕ `__next` __2개는 next에서 사용중이므로 `___next` ___3개를 사용하자.
+
