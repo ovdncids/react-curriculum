@@ -861,6 +861,11 @@ useEffect(() => {
   - const [ q, setQ ] = useState('');
   + const [ q, setQ ] = useState(_q);
   ```
+  ```js
+  // 그래도 3번 랜더링 된다면
+  if (q !== _q) setQ(_q);
+  ```
+
 </details>
 
 ## Proxy 설정
