@@ -53,6 +53,7 @@ import {Controller} from 'react-hook-form';
   />
 </FormControl>
 ```
+* ❕ `select`, `checkbox`, `radio`는 `<Controller />`를 사용해야 불필요한 오류를 만나지 안는다.
 
 ## Progress bar
 ```js
