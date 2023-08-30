@@ -55,6 +55,43 @@ import {Controller} from 'react-hook-form';
 ```
 * ❕ `select`, `checkbox`, `radio`는 `<Controller />`를 사용해야 불필요한 오류를 만나지 안는다.
 
+## Radio
+```js
+<Controller
+  control={control}
+  name="radio"
+  render={({field}) => (
+    <RadioGroup {...field} row>
+      <FormControlLabel
+        label="ON"
+        control={
+          <Radio
+            value={true}
+            onClick=(() => {
+              setTimeout(() => {
+                form.setValue('radio', true)
+              })
+            })
+        }
+      />
+      <FormControlLabel
+        label="OFF"
+        control={
+          <Radio
+            value={false}
+            onClick=(() => {
+              setTimeout(() => {
+                form.setValue('radio', false)
+              })
+            })
+        }
+      />
+    </RadioGroup>
+  )}
+/>
+```
+* ❕ `setTimeout`을 사용해야만 `'true', 'false'`가 아닌 정상인 `true, false` 값을 넣을 수 있다.
+
 ## Progress bar
 ```js
 import { useState, useEffect } from 'react';
