@@ -117,7 +117,12 @@ npx husky add .husky/pre-commit "npm run lint"
 ```json
 {
   "rules": {
-    "quotes": "error"
+    "quotes": "error",
+    "semi": [2, "never"],
+    "comma-dangle": "error",
+    "array-bracket-spacing": "error",
+    "object-curly-spacing": "error",
+    "arrow-parens": "error"
   }
 }
 ```
