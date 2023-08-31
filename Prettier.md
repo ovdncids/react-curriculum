@@ -111,3 +111,23 @@ npm run prepare
 npx husky add .husky/pre-commit "npm run lint"
 ```
 * `.husky/pre-commit` 파일이 생성된다. 이제 부터 `git commit` 마다 `npm run lint`가 먼저 실행 된다.
+
+# Typescript가 아닌 경우
+.eslintrc.json
+```json
+{
+  "rules": {
+    "quotes": "error"
+  }
+}
+```
+
+package.json
+```json
+{
+  "scripts": {
+    "fix": "next lint --fix"
+  }
+}
+```
+* `husky` 연동
