@@ -135,4 +135,4 @@ package.json
   }
 }
 ```
-* `husky` 연동
+* [`husky` 연동](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
