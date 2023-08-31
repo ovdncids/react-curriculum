@@ -19,6 +19,11 @@ npm run dev
 npm install -D sass
 ```
 
+## 필요 없는 파일 지우기
+```diff
+- styles/*
+```
+
 ## Markup
 styles/global.scss
 ```scss
