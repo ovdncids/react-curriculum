@@ -3,13 +3,7 @@
 ## Install
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
-npx create-next-app@latest {프로젝트명} --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
-```
-
-## typescript
-* https://nextjs.org/docs/basic-features/typescript
-```sh
-npx create-next-app@latest --ts
+npx create-next-app@latest
 ```
 
 ## 실행
