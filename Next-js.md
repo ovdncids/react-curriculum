@@ -201,145 +201,112 @@ const Home = () => {
 export default Home
 ```
 
-## getServerSideProps Users
-pages/users.js
+## SSR
+app/users/page.js
 ```js
-import Layout from '../components/layouts/layout'
-
-const Users = (props) => {
-  console.log(props.users)
+const Users = async () => {
+  const users = [{
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  }]
   return (
-    <Layout>
+    <div>
+      <h3>Users</h3>
+      <hr className="d-block" />
       <div>
-        <h3>Users</h3>
-        <hr className="d-block" />
-        <div>
-          <h4>Read</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Modify</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>홍길동</td>
-                <td>20</td>
+        <h4>Read</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Modify</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td>{user.name}</td>
+                <td>{user.age}</td>
                 <td>
                   <button>Update</button>
                   <button>Delete</button>
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-        <hr className="d-block" />
-        <div>
-          <h4>Create</h4>
-          <input type="text" placeholder="Name" />
-          <input type="text" placeholder="Age" />
-          <button>Create</button>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </Layout>
+      <hr className="d-block" />
+      <div>
+        <h4>Create</h4>
+        <input type="text" placeholder="Name" />
+        <input type="text" placeholder="Age" />
+        <button>Create</button>
+      </div>
+    </div>
   )
-}
-
-export const getServerSideProps = () => {
-  console.log('서버 사이드 우선 작업')
-  return {
-    props: {
-      users: [{
-        name: '홍길동',
-        age: 20
-      }, {
-        name: '춘향이',
-        age: 16
-      }]
-    }
-  }
 }
 
 export default Users
 ```
-* `getServerSideProps` 설명
-* 개발자 도구 > Elements > `__NEXT_DATA__` 확인
-
-```diff
-- <tr>
--   <td>홍길동</td>
--   <td>20</td>
--   <td>
--     <button>Update</button>
--     <button>Delete</button>
--   </td>
-- </tr>
-```
-```js
-{users.map((user, index) => (
-  <tr key={index}>
-    <td>{user.name}</td>
-    <td>{user.age}</td>
-    <td>
-      <button>Update</button>
-      <button>Delete</button>
-    </td>
-  </tr>
-))}
-```
 * `페이지 소스 보기`에서 `홍길동` 검색 (SEO 최적화)
-* export const getServerSideProps에서 export 빼보기
 
 ## API Users CRUD
 ### Read
-```sh
-npm install axios
-```
-
-pages/api/users.js
+app/api/users/route.js
 ```js
+import { NextResponse } from 'next/server'
+
 export const users = [{
   name: '홍길동',
   age: 20
+}, {
+  name: '춘향이',
+  age: 16
 }]
 
-const handler = async (req, res) => {
-  console.log(req.method)
-  users.push({
-    name: '춘향이',
-    age: 16
-  })
-  res.status(200).json(users)
+export async function GET() {
+  return NextResponse.json(users)
 }
-
-export default handler
 ```
 * http://localhost:3000/api/users
-* TS: `(req: NextApiRequest, res: NextApiResponse<User[]>)`
 
-pages/users.js
-```diff
-- export const getServerSideProps = (context) => {
-```
+services/usersService.js
 ```js
-export const getServerSideProps = async (context) => {
-  console.log(context.query)
-  const response = await axios('http://localhost:3000/api/users')
-  return {
-    props: {
-      users: response.data
-    }
+export const usersService = {
+  usersRead: async () => {
+    const res = await fetch('http://localhost:3000/api/users')
+    if (!res.ok) throw new Error('Failed to fetch data')
+    return res.json()
   }
 }
 ```
-* TS: `(context: NextPageContext)`
-* ❕ `getServerSideProps`는 `서버 사이드`이므로 `Endpoint`를 절대 경로로 넣어야 한다.
+* ❕ `http://localhost:3000/api/users`는 서버 사이드이므로 `Endpoint`를 절대 경로로 넣어야 한다.
+
+app/users/page.js
+```js
+import {usersService} from '@/services/usersService.js'
+```
+```diff
+- const users = [{
+-   name: '홍길동',
+-   age: 20
+- }, {
+-   name: '춘향이',
+-   age: 16
+- }]
+```
+```js
+const users = await usersService.usersRead()
+```
 * `페이지 소스 보기`에서 `홍길동` 다시 검색
 
 ### Create
-pages/api/users.js
+app/api/users/route.js
 ```diff
 - handler
 ```
@@ -356,7 +323,7 @@ const handler = async (req, res) => {
 }
 ```
 
-pages/users.js
+app/users/page.js
 ```js
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -413,7 +380,7 @@ const handler = async (req, res) => {
 export default handler
 ```
 
-pages/users.js
+app/users/page.js
 ```js
 const usersDelete = async (index) => {
   await axios.delete('/api/users/' + index)
@@ -440,7 +407,7 @@ pages/api/users/[index].js
 }
 ```
 
-pages/users.js
+app/users/page.js
 ```diff
 - const users = props.users
 ```
@@ -541,7 +508,7 @@ export default connection
 ```
 
 ### Read
-pages/api/users.js
+app/api/users/route.js
 ```js
 import mysql from '../../libraries/mysqlPool'
 ```
@@ -559,7 +526,7 @@ res.status(200).json(rows)
 ```
 
 ### Create
-pages/api/users.js
+app/api/users/route.js
 ```diff
 - users.push(req.body)
 ```
@@ -587,7 +554,7 @@ const [rows] = await mysql.execute(`
 console.log(rows)
 ```
 
-pages/users.js
+app/users/page.js
 * `usersDelete`에 관련된 `index`만 `user.userPk`로 바꾸기
 
 ### Update
@@ -603,7 +570,7 @@ const [rows] = await mysql.execute(`
 `, [req.body.name, req.body.age, req.query.userPk])
 ```
 
-pages/users.js
+app/users/page.js
 * `usersUpdate`에 관련된 `index`만 `user.userPk`로 바꾸기
 * `key`에 사용되는 `index`를 `user.userPk`로 바꾸기
 
@@ -612,7 +579,7 @@ pages/api/users/[userPk].js
 - import { users } from '../users'
 ```
 
-pages/api/users.js
+app/api/users/route.js
 ```diff
 - export const users = [{
 ```
