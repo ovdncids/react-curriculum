@@ -261,16 +261,18 @@ app/api/users/route.js
 ```js
 import { NextResponse } from 'next/server'
 
-export const users = [{
-  name: '홍길동',
-  age: 20
-}, {
-  name: '춘향이',
-  age: 16
-}]
+if (!global.users) {
+  global.users = [{
+    name: '홍길동',
+    age: 20
+  }, {
+    name: '춘향이',
+    age: 16
+  }]
+}
 
 export async function GET() {
-  return NextResponse.json(users)
+  return NextResponse.json(global.users)
 }
 ```
 * http://localhost:3000/api/users
@@ -279,7 +281,7 @@ services/usersService.js
 ```js
 export const usersService = {
   usersRead: async () => {
-    const res = await fetch('http://localhost:3000/api/users')
+    const res = await fetch('http://localhost:3000/api/users', { cache: 'no-store' })
     if (!res.ok) throw new Error('Failed to fetch data')
     return res.json()
   }
@@ -289,7 +291,7 @@ export const usersService = {
 
 app/users/page.js
 ```js
-import {usersService} from '@/services/usersService.js'
+import { usersService } from '@/services/usersService.js'
 ```
 ```diff
 - const users = [{
@@ -306,61 +308,80 @@ const users = await usersService.usersRead()
 * `페이지 소스 보기`에서 `홍길동` 다시 검색
 
 ### Create
-app/api/users/route.js
-```diff
-- handler
+```sh
+npm install react-hook-form
 ```
+
+app/api/users/route.js
 ```js
-const handler = async (req, res) => {
-  if (req.method === 'GET') {
-    res.status(200).json(users)
-  } else if (req.method === 'POST') {
-    users.push(req.body)
-    res.status(200).json({
-      result: 'Created'
-    })
-  }
+export async function POST(request) {
+  global.users.push(await request.json())
+  return NextResponse.json({
+    result: 'Created'
+  })
+}
+```
+
+services/usersService.js
+```js
+usersCreate: async (user) => {
+  const res = await fetch('http://localhost:3000/api/users', {
+    method: 'POST',
+    body: JSON.stringify(user)
+  })
+  return res.json()
 }
 ```
 
 app/users/page.js
 ```js
-import { useState } from 'react'
-import { useRouter } from 'next/router'
+import Create from './create'
+```
+```diff
+- <div>
+-   <h4>Create</h4>
+-   <input type="text" placeholder="Name" />
+-   <input type="text" placeholder="Age" />
+-   <button>Create</button>
+- </div>
 ```
 ```js
-const [user, setUser] = useState({
-  name: '',
-  age: ''
-})
-const router = useRouter()
-const usersCreate = async () => {
-  await axios.post('/api/users', user)
-  router.push('')
+<Create />
+```
+
+app/users/create.js
+```js
+'use client'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { usersService } from '@/services/usersService.js'
+
+const Create = () => {
+  const router = useRouter()
+  const userForm = useForm({
+    defaultValues: {
+      name: '',
+      age: ''
+    }
+  })
+  const { register } = userForm
+  const usersCreate = async () => {
+    await usersService.usersCreate(userForm.getValues())
+    router.refresh()
+  }
+  return (
+    <div>
+      <h4>Create</h4>
+      <input type="text" placeholder="Name" {...register('name')} />
+      <input type="text" placeholder="Age"  {...register('age')} />
+      <button onClick={() => {
+        usersCreate()
+      }}>Create</button>
+    </div>
+  )
 }
-```
-```js
-<input
-  type="text" placeholder="Name" value={user.name}
-  onChange={event => {
-    setUser({
-      ...user,
-      name: event.target.value
-    })
-  }}
-/>
-<input
-  type="text" placeholder="Age" value={user.age}
-  onChange={event => {
-    setUser({
-      ...user,
-      age: event.target.value
-    })
-  }}
-/>
-<button onClick={() => {
-  usersCreate()
-}}>Create</button>
+
+export default Create
 ```
 
 ### Delete
