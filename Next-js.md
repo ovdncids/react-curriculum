@@ -407,36 +407,56 @@ export default Create
 ```
 
 ### Delete
-pages/api/users/[index].js
+app/api/users/[index]/route.js
 ```js
-import { users } from '../users'
+import { NextResponse } from 'next/server'
 
-const handler = async (req, res) => {
-  if (req.method === 'DELETE') {
-    users.splice(req.query.index, 1)
-    res.status(200).json({
-      result: 'Deleted'
-    })
-  }
+export async function DELETE(_, context) {
+  global.users.splice(context.params.index, 1)
+  return NextResponse.json({
+    result: 'Deleted'
+  })
 }
+```
 
-export default handler
+services/usersService.js
+```js
+usersDelete: async (index) => {
+  const res = await fetch('http://localhost:3000/api/users/' + index, {
+    method: 'DELETE'
+  })
+  return res.json()
+}
 ```
 
 app/users/page.js
 ```js
-const usersDelete = async (index) => {
-  await axios.delete('/api/users/' + index)
-  router.push('')
-}
+import Delete from './delete'
 ```
 ```diff
 - <button>Delete</button>
 ```
 ```js
-<button onClick={() => {
-  usersDelete(index)
-}}>Delete</button>
+<Delete index={index} />
+```
+
+app/users/delete.js
+```js
+'use client'
+import { useRouter } from 'next/navigation'
+import { usersService } from '@/services/usersService.js'
+
+const Delete = ({index}) => {
+  const router = useRouter()
+  return (
+    <button onClick={async () => {
+      await usersService.usersDelete(index)
+      router.refresh()
+    }}>Delete</button>
+  )
+}
+
+export default Delete
 ```
 
 ### Update
