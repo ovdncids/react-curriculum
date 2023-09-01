@@ -189,7 +189,7 @@ export default Search
 ```
 
 ## Redirect / to users
-pages/index.js
+app/page.js
 ```js
 import { redirect } from 'next/navigation'
 
@@ -199,10 +199,6 @@ const Home = () => {
 
 export default Home
 ```
-
-* TS: `{ children }: { children: React.ReactNode }`
-
-
 
 ## getServerSideProps Users
 pages/users.js
