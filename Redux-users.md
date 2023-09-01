@@ -18,6 +18,7 @@ jsconfig.json
   ]
 }
 ```
+* TS: `baseUrl`만 tsconfig.json
 
 ## Users 리듀서 생성
 src/store/users/usersSlice.js
