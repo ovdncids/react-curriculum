@@ -81,6 +81,7 @@ input[type=text] {
   list-style: none;
 }
 .contents {
+  display: block;
   flex: 1;
   padding: 1rem;
 }
