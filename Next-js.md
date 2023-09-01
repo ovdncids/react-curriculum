@@ -5,6 +5,14 @@
 ```sh
 npx create-next-app@latest
 ```
+```sh
+Would you like to use TypeScript? No / Yes
+Would you like to use ESLint? Yes
+Would you like to use Tailwind CSS? Yes
+Would you like to use `src/` directory? No
+Would you like to use App Router? (recommended) Yes
+Would you like to customize the default import alias? No
+```
 
 ## 실행
 ```sh
@@ -13,19 +21,18 @@ code .
 npm run dev
 ```
 
+## eslint 설정
+* [Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
+* [Javascript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#javascript-style)
+
 ## Scss
 * https://nextjs.org/docs/basic-features/built-in-css-support#sass-support
 ```sh
 npm install -D sass
 ```
 
-## 필요 없는 파일 지우기
-```diff
-- styles/*
-```
-
 ## Markup
-styles/global.scss
+app/globals.scss
 ```scss
 * {
   margin: 0;
@@ -88,17 +95,14 @@ input[type=text] {
 }
 ```
 
-pages/_app.js
-```js
-import '../styles/global.scss'
-
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
+app/layout.js
+```diff
+- import './globals.css'
++ import './globals.scss'
 ```
 * TS: `{ Component, pageProps }: AppProps`
 
-pages/users.js
+app/users.js
 ```js
 const Users = () => {
   return (
