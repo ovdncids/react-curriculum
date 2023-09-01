@@ -21,19 +21,23 @@ code .
 npm run dev
 ```
 
-## eslint 설정
+* TS: `tsconfig.json` 오류
+```diif
+- "moduleResolution": "bundler",
++ "moduleResolution": "node",
+```
+
+## ESlint 설정
 * [Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
 * [Javascript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#javascript-style)
 
-## Scss
-* https://nextjs.org/docs/basic-features/built-in-css-support#sass-support
-```sh
-npm install -D sass
-```
+## Markup + Layout
+app/globals.css
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-## Markup
-app/globals.scss
-```scss
 * {
   margin: 0;
   font-family: -apple-system,BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -96,212 +100,109 @@ input[type=text] {
 ```
 
 app/layout.js
-```diff
-- import './globals.css'
-+ import './globals.scss'
+```js
+import Nav from './nav.js'
 ```
-* TS: `{ Component, pageProps }: AppProps`
+```diff
+- <body className={inter.className}>{children}</body>
+```
+```js
+<body className={inter.className}>
+  <div>
+    <header>
+      <h1>Next.js study</h1>
+    </header>
+    <hr />
+    <div className="container">
+      <Nav />
+      <hr />
+      <section className="contents">{children}</section>
+      <hr />
+    </div>
+    <footer>Copyright</footer>
+  </div>
+</body>
+```
 
-app/users.js
+app/nav.js
+```js
+'use client'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+
+const Nav = () => {
+  const pathname = usePathname()
+  return (
+    <nav className="nav">
+      <ul>
+        <li>
+          <h2>
+            <Link
+              href="/users"
+              className={pathname === '/users' ? 'active' : ''}
+            >Users</Link>
+          </h2>
+        </li>
+        <li>
+          <h2>
+            <Link
+              href="/search"
+              className={pathname === '/search' ? 'active' : ''}
+            >Search</Link>
+          </h2>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+
+export default Nav
+```
+
+## Pages
+app/users/page.js
 ```js
 const Users = () => {
   return (
     <div>
-      <header>
-        <h1>React study</h1>
-      </header>
-      <hr />
-      <div className="container">
-        <nav className="nav">
-          <ul>
-            <li><h2>Users</h2></li>
-            <li><h2>Search</h2></li>
-          </ul>
-        </nav>
-        <hr />
-        <section className="contents">
-          <div>
-            <h3>Users</h3>
-            <p>Contents</p>
-          </div>
-        </section>
-        <hr />
-      </div>
-      <footer>Copyright</footer>
+      <h3>Users</h3>
+      <p>Contents</p>
     </div>
   )
 }
 
 export default Users
+```
+
+app/search/page.js
+```js
+const Search = () => {
+  return (
+    <div>
+      <h3>Search</h3>
+      <p>Contents</p>
+    </div>
+  )
+}
+
+export default Search
 ```
 
 ## Redirect / to users
 pages/index.js
 ```js
-const Home = () => {
-  return <></>
-}
+import { redirect } from 'next/navigation'
 
-export const getServerSideProps = () => {
-  return {
-    redirect: {
-      destination: '/users'
-    }
-  }
+const Home = () => {
+  redirect('/users')
 }
 
 export default Home
 ```
 
-## Layouts
-* https://nextjs.org/docs/basic-features/layouts
-
-components/layouts/layout.js
-```js
-import Header from './header'
-import Nav from './nav'
-import Footer from './footer'
-
-const Layout = ({ children }) => {
-  return (
-    <div>
-      <Header></Header>
-      <hr />
-      <div className="container">
-        <nav className="nav">
-          <ul>
-            <li><h2>Users</h2></li>
-            <li><h2>Search</h2></li>
-          </ul>
-        </nav>
-        <hr />
-        <section className="contents">{children}</section>
-        <hr />
-      </div>
-      <footer>Copyright</footer>
-    </div>
-  )
-}
-
-export default Layout
-```
 * TS: `{ children }: { children: React.ReactNode }`
 
-components/layouts/header.js
-```js
-const Header = () => {
-  return (
-    <header>
-      <h1>Next.js study</h1>
-    </header>
-  )
-}
 
-export default Header
-```
-
-pages/users.js
-```js
-import Layout from '../components/layouts/layout'
-
-const Users = () => {
-  return (
-    <Layout>
-      <div>
-        <h3>Users</h3>
-        <p>Contents</p>
-      </div>
-    </Layout>
-  )
-}
-
-export default Users
-```
-* `pages/search.js` 생성
-
-## ActiveLink
-* https://github.com/vercel/next.js/tree/canary/examples/active-class-name
-* <details><summary>ActiveLink 소스</summary>
-
-  components/common/ActiveLink.js
-  ```ts
-  import { useRouter } from 'next/router'
-  import Link, { LinkProps } from 'next/link'
-  import React, { useState, useEffect, ReactElement, Children } from 'react'
-
-  type ActiveLinkProps = LinkProps & {
-    children: ReactElement
-    activeClassName: string
-  }
-
-  const ActiveLink = ({
-    children,
-    activeClassName,
-    ...props
-  }: ActiveLinkProps) => {
-    const { asPath, isReady } = useRouter()
-
-    const child = Children.only(children)
-    const childClassName = child.props.className || ''
-    const [className, setClassName] = useState(childClassName)
-
-    useEffect(() => {
-      // Check if the router fields are updated client-side
-      if (isReady) {
-        // Dynamic route will be matched via props.as
-        // Static route will be matched via props.href
-        const linkPathname = new URL(
-          (props.as || props.href) as string,
-          location.href
-        ).pathname
-
-        // Using URL().pathname to get rid of query and hash
-        const activePathname = new URL(asPath, location.href).pathname
-
-        const newClassName =
-          linkPathname === activePathname
-            ? `${childClassName} ${activeClassName}`.trim()
-            : childClassName
-
-        if (newClassName !== className) {
-          setClassName(newClassName)
-        }
-      }
-    }, [
-      asPath,
-      isReady,
-      props.as,
-      props.href,
-      childClassName,
-      activeClassName,
-      setClassName,
-      className,
-    ])
-
-    return (
-      <Link {...props} legacyBehavior>
-        {React.cloneElement(child, {
-          className: className || null,
-        })}
-      </Link>
-    )
-  }
-
-  export default ActiveLink
-  ```
-</details>
-
-components/layouts/nav.js
-```diff
-- <li><h2>Users</h2></li>
-```
-```js
-<li>
-  <ActiveLink activeClassName="active" href="/users">
-    <a>Users</a>
-  </ActiveLink>
- </li>
-```
 
 ## getServerSideProps Users
 pages/users.js
