@@ -98,6 +98,13 @@ input[type=text] {
   border-top: 1px solid rgb(118, 118, 118);
   min-width: 100px;
 }
+
+input {
+  border: 1px solid black;
+}
+input.error {
+  border: 1px solid red;
+}
 ```
 
 app/layout.js
@@ -364,16 +371,31 @@ const Create = () => {
       age: ''
     }
   })
-  const { register } = userForm
+  const { register, formState, formState: {errors} } = userForm
+  const userFormSubmit = userForm.handleSubmit(() => {})
   const usersCreate = async () => {
-    await usersService.usersCreate(userForm.getValues())
-    router.refresh()
+    userForm.clearErrors()
+    await userFormSubmit()
+    if (Object.keys(formState.errors).length === 0) {
+      await usersService.usersCreate(userForm.getValues())
+      router.refresh()
+    }
   }
   return (
     <div>
       <h4>Create</h4>
-      <input type="text" placeholder="Name" {...register('name')} />
-      <input type="text" placeholder="Age"  {...register('age')} />
+      <input type="text" placeholder="Name"
+        {...register('name', {
+          required: true
+        })}
+        className={!!errors.name ? 'error' : ''}
+      />
+      <input type="text" placeholder="Age"
+        {...register('age', {
+          required: true
+        })}
+        className={!!errors.name ? 'error' : ''}
+      />
       <button onClick={() => {
         usersCreate()
       }}>Create</button>
