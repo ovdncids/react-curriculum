@@ -117,6 +117,7 @@ npx husky add .husky/pre-commit "npm run lint"
 ```json
 {
   "rules": {
+    "indent": ["error", 2],
     "quotes": "error",
     "semi": [2, "never"],
     "comma-dangle": "error",
@@ -125,6 +126,15 @@ npx husky add .husky/pre-commit "npm run lint"
     "arrow-parens": "error"
   }
 }
+```
+```sh
+indent: Tab size 2
+quotes: 홑따옴표 사용 유무
+semi: 세미콜론 사용 유무
+comma-dangle: 마지막 배열과 마지막 오브젝트에 컴마 사용 유무
+array-bracket-spacing: 배열 안에 공백 유무
+object-curly-spacing: 오브젝트 안에 공백 유무
+arrow-parens: 화살표 함수에서 인자가 하나인 경우 () 사용 유무
 ```
 
 package.json
