@@ -529,45 +529,59 @@ app/users/page.js
 - </tr>
 ```
 ```js
-<Update index={index} _user={user} />
+<Update key={index} index={index} _user={user} />
 ```
 
 app/users/update.js
 ```js
-<td>
-  <input
-    type="text" placeholder="Name" value={user.name}
-    onChange={event => {
-      user.name = event.target.value
-      usersSet(users)
-    }}
-  />
-</td>
-<td>
-  <input
-    type="text" placeholder="Age" value={user.age}
-    onChange={event => {
-      user.age = event.target.value
-      usersSet(users)
-    }}
-  />
-</td>
-```
-* `Input box` 수정 해보기
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { usersService } from '@/services/usersService.js'
+import Delete from './delete'
 
-```js
-const usersUpdate = async (index, user) => {
-  await axios.patch('/api/users/' + index, user)
-  router.push('')
+const Update = ({index, _user}) => {
+  const router = useRouter()
+  const [user, setUser] = useState(_user)
+  const usersUpdate = async () => {
+    await usersService.usersUpdate(index, user)
+    router.refresh()
+  }
+  return (
+    <tr key={index}>
+      <td>
+        <input
+          type="text" placeholder="Name" value={user.name}
+          onChange={(event) => {
+            setUser({
+              ...user,
+              name: event.target.value
+            })
+          }}
+        />
+      </td>
+      <td>
+        <input
+          type="text" placeholder="Age" value={user.age}
+          onChange={(event) => {
+            setUser({
+              ...user,
+              age: event.target.value
+            })
+          }}
+        />
+      </td>
+      <td>
+        <button onClick={async () => {
+          await usersUpdate(index, user)
+        }}>Update</button>
+        <Delete index={index} />
+      </td>
+    </tr>
+  )
 }
-```
-```diff
-- <button>Update</button>
-```
-```js
-<button onClick={() => {
-  usersUpdate(index, user)
-}}>Update</button>
+
+export default Update
 ```
 
 ## MySQL CRUD
