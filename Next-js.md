@@ -4,6 +4,12 @@
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
 npx create-next-app@latest
+Would you like to use TypeScript? No / Yes
+Would you like to use ESLint? Yes
+Would you like to use Tailwind CSS? Yes
+Would you like to use `src/` directory? No
+Would you like to use App Router? (recommended) No
+Would you like to customize the default import alias? No
 ```
 
 ## 실행
