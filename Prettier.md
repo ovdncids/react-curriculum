@@ -43,8 +43,17 @@ npx gts init
 
 package.json
 ```diff
-- "lint": "next lint"
-+ "lint": "gts lint",
+- next lint
++ gts lint
+? Replace (y/N) Y
+```
+
+```sh
+./tsconfig.json already exists
+? Overwrite (y/N) N
+
+./.eslintrc.json already exists
+? Overwrite (y/N) N
 ```
 
 .prettierrc.js
