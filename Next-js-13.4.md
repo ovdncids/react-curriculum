@@ -320,10 +320,6 @@ const users = await usersService.usersRead()
 * `페이지 소스 보기`에서 `홍길동` 다시 검색
 
 ### Create
-```sh
-npm install react-hook-form
-```
-
 app/api/users/route.js
 ```js
 export async function POST(request) {
@@ -379,44 +375,96 @@ export default Create
 ```
 
 app/users/create.js
+* <details><summary>react-hook-form</summary>
+
+  * https://medium.com/@prithvi128717/creating-a-form-in-react-with-react-hook-form-and-next-js-13-4-5dae780daaef
+  ```js
+  'use client'
+  import { useRouter } from 'next/navigation'
+  import { useForm } from 'react-hook-form'
+  import { usersService } from '@/services/usersService.js'
+  
+  const Create = () => {
+    const router = useRouter()
+    const userForm = useForm({
+      defaultValues: {
+        name: '',
+        age: ''
+      }
+    })
+    const { register, formState, formState: {errors} } = userForm
+    const userFormSubmit = userForm.handleSubmit(() => {})
+    const usersCreate = async () => {
+      userForm.clearErrors()
+      await userFormSubmit()
+      if (Object.keys(formState.errors).length === 0) {
+        await usersService.usersCreate(userForm.getValues())
+        router.refresh()
+      }
+    }
+    return (
+      <div>
+        <h4>Create</h4>
+        <input type="text" placeholder="Name"
+          {...register('name', {
+            required: true
+          })}
+          className={!!errors.name ? 'error' : ''}
+        />
+        <input type="text" placeholder="Age"
+          {...register('age', {
+            required: true
+          })}
+          className={!!errors.name ? 'error' : ''}
+        />
+        <button onClick={() => {
+          usersCreate()
+        }}>Create</button>
+      </div>
+    )
+  }
+  
+  export default Create
+  ```
+
+</details>
+
 ```js
 'use client'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
 import { usersService } from '@/services/usersService.js'
 
 const Create = () => {
   const router = useRouter()
-  const userForm = useForm({
-    defaultValues: {
-      name: '',
-      age: ''
-    }
+  const [user, setUser] = useState({
+    name: '',
+    age: ''
   })
-  const { register, formState, formState: {errors} } = userForm
-  const userFormSubmit = userForm.handleSubmit(() => {})
   const usersCreate = async () => {
-    userForm.clearErrors()
-    await userFormSubmit()
-    if (Object.keys(formState.errors).length === 0) {
-      await usersService.usersCreate(userForm.getValues())
-      router.refresh()
-    }
+    await usersService.usersCreate(user)
+    router.refresh()
   }
   return (
     <div>
       <h4>Create</h4>
-      <input type="text" placeholder="Name"
-        {...register('name', {
-          required: true
-        })}
-        className={!!errors.name ? 'error' : ''}
+      <input
+        type="text" placeholder="Name" value={user.name}
+        onChange={(event) => {
+          setUser({
+            ...user,
+            name: event.target.value
+          })
+        }}
       />
-      <input type="text" placeholder="Age"
-        {...register('age', {
-          required: true
-        })}
-        className={!!errors.name ? 'error' : ''}
+      <input
+        type="text" placeholder="Age" value={user.age}
+        onChange={(event) => {
+          setUser({
+            ...user,
+            age: event.target.value
+          })
+        }}
       />
       <button onClick={() => {
         usersCreate()
@@ -572,8 +620,8 @@ const Update = ({index, _user}) => {
         />
       </td>
       <td>
-        <button onClick={async () => {
-          await usersUpdate(index, user)
+        <button onClick={() => {
+          usersUpdate(index, user)
         }}>Update</button>
         <Delete index={index} />
       </td>
@@ -582,6 +630,12 @@ const Update = ({index, _user}) => {
 }
 
 export default Update
+```
+* `useEffect` 적용해서 `SSR` 비교
+```js
+useEffect(() => {
+  setUser(_user)
+}, [])
 ```
 
 ## MySQL CRUD
