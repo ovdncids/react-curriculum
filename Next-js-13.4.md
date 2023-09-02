@@ -107,6 +107,8 @@ input.error {
 }
 ```
 
+* https://nextjs.org/docs/app/api-reference/file-conventions
+
 app/layout.js
 ```js
 import Nav from './nav.js'
@@ -263,6 +265,9 @@ export default Users
 * `페이지 소스 보기`에서 `홍길동` 검색 (SEO 최적화)
 
 ## API Users CRUD
+* https://nextjs.org/docs/app/api-reference/file-conventions/route
+* https://junghan92.medium.com/번역-next-js의-app-디렉터리-아키텍처-이해하기-28672980d765
+
 ### Read
 app/api/users/route.js
 ```js
@@ -341,6 +346,8 @@ usersCreate: async (user) => {
 ```
 
 app/users/page.js
+* ❕ `import { useState } from 'react'` 넣어보기
+
 ```js
 import Create from './create'
 ```
@@ -354,6 +361,21 @@ import Create from './create'
 ```
 ```js
 <Create />
+```
+
+app/users/create.js
+```js
+import { useState } from 'react'
+
+const Create = () => {
+  return (
+    <div>
+      <h4>Create</h4>
+    </div>
+  )
+}
+
+export default Create
 ```
 
 app/users/create.js
@@ -460,35 +482,57 @@ export default Delete
 ```
 
 ### Update
-pages/api/users/[index].js
+app/api/users/[index]/route.js
 ```js
-} else if (req.method === 'PATCH') {
-  users[req.query.index] = req.body
-  res.status(200).json({
+export async function PATCH(request, context) {
+  global.users[context.params.index] = await request.json()
+  return NextResponse.json({
     result: 'Updated'
   })
 }
 ```
 
+services/usersService.js
+```js
+usersUpdate: async (index, user) => {
+  const res = await fetch('http://localhost:3000/api/users/' + index, {
+    method: 'PATCH',
+    body: JSON.stringify(user)
+  })
+  return res.json()
+}
+```
+
+```js
+usersUpdate: async (index, user) => {
+  const res = await fetch('http://localhost:3000/api/users/' + index, {
+    method: 'PATCH',
+    body: JSON.stringify(user)
+  })
+  return res.json()
+}
+```
+
 app/users/page.js
 ```diff
-- const users = props.users
-```
-```js
-const [users, setUsers] = useState(props.users)
-
-const usersSet = (users) => {
-  setUsers(JSON.parse(JSON.stringify(users)))
-}
-useEffect(() => {
-  console.log('props.users 다시 받음')
-  usersSet(props.users)
-}, [props.users])
+- import Delete from './delete'
++ import Update from './update'
 ```
 ```diff
-- <td>{user.name}</td>
-- <td>{user.age}</td>
+- <tr key={index}>
+-   <td>{user.name}</td>
+-   <td>{user.age}</td>
+-   <td>
+-     <button>Update</button>
+-     <Delete />
+-   </td>
+- </tr>
 ```
+```js
+<Update index={index} _user={user} />
+```
+
+app/users/update.js
 ```js
 <td>
   <input
