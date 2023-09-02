@@ -704,118 +704,129 @@ useEffect(() => {
 ```sh
 npm install mysql2
 ```
-next.config.js
+libraries/mysql2Pool.js
 ```js
-const mysql2 = require('mysql2/promise')
+import mysql2 from 'mysql2/promise'
 
-global.mysql2 = {
-  connection: null
+const mysqlPool = async () => {
+  if (!global.mysql2Connection) {
+    const mysql2Init = async () => {
+      const connection = await mysql2.createConnection({
+        host: 'localhost',
+        user: 'user',
+        password: 'password',
+        database: 'test'
+      })
+      const [rows, fields] = await connection.execute(`
+        select 'MySQL Connected' as Result
+      `)
+      console.log(rows)
+      global.mysql2Connection = connection
+      console.log(global.mysql2Connection)
+    }
+    await mysql2Init()
+  }
+  return global.mysql2Connection
 }
-const mysql2Init = async () => {
-  const connection = await mysql2.createConnection({
-    host: 'localhost',
-    user: 'user',
-    password: 'password',
-    database: 'database'
-  })
-  const [rows, fields] = await connection.execute(`
-    select 'MySQL Connected' as Result
-  `)
-  console.log(rows)
-  global.mysql2.connection = connection
-}
-mysql2Init()
-```
-* ❕ `npm run dev` 실행시 `next.config.js` 안에 `async await`가 완료 되어야 `로컬 서버` 응답을 받을 수 있다.
 
-libraries/mysqlPool.js
-```js
-export default global.mysql2.connection
-```
-
-libraries/mysqlPool.ts
-```ts
-import type { Connection } from 'mysql2'
-
-export const { mysql2: { connection } } = global as unknown as { mysql2: { connection: Connection } }
-export default connection
+export default mysqlPool
 ```
 
 ### Read
 app/api/users/route.js
 ```js
-import mysql from '../../libraries/mysqlPool'
-```
-```diff
-- res.status(200).json(users)
-```
-```js
-const [rows] = await mysql.execute(`
-  select
-    user_pk as userPk, name, age
-  from users
-`)
-console.log(rows)
-res.status(200).json(rows)
+import { NextResponse } from 'next/server'
+import mysql2Pool from '@/libraries/mysql2Pool'
+
+export async function GET() {
+  const mysql = await mysql2Pool()
+  const [rows] = await mysql.execute(`
+    select
+      user_pk as userPk, name, age
+    from users
+  `)
+  console.log(rows)
+  return NextResponse.json(rows)
+}
+
+export async function POST(request) {
+  global.users.push(await request.json())
+  return NextResponse.json({
+    result: 'Created'
+  })
+}
 ```
 
 ### Create
 app/api/users/route.js
-```diff
-- users.push(req.body)
-```
 ```js
-const [rows] = await mysql.execute(`
-  insert into users(name, age)
-  values (?, ?)
-`, [req.body.name, req.body.age])
-console.log(rows)
+export async function POST(request) {
+  const user = await request.json()
+  const mysql = await mysql2Pool()
+  const [rows] = await mysql.execute(`
+    insert into users(name, age)
+    values (?, ?)
+  `, [user.name, user.age])
+  console.log(rows)
+  return NextResponse.json({
+    result: 'Created'
+  })
+}
 ```
 
 ### Delete
 pages/api/users/[index].js to pages/api/users/[userPk].js
 ```js
-import mysql from '../../../libraries/mysqlPool'
-```
-```diff
-- users.splice(req.query.index, 1)
-```
-```js
-const [rows] = await mysql.execute(`
-  delete from users
-  where user_pk = ?
-`, [req.query.userPk])
-console.log(rows)
+import mysql2Pool from '@/libraries/mysql2Pool'
+
+export async function DELETE(_, context) {
+  const mysql = await mysql2Pool()
+  const [rows] = await mysql.execute(`
+    delete from users
+    where user_pk = ?
+  `, [context.params.userPk])
+  console.log(rows)
+  return NextResponse.json({
+    result: 'Deleted'
+  })
+}
 ```
 
-app/users/page.js
-* `usersDelete`에 관련된 `index`만 `user.userPk`로 바꾸기
+app/users/delete.js
+* `index`를 `userPk`로 바꾸기 
+
+app/users/update.js
+```diff
+<Delete index={index} />
+```
+```js
+<Delete userPk={user.userPk} />
+```
 
 ### Update
 pages/api/users/[userPk].js
+```js
+export async function PATCH(request, context) {
+  const user = await request.json()
+  const mysql = await mysql2Pool()
+  const [rows] = await mysql.execute(`
+    update users
+    set name = ?, age = ?
+    where user_pk = ?
+  `, [user.name, user.age, context.params.userPk])
+  console.log(rows)
+  return NextResponse.json({
+    result: 'Updated'
+  })
+}
+```
+
+app/users/update.js
 ```diff
-- users[req.query.index] = req.body
+- await usersService.usersUpdate(index, user)
 ```
 ```js
-const [rows] = await mysql.execute(`
-  update users
-  set name = ?, age = ?
-  where user_pk = ?
-`, [req.body.name, req.body.age, req.query.userPk])
-```
-
-app/users/page.js
-* `usersUpdate`에 관련된 `index`만 `user.userPk`로 바꾸기
-* `key`에 사용되는 `index`를 `user.userPk`로 바꾸기
-
-pages/api/users/[userPk].js
-```diff
-- import { users } from '../users'
-```
-
-app/api/users/route.js
-```diff
-- export const users = [{
+await usersService.usersUpdate(user.userPk, user)
 ```
 
 ## getServerSideProps Search
