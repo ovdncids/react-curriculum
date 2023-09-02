@@ -740,7 +740,7 @@ const mysqlPool = async () => {
 export default mysqlPool
 ```
 * TS:
-``ts
+```ts
 import mysql2, { Connection } from 'mysql2/promise'
 
 const _global: { mysql2Connection: Connection } = global as unknown as {
