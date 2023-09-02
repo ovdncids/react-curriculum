@@ -579,7 +579,7 @@ app/users/page.js
 - </tr>
 ```
 ```js
-<Update key={index} index={index} _user={user} />
+<Update key={index} index={index} user={user} />
 ```
 
 app/users/update.js
@@ -590,9 +590,10 @@ import { useRouter } from 'next/navigation'
 import { usersService } from '@/services/usersService.js'
 import Delete from './delete.js'
 
-const Update = ({index, _user}) => {
+const Update = (props) => {
+  const { index } = props
   const router = useRouter()
-  const [user, setUser] = useState(_user)
+  const [user, setUser] = useState(props.user)
   const usersUpdate = async () => {
     await usersService.usersUpdate(index, user)
     router.refresh()
@@ -634,7 +635,7 @@ export default Update
 * ❕ `useEffect` 적용해서 `SSR` 비교
 ```js
 useEffect(() => {
-  setUser(_user)
+  setUser(props.user)
 }, [])
 ```
 
@@ -650,10 +651,11 @@ useEffect(() => {
   import { usersService } from '@/services/usersService.js'
   import Delete from './delete'
   
-  const Update = ({index, _user}) => {
+  const Update = (props) => {
+    const { index } = props
     const router = useRouter()
     const userForm = useForm({
-      defaultValues: {..._user}
+      defaultValues: {...props.user}
     })
     const { register, formState, formState: {errors} } = userForm
     const userFormSubmit = userForm.handleSubmit(() => {})
@@ -695,7 +697,6 @@ useEffect(() => {
   ```
 
 </details>
-
 
 ## MySQL CRUD
 ### MySQL 연결
