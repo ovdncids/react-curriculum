@@ -53,7 +53,7 @@ package.json
 ? Overwrite (y/N) N
 
 ./.eslintrc.json already exists
-? Overwrite (y/N) N
+? Overwrite (y/N) Y
 ```
 
 .prettierrc.js
