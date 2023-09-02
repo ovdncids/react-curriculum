@@ -288,13 +288,13 @@ export async function GET() {
 }
 ```
 * http://localhost:3000/api/users
+* TS: `const _global: { users: User[] } = global as unknown as { users: User[] }`
 
 services/usersService.js
 ```js
 export const usersService = {
   usersRead: async () => {
     const res = await fetch('http://localhost:3000/api/users', { cache: 'no-store' })
-    if (!res.ok) throw new Error('Failed to fetch data')
     return res.json()
   }
 }
@@ -329,6 +329,7 @@ export async function POST(request) {
   })
 }
 ```
+* TS: `request: Request`
 
 services/usersService.js
 ```js
@@ -489,6 +490,13 @@ export async function DELETE(_, context) {
     result: 'Deleted'
   })
 }
+```
+* TS:
+```ts
+export async function DELETE(
+  _: Request,
+  context: { params: { index: number } }
+) {
 ```
 
 services/usersService.js
@@ -723,7 +731,6 @@ const mysqlPool = async () => {
       `)
       console.log(rows)
       global.mysql2Connection = connection
-      console.log(global.mysql2Connection)
     }
     await mysql2Init()
   }
@@ -731,6 +738,14 @@ const mysqlPool = async () => {
 }
 
 export default mysqlPool
+```
+* TS:
+``ts
+import mysql2, { Connection } from 'mysql2/promise'
+
+const _global: { mysql2Connection: Connection } = global as unknown as {
+  mysql2Connection: Connection
+}
 ```
 
 ### Read
