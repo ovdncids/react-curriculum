@@ -345,7 +345,7 @@ app/users/page.js
 * ❕ `import { useState } from 'react'` 넣어보기
 
 ```js
-import Create from './create'
+import Create from './create.js'
 ```
 ```diff
 - <div>
@@ -565,8 +565,8 @@ usersUpdate: async (index, user) => {
 
 app/users/page.js
 ```diff
-- import Delete from './delete'
-+ import Update from './update'
+- import Delete from './delete.js'
++ import Update from './update.js'
 ```
 ```diff
 - <tr key={index}>
@@ -588,7 +588,7 @@ app/users/update.js
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usersService } from '@/services/usersService.js'
-import Delete from './delete'
+import Delete from './delete.js'
 
 const Update = ({index, _user}) => {
   const router = useRouter()
@@ -904,49 +904,10 @@ export default Search
 ```
 * http://localhost:3000/search?q=홍
 
-### Search q값 넘기기
-pages/search.js
-```diff
-- const response = await axios('http://localhost:3000/api/users')
-```
-```js
-const response = await axios('http://localhost:3000/api/search', {
-  params: context.query
-})
-```
-
-pages/api/search.js
-```diff
-- const [rows] = await mysql.execute(`
--   select
--     user_pk as userPk, name, age
--   from users
-- `)
-```
-```js
-const q = req.query.q || ''
-console.log(q)
-const [rows] = await mysql.execute(`
-  select
-    user_pk as userPk, name, age
-  from users
-  where
-    name like concat('%', ?, '%')
-`, [q])
-```
-
 ### Search 검색
-pages/search.js
+app/search/page.js
 ```js
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-
-const [q, setQ] = useState(props.q)
-const router = useRouter()
-const searchRead = (event) => {
-  event.preventDefault()
-  router.push({query: {q}})
-}
+import SearchForm from './search-form.js'
 ```
 ```diff
 - <form>
@@ -955,31 +916,36 @@ const searchRead = (event) => {
 - </form>
 ```
 ```js
-<form onSubmit={searchRead}>
-  <input
-    type="text" placeholder="Search"
-    value={q}
-    onChange={event => {setQ(event.target.value)}}
-  />
-  <button>Search</button>
-</form>
+<SearchForm q={q} />
 ```
-```diff
-- return {
--   props: {
--     users: response.data
--   }
-- }
-```
+
+pages/api/search-form.js
 ```js
-return {
-  props: {
-    users: response.data,
-    q: context.query.q || ''
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+const SearchForm = (props) => {
+  const router = useRouter()
+  const [q, setQ] = useState(props.q)
+  const searchRead = (event) => {
+    event.preventDefault()
+    router.push('?q=' + q)
   }
+  return (
+    <form onSubmit={searchRead}>
+      <input
+        type="text" placeholder="Search"
+        value={q}
+        onChange={(event) => {setQ(event.target.value)}}
+      />
+      <button>Search</button>
+    </form>
+  )
 }
+
+export default SearchForm
 ```
-* TS: `const searchRead = (event: React.SyntheticEvent) => {`
 * `검색`, `뒤로가기` 해보기
 * ❔ `뒤로가기` 하면 검색창이 변하지 않는다. `useEffect`를 사용해서 검색창이 변하게 하려면
 * <details><summary>정답</summary>
@@ -990,280 +956,3 @@ return {
   }, [props.q])
   ```
 </details>
-
-# etc.
-## 404
-pages/404.js
-```js
-export default function Custom404() {
-  return <div>404</div>
-}
-```
-
-## Data Fetching - getInitialProps
-* https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
-```js
-function Page(props) {
-  return <div>Next stars: {props.stars}</div>
-}
-
-Page.getInitialProps = async (ctx) => {
-  const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  const json = await res.json()
-  return { stars: json.stargazers_count }
-}
-
-export default Page
-```
-
-## 환경 설정
-* https://nextjs.org/docs/basic-features/environment-variables
-```sh
-npm install -D env-cmd
-```
-
-.env.development
-```env
-NEXT_PUBLIC_BACKEND_API_URL=http://backend.com
-```
-* `NEXT_PUBLIC_`를 붙히면 `클라이언트 사이드`에서도 사용 가능
-
-package.json
-```json
-{
-  "scripts": {
-    "build:dev": "env-cmd -f .env.development next build",
-    "start:dev": "env-cmd -f .env.development next start",
-    "build:prod": "env-cmd -f .env.prod next build",
-    "start:prod": "env-cmd -f .env.prod next start"
-  }
-}
-```
-* local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
-* `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자.
-
-## Proxy
-next.config.js
-```js
-const nextConfig = {
-  ...
-}
-
-module.exports = {
-  ...nextConfig,
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/:path*`
-      }
-    ]
-  }
-}
-```
-
-## cookies-next
-* https://www.npmjs.com/package/cookies-next
-* [Express Cookies - httpOnly](https://github.com/ovdncids/react-curriculum/blob/master/Express.md#%EC%84%9C%EB%A1%9C-%EB%8B%A4%EB%A5%B8-%EB%8F%84%EB%A9%94%EC%9D%B8-%EA%B0%84%EC%97%90-cookie-%EA%B3%B5%EC%9C%A0)
-```sh
-npm install cookies-next
-```
-
-<!--
-next.config.js
-```js
-const nextConfig = {
-  async headers() {
-    return [
-      {
-        source: '/api',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Credentials',
-            value: "true"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
--->
-
-/page/api/users.ts
-```ts
-import { setCookie } from 'cookies-next'
-
-setCookie("user_pk", 1, { req, res, maxAge: 60 * 60 * 24 })
-```
-
-/page/users.ts
-```ts
-import { getCookie } from 'cookies-next'
-
-export const getServerSideProps = async (context: NextPageContext) => {
-  const user_pk = getCookie('user_pk', { req: context.req, res: context.res })
-  const response = await axios.get('http://localhost:3000/api/users', {
-    headers: {
-      Cookie: `user_pk=${user_pk}`
-    }
-  })
-  return {
-    props: {
-      users: response.data
-    }
-  }
-}
-```
-
-## getServerSideProps에서 redirect 시키키
-```ts
-if (!user.name) {
-  apiRedirectAuthPage(content)
-}
-
-export const apiRedirectAuthPage = (context: NextPageContext) => {
-  // `/_next/data/development/list.json` 이런 형식의 `context.req?.url` 처리
-  let url = context.req?.url?.split('/').pop()
-  url = url?.split('?').map((u, index) => {
-    if (index === 0) {
-      return u.replace('.json', '')
-    } else {
-      return u
-    }
-  }).join('?')
-  const scheme = context.req?.headers.host?.includes('local') ? 'http' : 'https'
-  const redirectUrl = encodeURIComponent(`${scheme}://${context.req?.headers.host}/${url}`)
-  const destination = `${process.env.NEXT_PUBLIC_BACKEND_AUTH_URL}/login?redirect_url=${redirectUrl}`
-  return {
-    redirect: {
-      destination
-    }
-  }
-}
-```
-
-## Next.js - Typescript 환경에서만 발생 하는 문제
-```ts
-const funny = async () => {
-  const array1 = [{ id: 1 }, { id: 2}]
-  const array2 = []
-  for (let index = 0; index < array1.length; index++) {
-    const obj = array1[index]
-    array2.push({
-      id: obj.id
-    })
-  }
-  console.log(array2)
-}
-funny()
-```
-* async 함수에서 `for문`을 사용하면 동일한 object가 push 된다. `[].forEach문`을 사용하면 문제 없다.
-
-## Next.js 13에서 12로 버전 내리기
-```sh
-# 프로젝트 생성 후
-npm install next@^12.3.2
-```
-
-## 서버 사이드인지 클라이언트 사이드인지 확인 하는 방법
-* https://stackoverflow.com/questions/49411796/how-do-i-detect-whether-i-am-on-server-on-client-in-next-js
-```js
-type window === 'undefined'
-```
-
-## File Upload
-* https://codesandbox.io/s/thyb0?file=/package.json:234-244
-
-```sh
-npm install formidable
-```
-
-pages/upload.js
-```js
-import axios from 'axios'
-
-const Update = () => {
-  const upload = (event) => {
-    event.preventDefault()
-    const formData = new FormData()
-    formData.append('file', event.target[0].files[0])
-    axios.post('http://localhost:3000/api/upload', formData)
-  }
-  return (
-    <div>
-      <form onSubmit={(event) => upload(event)}>
-        <input type="file" name="file" />
-        <button>업로드</button>
-      </form>
-    </div>
-  )
-}
-
-export default Update
-```
-* TS: `const upload = (event: FormEvent<HTMLFormElement>) => {`
-
-pages/api/upload.js
-```js
-import formidable from 'formidable'
-import fs from 'fs'
-
-// bodyParser를 사용하지 않아야 files을 받을 수 있다.
-export const config = {
-  api: {
-    bodyParser: false
-  }
-}
-
-const handler = (req, res) => {
-  if (req.method === 'POST') {
-    const form = new formidable.IncomingForm()
-    form.parse(req, (err, fields, files) => {
-      const file = files.file
-      const data = fs.readFileSync(file.filepath)
-      // 경로는 최상단 기준
-      fs.writeFileSync(`./uploads/${file.originalFilename}`, data)
-      fs.unlinkSync(file.filepath)
-      return res.status(200).send({result: 'Done'})
-    })
-  }
-}
-
-export default handler
-```
-
-## Jimp (이미지 포맷, 크기 변경)
-* https://github.com/oliver-moran/jimp
-```js
-import Jimp from 'jimp'
-
-const formatSize = async (file) => {
-  const image = await Jimp.read(file.filepath)
-  const imageFormat = image.write('./uploads/format.jpg')
-  const imageResize = imageFormat.resize(1920, Jimp.AUTO)
-  imageResize.write('./uploads/1920.jpg')
-}
-await formatSize(files.file)
-```
-
-## Head
-* https://nextjs.org/docs/api-reference/next/head
-```js
-import Head from 'next/head';
-
-<Head>
-  <title>홈 {'}'} 목록</title>
-  <meta keywords={'keywords'} />
-</Head>
-```
-
-## Next.js 서버에러 페이지
-pages/_error.js
-```js
-const Error = () => {
-  return <div>에러 페이지</div>
-}
-
-export default Error
-```
