@@ -421,9 +421,7 @@ app/users/create.js
           })}
           className={!!errors.name ? 'error' : ''}
         />
-        <button onClick={() => {
-          usersCreate()
-        }}>Create</button>
+        <button onClick={usersCreate}>Create</button>
       </div>
     )
   }
@@ -624,9 +622,7 @@ const Update = ({index, _user}) => {
         />
       </td>
       <td>
-        <button onClick={() => {
-          usersUpdate(index, user)
-        }}>Update</button>
+        <button onClick={usersUpdate}>Update</button>
         <Delete index={index} />
       </td>
     </tr>
@@ -635,12 +631,71 @@ const Update = ({index, _user}) => {
 
 export default Update
 ```
-* `useEffect` 적용해서 `SSR` 비교
+* ❕ `useEffect` 적용해서 `SSR` 비교
 ```js
 useEffect(() => {
   setUser(_user)
 }, [])
 ```
+
+* <details><summary>react-hook-form</summary>
+
+  ```sh
+  npm install react-hook-form
+  ```
+  ```js
+  'use client'
+  import { useRouter } from 'next/navigation'
+  import { useForm } from 'react-hook-form'
+  import { usersService } from '@/services/usersService.js'
+  import Delete from './delete'
+  
+  const Update = ({index, _user}) => {
+    const router = useRouter()
+    const userForm = useForm({
+      defaultValues: {..._user}
+    })
+    const { register, formState, formState: {errors} } = userForm
+    const userFormSubmit = userForm.handleSubmit(() => {})
+    const usersUpdate = async () => {
+      userForm.clearErrors()
+      await userFormSubmit()
+      if (Object.keys(formState.errors).length === 0) {
+        await usersService.usersUpdate(index, userForm.getValues())
+        router.refresh()
+      }
+    }
+    return (
+      <tr key={index}>
+        <td>
+          <input type="text" placeholder="Name"
+            {...register('name', {
+              required: true
+            })}
+            className={!!errors.name ? 'error' : ''}
+          />
+        </td>
+        <td>
+          <input type="text" placeholder="Age"
+            {...register('age', {
+              required: true
+            })}
+            className={!!errors.name ? 'error' : ''}
+          />
+        </td>
+        <td>
+          <button onClick={usersUpdate}>Update</button>
+          <Delete index={index} />
+        </td>
+      </tr>
+    )
+  }
+  
+  export default Update
+  ```
+
+</details>
+
 
 ## MySQL CRUD
 ### MySQL 연결
