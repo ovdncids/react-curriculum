@@ -829,80 +829,78 @@ app/users/update.js
 await usersService.usersUpdate(user.userPk, user)
 ```
 
-## getServerSideProps Search
-pages/search.js
+## API Search
+app/api/search/route.js
 ```js
-import Layout from '../components/layouts/layout'
-import axios from 'axios'
+import { NextResponse } from 'next/server'
+import mysql2Pool from '@/libraries/mysql2Pool'
 
-const Search = (props) => {
-  const users = props.users
+export async function GET(request) {
+  const q = request.nextUrl.searchParams.get('q')
+  const mysql = await mysql2Pool()
+  const [rows] = await mysql.execute(`
+    select
+      user_pk as userPk, name, age
+    from users
+    where
+      name like concat('%', ?, '%')
+  `, [q])
+  console.log(rows)
+  return NextResponse.json(rows)
+}
+```
+
+services/searchService.js
+```js
+export const searchService = {
+  searchRead: async (q) => {
+    const res = await fetch('http://localhost:3000/api/search?q=' + q, { cache: 'no-store' })
+    return res.json()
+  }
+}
+```
+
+app/search/page.js
+```js
+import { searchService } from '@/services/searchService.js'
+
+const Search = async (request) => {
+  const q = request.searchParams.q || ''
+  const users = await searchService.searchRead(q)
   return (
-    <Layout>
+    <div>
+      <h3>Search</h3>
+      <hr className="d-block" />
       <div>
-        <h3>Search</h3>
-        <hr className="d-block" />
-        <div>
-          <form>
-            <input type="text" placeholder="Search" />
-            <button>Search</button>
-          </form>
-        </div>
-        <hr className="d-block" />
-        <div>
-          <table className="table-search">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Age</th>
-              </tr>
-            </thead>
-            <tbody>
+        <form>
+          <input type="text" placeholder="Search" />
+          <button>Search</button>
+        </form>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <table className="table-search">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
             {users.map((user, index) => (
               <tr key={index}>
                 <td>{user.name}</td>
                 <td>{user.age}</td>
               </tr>
             ))}
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </div>
-    </Layout>
+    </div>
   )
 }
 
-export const getServerSideProps = async (context) => {
-  console.log(context.query)
-  const response = await axios('http://localhost:3000/api/search')
-  return {
-    props: {
-      users: response.data
-    }
-  }
-}
-
 export default Search
-```
-* TS: `const { query } = context as unknown as { query: any }`
-
-pages/api/search.js
-```js
-import mysql from '../../libraries/mysqlPool'
-
-const handler = async (req, res) => {
-  if (req.method === 'GET') {
-    const [rows] = await mysql.execute(`
-      select
-        user_pk as userPk, name, age
-      from users
-    `)
-    console.log(rows)
-    res.status(200).json(rows)
-  }
-}
-
-export default handler
 ```
 * http://localhost:3000/search?q=홍
 
