@@ -331,7 +331,7 @@ export async function POST(request) {
   })
 }
 ```
-* TS: `request: Request`
+* TS: `request: NextRequest`
 
 services/usersService.js
 ```js
@@ -863,6 +863,7 @@ export async function GET(request) {
   return NextResponse.json(rows)
 }
 ```
+* http://localhost:3000/api/search?q=홍
 
 services/searchService.js
 ```js
@@ -916,7 +917,10 @@ const Search = async (request) => {
 
 export default Search
 ```
+* https://nextjs.org/docs/app/api-reference/file-conventions/page
+* TS: request: { searchParams: { q: string } }
 * http://localhost:3000/search?q=홍
+* `검색`, `뒤로가기` 해보기
 
 ### Search 검색
 app/search/page.js
@@ -933,7 +937,7 @@ import SearchForm from './search-form.js'
 <SearchForm q={q} />
 ```
 
-pages/api/search-form.js
+app/search/search-form.js
 ```js
 'use client'
 import { useState } from 'react'
@@ -960,6 +964,7 @@ const SearchForm = (props) => {
 
 export default SearchForm
 ```
+* TS: `event: React.FormEvent<HTMLFormElement>`
 * `검색`, `뒤로가기` 해보기
 * ❔ `뒤로가기` 하면 검색창이 변하지 않는다. `useEffect`를 사용해서 검색창이 변하게 하려면
 * <details><summary>정답</summary>
