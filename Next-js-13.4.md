@@ -630,12 +630,19 @@ export default Update
 ```
 * ❕ `useEffect` 적용해서 `SSR` 비교
 ```js
+const [user, setUser] = useState({
+  name: '',
+  age: ''
+})
+
 useEffect(() => {
   setUser(props.user)
 }, [])
 ```
 
 * <details><summary>react-hook-form</summary>
+
+  * https://medium.com/@prithvi128717/creating-a-form-in-react-with-react-hook-form-and-next-js-13-4-5dae780daaef
 
   ```sh
   npm install react-hook-form
@@ -801,7 +808,7 @@ app/users/delete.js
 
 app/users/update.js
 ```diff
-<Delete index={index} />
+- <Delete index={index} />
 ```
 ```js
 <Delete userPk={user.userPk} />
@@ -832,6 +839,9 @@ app/users/update.js
 ```js
 await usersService.usersUpdate(user.userPk, user)
 ```
+
+services/usersService.js
+* `index`를 `userPk`로 바꾸기 
 
 ## API Search
 app/api/search/route.js
