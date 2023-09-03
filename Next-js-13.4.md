@@ -221,6 +221,7 @@ const Users = async () => {
     name: '춘향이',
     age: 16
   }]
+  console.log(users)
   return (
     <div>
       <h3>Users</h3>
@@ -263,6 +264,7 @@ const Users = async () => {
 export default Users
 ```
 * `페이지 소스 보기`에서 `홍길동` 검색 (SEO 최적화)
+* `console.log(users)`가 어디에 찍히는지 확인
 
 ## API Users CRUD
 * https://nextjs.org/docs/app/api-reference/file-conventions/route
@@ -343,7 +345,7 @@ usersCreate: async (user) => {
 ```
 
 app/users/page.js
-* ❕ `import { useState } from 'react'` 넣어보기
+* ❕ `import { useState } from 'react'` `const [user, setUser] = useState()` 넣어보기
 
 ```js
 import Create from './create.js'
@@ -358,21 +360,6 @@ import Create from './create.js'
 ```
 ```js
 <Create />
-```
-
-app/users/create.js
-```js
-import { useState } from 'react'
-
-const Create = () => {
-  return (
-    <div>
-      <h4>Create</h4>
-    </div>
-  )
-}
-
-export default Create
 ```
 
 app/users/create.js
@@ -478,6 +465,7 @@ const Create = () => {
 
 export default Create
 ```
+* ❕ `'use client'` 빼보기
 
 ### Delete
 app/api/users/[index]/route.js
