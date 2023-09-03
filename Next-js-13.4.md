@@ -975,3 +975,36 @@ export default SearchForm
   }, [props.q])
   ```
 </details>
+
+## 환경 설정
+* https://github.com/ovdncids/react-curriculum/blob/master/Next-js.md#환경-설정
+
+## 빌드, 배포
+```sh
+# 운영 환경 배포전 빌드
+npm run build
+```
+
+### Error: connect ECONNREFUSED 127.0.0.1:3000 오류 발생시
+* Generating static pages (0/8)TypeError: fetch failed
+
+services/usersService.js
+```js
+usersRead: async () => {
+  try {
+    const res = await fetch('http://localhost:3000/api/users', {
+      cache: 'no-store'
+    })
+    return res.json()
+  } catch (error) {
+    return []
+  }
+},
+```
+* ❕ Next.js는 build 시 `page.js 파일들`을 사전 랜더하므로 오류가 나오면 build가 중단 된다.
+* ❕ 따라서 `page.js` 파일들의 통신은 `try catch` 해주어야 한다. (주로 `read` 통신)
+
+```sh
+# 운영 환경
+npm run start
+```
