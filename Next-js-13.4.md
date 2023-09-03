@@ -986,7 +986,7 @@ npm run build
 ```
 
 ### Error: connect ECONNREFUSED 127.0.0.1:3000 오류 발생시
-* Generating static pages (0/8)TypeError: fetch failed
+`Generating static pages (0/8)TypeError: fetch failed`
 
 services/usersService.js
 ```js
