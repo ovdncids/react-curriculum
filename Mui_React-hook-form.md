@@ -92,6 +92,30 @@ import {Controller} from 'react-hook-form';
 ```
 * ❕ `setTimeout`을 사용해야만 `'true', 'false'`가 아닌 정상인 `true, false` 값을 넣을 수 있다.
 
+## Autocomplete
+```js
+const options = [
+  {label: 'A', id: 1},
+  {label: 'B', id: 2}
+];
+
+<Controller
+  control={control}
+  name="autocomplete"
+  render={({field: {onChange, value}}) => (
+    <Autocomplete
+      value={value}
+      onChange={(event, id) => {
+        onChange(id)
+      }}
+      options={options.map((option) => option.id)}
+      getOptionLabel={(id) => options.find(option) => option.id === id)}
+      renderInput={(params) => <TextField {...params} label="Select box" />}
+    />
+  )}
+/>
+```
+
 ## Progress bar
 ```js
 import { useState, useEffect } from 'react';
