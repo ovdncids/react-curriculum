@@ -15,59 +15,63 @@ npm install jsonwebtoken
 ### JWT 미들웨어 파일 생성
 middlewares/jwtAuth.js
 ```js
-const jwt = require('jsonwebtoken');
-const privateKey = 'privateKey';
+const jwt = require('jsonwebtoken')
+const privateKey = 'a@a.com'
 // privateKey를 바탕으로 JWT가 암호환된 토큰을 생성한다.
 
 const tokenCreate = function(request, response, user) {
-  jwt.sign(user, privateKey, {
-    expiresIn: '1d',
-    subject: 'login'
-  }, function (error, token) {
-    if (error) return response.status(403).send({
-      message: error.message
-    });
+  try {
+    const token = jwt.sign(user, privateKey, {
+      expiresIn: '1d', // '60' = 60초
+      subject: 'login'
+    })
     response.status(200).send({
       token: token
-    });
-  });
-};
+    })
+  } catch (error) {
+    response.status(403).json({
+      message: error.message
+    })
+  }
+}
 
 const tokenCheck = function (request, response, next) {
-  const token = request.headers['x-jwt-token'];
-  if (!token) return response.status(403).send({
+  const token = request.headers['x-jwt-token']
+  if (!token) return response.status(403).json({
     message: 'You need to login first'
-  });
-  jwt.verify(token, privateKey, function (error, decoded) {
-    if (error) return response.status(403).send({
+  })
+  try {
+    const decoded = jwt.verify(token, privateKey)
+    request.decoded = decoded
+    next()
+  } catch (error) {
+    if (error) return response.status(403).json({
       message: error.message
-    });
-    request.decoded = decoded;
-    next();
-  });
-};
+    })
+  }
+}
 
 module.exports = {
   tokenCreate: tokenCreate,
   tokenCheck: tokenCheck
-};
+}
 ```
 
 ### 라우터에 JWT 미들웨어 적용
 routers/users.js
 ```js
-const jwtAuth = require('../middlewares/jwtAuth.js');
+const jwtAuth = require('../middlewares/jwtAuth.js')
 
 router.post('/login/', function(request, response) {
   // TODO: 로그인 가능한 회원인지 확인
   jwtAuth.tokenCreate(request, response, request.body);
-});
+})
 
 router.get('/login/', jwtAuth.tokenCheck, function(request, response) {
   response.status(200).send({
     decoded: request.decoded
-  });
-});
+  })
+})
 ```
 
 ### Access-Control-Allow-Headers에 x-jwt-token 적용 되어 있는지 확인
@@ -75,7 +79,7 @@ index.js
 ```js
 app.use(function(request, response, next) {
   ...
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-jwt-token');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-jwt-token')
 });
 ```
 
@@ -190,3 +194,7 @@ localStorage.removeItem('x-jwt-token');
 window.location.href = '/login';
 // 또는 Store의 state값 수정 (token: null)
 ```
+
+## Refresh 토큰에 대한 생각
+* 토큰 2개를 발행하고 하나를 `Access용 토큰` 하나를 `Refresh용 토큰`으로 사용한다. 만료일은 `Refresh용 토큰`을 좀 더 길개 한다.
+* `tokenCheck` 미들웨어에서 `Access용 토큰`을 먼저 검사하고 만료되면 `Refresh용 토큰`를 검사하고 토큰 2개를 다시 발행한다.
