@@ -1,7 +1,7 @@
 # JSON Web Token(JWT)
 서버와 클라이언트 통신에서 주로 로그인에 사용되는 보안 토큰
 
-* https://www.npmjs.com/package/jsonwebtoken
+* https://github.com/auth0/node-jsonwebtoken
 * https://jwt.io
 
 ## Backend
