@@ -1161,3 +1161,13 @@ const Error = () => {
 
 export default Error
 ```
+
+## CDN 적용
+* https://nextjs.org/docs/pages/api-reference/components/script
+
+page/_app.js
+```js
+import Script from 'next/script'
+
+<Script src="https://example.com/script.js" strategy="beforeInteractive" />
+```
