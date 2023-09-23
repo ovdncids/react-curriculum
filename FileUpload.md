@@ -13,7 +13,7 @@ function App() {
     axios.post('http://localhost:3100/api/v1/files', formData);
   };
   return (
-    <form onSubmit={event => fileUpdate(event)}>
+    <form onSubmit={(event) => fileUpdate(event)}>
       <input type="file" />
       <button>File Update</button>
     </form>
