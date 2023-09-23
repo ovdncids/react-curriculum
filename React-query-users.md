@@ -149,7 +149,7 @@ const [user, setUser] = useState({
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
-  onChange={event => {
+  onChange={(event) => {
     setUser({
       ...user,
       name: event.target.value
@@ -158,7 +158,7 @@ const [user, setUser] = useState({
 />
 <input
   type="text" placeholder="Age" value={user.age}
-  onChange={event => {
+  onChange={(event) => {
     setUser({
       ...user,
       age: event.target.value
@@ -231,7 +231,7 @@ return res.data.users;
 <td>
   <input
     type="text" placeholder="Name" value={user.name}
-    onChange={event => {
+    onChange={(event) => {
       user.name = event.target.value;
       setUsers(JSON.parse(JSON.stringify(users)));
     }}
@@ -240,7 +240,7 @@ return res.data.users;
 <td>
   <input
     type="text" placeholder="Age" value={user.age}
-    onChange={event => {
+    onChange={(event) => {
       user.age = event.target.value;
       setUsers(JSON.parse(JSON.stringify(users)));
     }}
