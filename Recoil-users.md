@@ -103,7 +103,7 @@ const [users, setUsers] = useRecoilState(usersState);
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
-  onChange={event => {
+  onChange={(event) => {
     setUser({
       ...user,
       name: event.target.value
@@ -112,7 +112,7 @@ const [users, setUsers] = useRecoilState(usersState);
 />
 <input
   type="text" placeholder="Age" value={user.age}
-  onChange={event => {
+  onChange={(event) => {
     setUser({
       ...user,
       age: event.target.value
@@ -180,7 +180,7 @@ src/components/contents/Users.js
 <td>
   <input
     type="text" placeholder="Name" value={user.name}
-    onChange={event => {
+    onChange={(event) => {
       user.name = event.target.value;
       users[index] = user;
       setUsers(users);
@@ -190,7 +190,7 @@ src/components/contents/Users.js
 <td>
   <input
     type="text" placeholder="Age" value={user.age}
-    onChange={event => {
+    onChange={(event) => {
       user.age = event.target.value;
       users[index] = user;
       setUsers(users);
