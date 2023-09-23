@@ -872,7 +872,7 @@ const searchRead = () => {
   <input
     type="text" placeholder="Search"
     value={q}
-    onChange={event => {setQ(event.target.value)}}
+    onChange={(event) => {setQ(event.target.value)}}
   />
   <button>Search</button>
 </form>
