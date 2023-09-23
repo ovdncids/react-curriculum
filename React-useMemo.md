@@ -28,7 +28,7 @@ function App() {
       <Users users={users}></Users>
       <input
         type="text" placeholder="User" value={user}
-        onChange={event => setUser(event.target.value)}
+        onChange={(event) => setUser(event.target.value)}
       />
       <button onClick={() => setUsers([...users, user])}>Create</button>
     </div>
