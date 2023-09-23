@@ -56,6 +56,17 @@ package.json
 ? Overwrite (y/N) Y
 ```
 
+```sh
+npm install
+```
+### React: While resolving: react-study-typescript@0.1.0 Found: @typescript-eslint/eslint-plugin@5.62.0
+package.json
+```diff
+"devDependencies": {
+-   "typescript": "~5.1.6",
+}
+```
+
 .prettierrc.js
 ```js
 module.exports = {
