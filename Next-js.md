@@ -479,7 +479,7 @@ const usersCreate = async () => {
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
-  onChange={event => {
+  onChange={(event) => {
     setUser({
       ...user,
       name: event.target.value
@@ -488,7 +488,7 @@ const usersCreate = async () => {
 />
 <input
   type="text" placeholder="Age" value={user.age}
-  onChange={event => {
+  onChange={(event) => {
     setUser({
       ...user,
       age: event.target.value
@@ -567,7 +567,7 @@ useEffect(() => {
 <td>
   <input
     type="text" placeholder="Name" value={user.name}
-    onChange={event => {
+    onChange={(event) => {
       user.name = event.target.value
       usersSet(users)
     }}
@@ -576,7 +576,7 @@ useEffect(() => {
 <td>
   <input
     type="text" placeholder="Age" value={user.age}
-    onChange={event => {
+    onChange={(event) => {
       user.age = event.target.value
       usersSet(users)
     }}
@@ -853,7 +853,7 @@ const searchRead = (event) => {
   <input
     type="text" placeholder="Search"
     value={q}
-    onChange={event => {setQ(event.target.value)}}
+    onChange={(event) => {setQ(event.target.value)}}
   />
   <button>Search</button>
 </form>
