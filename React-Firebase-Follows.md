@@ -67,7 +67,7 @@ function Follows(props) {
               <tr key={index}>
                 <td>
                   <input type="radio" name="follow-user" value={user.key}
-                    onChange={event => {follow.user = event.target.value}}
+                    onChange={(event) => {follow.user = event.target.value}}
                   />
                   {user.name}
                 </td>
@@ -90,7 +90,7 @@ function Follows(props) {
               <tr key={index}>
                 <td>
                   <input type="radio" name="follow-following" value={user.key}
-                    onChange={event => {follow.following = event.target.value}}
+                    onChange={(event) => {follow.following = event.target.value}}
                   />
                   {user.name}
                 </td>
