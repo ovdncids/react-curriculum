@@ -157,11 +157,11 @@ src/components/contents/Users.js
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
-  onChange={event => {user.name = event.target.value}}
+  onChange={(event) => {user.name = event.target.value}}
 />
 <input
   type="text" placeholder="Age" value={user.age}
-  onChange={event => {user.age = event.target.value}}
+  onChange={(event) => {user.age = event.target.value}}
 />
 <button onClick={() => usersStore.usersCreate(user)}>Create</button>
 ```
@@ -266,13 +266,13 @@ src/components/contents/Users.js
 <td>
   <input
     type="text" placeholder="Name" value={user.name}
-    onChange={event => {user.name = event.target.value}}
+    onChange={(event) => {user.name = event.target.value}}
   />
 </td>
 <td>
   <input
     type="text" placeholder="Age" value={user.age}
-    onChange={event => {user.age = event.target.value}}
+    onChange={(event) => {user.age = event.target.value}}
   />
 </td>
 ```
@@ -534,7 +534,7 @@ const searchRead = (event) => {
   <input
     type="text" placeholder="Search"
     value={q}
-    onChange={event => {setQ(event.target.value)}}
+    onChange={(event) => {setQ(event.target.value)}}
   />
   <button>Search</button>
 </form>
