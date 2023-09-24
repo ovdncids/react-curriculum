@@ -241,3 +241,5 @@ npm run fix
   "jest": true
 }
 ```
+
+* [`husky` 연동](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#husky)
