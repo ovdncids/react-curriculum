@@ -864,7 +864,7 @@ useEffect(() => {
   ```js
   // 그래도 3번 랜더링 된다면
   if (q !== _q) setQ(_q);
-  <button onClick={() => setQ('')}>3번 눌러보기</button>
+  <button type="button" onClick={() => setQ('')}>3번 눌러보기</button>
   ```
 
 </details>
