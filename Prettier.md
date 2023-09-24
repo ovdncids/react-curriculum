@@ -182,7 +182,7 @@ What style of indentation do you use? Spaces
 What quotes do you use for strings? Double / Single
 What line endings do you use? Unix / Windows
 Do you require semicolons? No
-eslint-plugin-react@latest eslint@latest Would you like to install them now? Yes
+eslint-plugin-react@latest eslint@latest Would you like to install them now? (Javascript = Yes), (Typescript = No)
 Which package manager do you want to use? npm
 ```
 ```sh
