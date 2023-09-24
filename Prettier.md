@@ -132,7 +132,7 @@ npx husky add .husky/pre-commit "npm run lint"
 ```
 * `.husky/pre-commit` 파일이 생성된다. 이제 부터 `git commit` 마다 `npm run lint`가 먼저 실행 된다.
 
-# Javascript Style
+# Only ESLint in Next.js
 .eslintrc.json
 ```json
 {
@@ -166,3 +166,78 @@ package.json
 }
 ```
 * [`husky` 연동](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#husky)
+
+# Only ESLint in React
+```sh
+npx eslint --init
+
+How would you like to use ESLint? To check syntax, find problems, and enforce code style
+What type of modules does your project use? JavaScript modules (import/export)
+Which framework does your project use? React
+Does your project use TypeScript? No / Yes
+Where does your code run? Browser
+How would you like to define a style for your project? Answer questions about your style
+What format do you want your config file to be in? JavaScript
+What style of indentation do you use? Spaces
+What quotes do you use for strings? Double / Single
+What line endings do you use? Unix / Windows
+Do you require semicolons? No
+eslint-plugin-react@latest eslint@latest Would you like to install them now? Yes
+Which package manager do you want to use? npm
+```
+```sh
+npx eslin  .
+npx eslin  --fix .
+```
+
+package.json
+```json
+"scripts": {
+  "lint": "npx eslint .",
+  "fix": "npx eslint --fix ."
+}
+```
+```sh
+npm run lint
+npm run fix
+```
+
+## Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration
+.eslintrc.js
+```js
+{
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
+```
+
+## Spaces 2
+```js
+{
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ]
+  }
+}
+```
+
+## error  'React' must be in scope when using JSX  react/react-in-jsx-scope
+.eslintrc.js
+```js
+"rules": {
+  "react/react-in-jsx-scope": "off"
+}
+```
+
+## error  'test' is not defined, error  'expect' is not defined
+.eslintrc.js
+```js
+"env": {
+  "jest": true
+}
+```
