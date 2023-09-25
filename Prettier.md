@@ -174,7 +174,7 @@ npx eslint --init
 How would you like to use ESLint? To check syntax, find problems, and enforce code style
 What type of modules does your project use? JavaScript modules (import/export)
 Which framework does your project use? React
-Does your project use TypeScript? No / Yes
+Does your project use TypeScript? (Javascript = No) / (Typescript = Yes)
 Where does your code run? Browser
 How would you like to define a style for your project? Answer questions about your style
 What format do you want your config file to be in? JavaScript
@@ -182,7 +182,7 @@ What style of indentation do you use? Spaces
 What quotes do you use for strings? Double / Single
 What line endings do you use? Unix / Windows
 Do you require semicolons? No
-eslint-plugin-react@latest eslint@latest Would you like to install them now? (Javascript = Yes), (Typescript = No)
+eslint-plugin-react@latest eslint@latest Would you like to install them now? (Javascript = Yes) / (Typescript = No)
 Which package manager do you want to use? npm
 ```
 ```sh
