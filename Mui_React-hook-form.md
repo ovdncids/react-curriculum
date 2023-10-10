@@ -376,6 +376,12 @@ const { formState: {isDirty} } = form;
 ```
 * `value`가 수정 되면 `true`, 수정 후 다시 처음과 같아지면 `false`
 
+## DefaultValues
+```js
+console.log(form.formState.defaultValues);
+```
+* form 생성시의 `defaultValues`값을 가진다.
+
 ## Clone
 ```js
 const formClone = useForm({
