@@ -1,51 +1,55 @@
 # Infinite Scroll
-* [무한 스크롤 - React Hook](https://github.com/ovdncids/react-curriculum/blob/master/Mui.md#%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-infinite-scroll)
+* [무한 스크롤 - React Hook](https://github.com/ovdncids/react-curriculum/blob/master/Mui_React-hook-form.md#%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-infinite-scroll)
 * [Intersection Observer API - 추후](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 
 ## React before Hook
 ### Search를 복사 하여 InfiniteStore, router, component 생성
 
-src/shared/stores/InfiniteStore.js
+src/stores/usersStore.js
 ```js
-import _ from 'lodash';
-
-class InfiniteStore {
-  ...
-  page = 0
-
-  read() {
-    utils.nProgress.start();
-    axios.get(`/api/v1/infinite/${++this.page}`).then(response => {
-      console.log(response);
-      this.users = _.concat(this.users, response.data.users);
-      utils.nProgress.done();
-    }).catch(error => {
-      utils.apiCommonError(error);
+// usersStore 안에 추가
+page: 1
+```
+```js
+// usersActions 안에 추가
+usersInfinite: async () => {
+  try {
+    let page = usersStore.getState().page
+    const response = await axios.get('http://localhost:3100/api/v1/users/infinite/' + page++);
+    console.log('Done usersUpdate', response, page);
+    usersStore.setState((state) => {
+      return {
+        users: state.users.concat(response.data.users),
+        page: page
+      };
     });
+  } catch(error) {
+    axiosError(error);
   }
 }
 ```
 
-src/components/contents/Infinite.js
+src/components/contents/Users.js
 ```js
-  componentDidMount() {
-    const { infiniteStore } = this.props;
-    infiniteStore.read();
-    // scroll event
-    window.onscroll = function(event) {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        infiniteStore.read();
-      }
-    };
-  }
+// 추가
+useEffect(() => {
+  usersActions.usersInfinite();
+  const infiniteScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      usersActions.usersInfinite();
+    }
+  };
+  window.addEventListener('scroll', infiniteScroll);
+  return () => {
+    window.removeEventListener('scroll', infiniteScroll);
+  };
+}, []);
 ```
 
 ## Express
-### /routes/search.js를 복사 하여 infinite.js생성
-
-/routes/infinite.js
+/routes/users.js
 ```js
-router.get('/:page', (req, res) => {
+router.get('infinite/:page', (req, res) => {
   const pageSize = 50;
   const page = Number(req.params.page);
   const startPage = page * pageSize - pageSize;
@@ -59,7 +63,6 @@ router.get('/:page', (req, res) => {
 ```
 
 ### Mock 데이터 생성
-
 /mock/user.json
 ```json
 [
