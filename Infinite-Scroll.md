@@ -16,7 +16,7 @@ usersInfinite: async () => {
   try {
     let page = usersStore.getState().page
     const response = await axios.get('http://localhost:3100/api/v1/users/infinite/' + page++);
-    console.log('Done usersUpdate', response, page);
+    console.log('Done usersInfinite', response, page);
     usersStore.setState((state) => {
       return {
         users: state.users.concat(response.data.users),
