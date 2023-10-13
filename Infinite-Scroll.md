@@ -20,7 +20,7 @@ usersInfinite: async () => {
     usersStore.setState((state) => {
       return {
         users: state.users.concat(response.data.users),
-        page: page
+        page
       };
     });
   } catch(error) {
