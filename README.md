@@ -463,7 +463,7 @@ export const usersActions = {
 };
 ```
 * `전개 구조` 설명 하기
-* `action` 안에서 state 사용 `usersStore.getState().user`
+* `action` 안에서 `state` 사용 `usersStore.getState().user`
 * <details><summary>TS: (state: UsersStore)</summary>
 
   ```ts
