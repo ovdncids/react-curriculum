@@ -463,6 +463,20 @@ export const usersActions = {
 };
 ```
 * `전개 구조` 설명 하기
+* `action` 안에서 state 사용 `usersStore.getState().user`
+* <details><summary>TS: (state: UsersStore)</summary>
+
+  ```ts
+  interface User {
+    name: string
+    age: string | number
+  }
+  interface UsersStore {
+    users: User[]
+    user: User
+  }
+  ```
+</details>
 
 ### Zustand 특징
 * `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
