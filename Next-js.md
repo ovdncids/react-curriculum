@@ -1,4 +1,4 @@
-# Next.js
+# Next.js (12.3.0)
 
 ## Install
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
