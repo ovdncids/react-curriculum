@@ -22,6 +22,10 @@ function App() {
 ```
 
 ## Express
+```sh
+npm install express-fileupload
+```
+
 index.js
 ```js
 // fileUpload
