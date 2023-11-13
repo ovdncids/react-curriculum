@@ -579,3 +579,8 @@ _document.tsx
 ```
 * ❕ `__next` __2개는 next에서 사용중이므로 `___next` ___3개를 사용하자.
 
+# Tailwind
+## background-color
+```css
+classname='bg-[#e6f3fa]'
+```
