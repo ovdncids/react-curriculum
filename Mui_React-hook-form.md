@@ -1,4 +1,4 @@
-# Material UI & React Hook Form
+# Material UI & React Hook Form & Tailwind
 * https://mui.com
 * https://react-hook-form.com/
 
