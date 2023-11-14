@@ -28,8 +28,8 @@ npm run dev
 ```
 
 ## ESlint 설정
-* [Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
-* [Javascript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#javascript-style)
+* [Javascript & Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#only-eslint-in-nextjs-javascript--typescript)
+* [GTS (Typescript)](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
 
 ## Markup + Layout
 app/globals.css
