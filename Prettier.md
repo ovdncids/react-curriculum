@@ -138,7 +138,7 @@ npx husky add .husky/pre-commit "npm run lint"
 {
   "rules": {
     "indent": ["error", 2],
-    "quotes": "error",
+    "quotes": ["error", "double"],
     "semi": [2, "never"],
     "comma-dangle": "error",
     "array-bracket-spacing": "error",
