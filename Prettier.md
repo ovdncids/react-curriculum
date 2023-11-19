@@ -139,6 +139,7 @@ npx husky add .husky/pre-commit "npm run lint"
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "double"],
+    "jsx-quotes": ["error", "prefer-double"],
     "semi": [2, "never"],
     "comma-dangle": "error",
     "array-bracket-spacing": "error",
@@ -150,6 +151,7 @@ npx husky add .husky/pre-commit "npm run lint"
 ```sh
 indent: Tab size 2
 quotes: 홑따옴표 사용 유무
+jsx-quotes: jsx 안에서 "" 또는 '""' 사용 유무
 semi: 세미콜론 사용 유무
 comma-dangle: 마지막 배열과 마지막 오브젝트에 컴마 사용 유무
 array-bracket-spacing: 배열 안에 공백 유무
