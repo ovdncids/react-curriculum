@@ -121,6 +121,11 @@ package.json
 - "prepare": "npm run compile",
 + "prepare": "husky install",
 ```
+* 기본은 `error`만 커밋 방지하지만 `warning`까지 방지 싶은 경우
+```diff
+- "lint": "... lint",
++ ""lint": "... lint --max-warnings=0"
+```
 
 ```sh
 npm run prepare
