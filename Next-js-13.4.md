@@ -29,6 +29,14 @@ npm run dev
 
 ## ESlint 설정
 * [Javascript & Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#only-eslint-in-nextjs-javascript--typescript)
+  * next.config.js
+  ```js
+  const nextConfig = {
+    eslint: {
+      dirs: ["/"]
+    }
+  }
+  ```
 * [GTS (Typescript)](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
 
 ## Markup + Layout
