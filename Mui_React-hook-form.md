@@ -582,5 +582,10 @@ _document.tsx
 # Tailwind
 ## background-color
 ```css
-classname='bg-[#e6f3fa]'
+class='bg-[#e6f3fa]'
+```
+
+## font-family
+```css
+class="font-['NanumGothic']"
 ```
