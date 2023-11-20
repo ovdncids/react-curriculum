@@ -4,6 +4,7 @@
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
 npx create-next-app@latest
+# npx create-next-app@13.5.6
 ```
 ```sh
 Would you like to use TypeScript? No / Yes
