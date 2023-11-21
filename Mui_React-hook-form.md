@@ -590,6 +590,12 @@ className='bg-[#e6f3fa]'
 className="font-['NanumGothic']"
 ```
 
+## 이미지 가로 세로 비율 맞추기
+* https://stackoverflow.com/questions/5445491/height-equal-to-dynamic-width-css-fluid-layout
+```css
+className="w-auto aspect-square"
+```
+
 ## React Material UI Carousel
 * https://github.com/Learus/react-material-ui-carousel
 * 이미지 크기가 서로 다른 Carousel (`object-fit: cover;` 가로세로 크기가 우선 고정 되면 해당 크기에 이미지를 맞춤)
