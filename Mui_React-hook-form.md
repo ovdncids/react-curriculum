@@ -582,10 +582,17 @@ _document.tsx
 # Tailwind
 ## background-color
 ```css
-class='bg-[#e6f3fa]'
+className='bg-[#e6f3fa]'
 ```
 
 ## font-family
 ```css
-class="font-['NanumGothic']"
+className="font-['NanumGothic']"
+```
+
+## React Material UI Carousel
+* https://github.com/Learus/react-material-ui-carousel
+* 이미지 크기가 서로 다른 Carousel (`object-fit: cover;` 가로세로 크기가 우선 고정 되면 해당 크기에 이미지를 맞춤)
+```css
+<img className="object-cover" ... />
 ```
