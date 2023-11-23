@@ -1127,6 +1127,9 @@ const handler = (req, res) => {
 export default handler
 ```
 
+## Next/Image 태그
+* https://velog.io/@joy37/NextImage%EC%97%90-%EB%8C%80%ED%95%B4-%EC%96%BC%EB%A7%8C%ED%81%BC-%EC%95%8C%EC%95%84
+
 ## Jimp (이미지 포맷, 크기 변경)
 * https://github.com/oliver-moran/jimp
 ```js
