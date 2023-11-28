@@ -11,11 +11,8 @@ jsconfig.json
 ```json
 {
   "compilerOptions": {
-      "baseUrl": "src"
-  },
-  "include": [
-      "src"
-  ]
+    "baseUrl": "src"
+  }
 }
 ```
 * TS: `baseUrl`만 tsconfig.json
