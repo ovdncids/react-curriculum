@@ -2,6 +2,7 @@
 * https://stitches.dev
 
 ## Swiper
+* https://swiperjs.com/demos
 ```js
 import { styled, keyframes } from "@stitches/react"
 import { useState } from "react"
