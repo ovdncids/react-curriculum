@@ -53,19 +53,6 @@ const SwiperStyled = styled('div', {
   }
 });
 
-const animations = [];
-items.forEach((_item, index) => {
-  const left = ((items.length -1 + index) % items.length) * -width;
-  animations.push(keyframes({
-    from: {
-      left: left
-    },
-    to: {
-      left: index * -width
-    }
-  }));
-});
-
 const Swiper = () => {
   const [current, setCurrent] = useState({
     index: 0,
