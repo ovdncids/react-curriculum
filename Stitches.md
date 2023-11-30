@@ -112,12 +112,8 @@ const Swiper = () => {
           ))}
         </div>
       </SwiperStyled>
-      <button
-        onClick={() => move('back')}
-      >Back</button>
-      <button
-        onClick={() => move('next')}
-      >Next</button>
+      <button onClick={() => move('back')}>Back</button>
+      <button onClick={() => move('next')}>Next</button>
     </>
   );
 };
