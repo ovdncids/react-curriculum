@@ -4,7 +4,7 @@
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
 npx create-next-app@latest
-# npx create-next-app@13.5.6
+# npx create-next-app@13.5.6 (node 16버전으로 사용할 수 있는 latest 버전)
 ```
 ```sh
 Would you like to use TypeScript? No / Yes
@@ -301,9 +301,9 @@ export async function GET() {
 * http://localhost:3000/api/users
 * TS: `const _global: { users: User[] } = global as unknown as { users: User[] }`
 
-services/usersService.js
+services/usersServices.js
 ```js
-export const usersService = {
+export const usersServices = {
   usersRead: async () => {
     const res = await fetch('http://localhost:3000/api/users', { cache: 'no-store' })
     return res.json()
@@ -314,7 +314,7 @@ export const usersService = {
 
 app/users/page.js
 ```js
-import { usersService } from '@/services/usersService.js'
+import { usersServices } from '@/services/usersServices.js'
 ```
 ```diff
 - const users = [{
@@ -326,7 +326,7 @@ import { usersService } from '@/services/usersService.js'
 - }]
 ```
 ```js
-const users = await usersService.usersRead()
+const users = await usersServices.usersRead()
 ```
 * `페이지 소스 보기`에서 `홍길동` 다시 검색
 
@@ -342,7 +342,7 @@ export async function POST(request) {
 ```
 * TS: `request: NextRequest`
 
-services/usersService.js
+services/usersServices.js
 ```js
 usersCreate: async (user) => {
   const res = await fetch('http://localhost:3000/api/users', {
@@ -383,7 +383,7 @@ app/users/create.js
   'use client'
   import { useRouter } from 'next/navigation'
   import { useForm } from 'react-hook-form'
-  import { usersService } from '@/services/usersService.js'
+  import { usersServices } from '@/services/usersServices.js'
   
   const Create = () => {
     const router = useRouter()
@@ -399,7 +399,7 @@ app/users/create.js
       userForm.clearErrors()
       await userFormSubmit()
       if (Object.keys(formState.errors).length === 0) {
-        await usersService.usersCreate(userForm.getValues())
+        await usersServices.usersCreate(userForm.getValues())
         router.refresh()
       }
     }
@@ -432,7 +432,7 @@ app/users/create.js
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { usersService } from '@/services/usersService.js'
+import { usersServices } from '@/services/usersServices.js'
 
 const Create = () => {
   const router = useRouter()
@@ -441,7 +441,7 @@ const Create = () => {
     age: ''
   })
   const usersCreate = async () => {
-    await usersService.usersCreate(user)
+    await usersServices.usersCreate(user)
     router.refresh()
   }
   return (
@@ -496,7 +496,7 @@ export async function DELETE(
 ) {
 ```
 
-services/usersService.js
+services/usersServices.js
 ```js
 usersDelete: async (index) => {
   const res = await fetch('http://localhost:3000/api/users/' + index, {
@@ -521,13 +521,13 @@ app/users/delete.js
 ```js
 'use client'
 import { useRouter } from 'next/navigation'
-import { usersService } from '@/services/usersService.js'
+import { usersServices } from '@/services/usersServices.js'
 
 const Delete = ({index}) => {
   const router = useRouter()
   return (
     <button onClick={async () => {
-      await usersService.usersDelete(index)
+      await usersServices.usersDelete(index)
       router.refresh()
     }}>Delete</button>
   )
@@ -547,7 +547,7 @@ export async function PATCH(request, context) {
 }
 ```
 
-services/usersService.js
+services/usersServices.js
 ```js
 usersUpdate: async (index, user) => {
   const res = await fetch('http://localhost:3000/api/users/' + index, {
@@ -582,7 +582,7 @@ app/users/update.js
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { usersService } from '@/services/usersService.js'
+import { usersServices } from '@/services/usersServices.js'
 import Delete from './delete.js'
 
 const Update = (props) => {
@@ -590,7 +590,7 @@ const Update = (props) => {
   const router = useRouter()
   const [user, setUser] = useState(props.user)
   const usersUpdate = async () => {
-    await usersService.usersUpdate(index, user)
+    await usersServices.usersUpdate(index, user)
     router.refresh()
   }
   return (
@@ -650,7 +650,7 @@ useEffect(() => {
   'use client'
   import { useRouter } from 'next/navigation'
   import { useForm } from 'react-hook-form'
-  import { usersService } from '@/services/usersService.js'
+  import { usersServices } from '@/services/usersServices.js'
   import Delete from './delete'
   
   const Update = (props) => {
@@ -665,7 +665,7 @@ useEffect(() => {
       userForm.clearErrors()
       await userFormSubmit()
       if (Object.keys(formState.errors).length === 0) {
-        await usersService.usersUpdate(index, userForm.getValues())
+        await usersServices.usersUpdate(index, userForm.getValues())
         router.refresh()
       }
     }
@@ -833,13 +833,13 @@ export async function PATCH(request, context) {
 
 app/users/update.js
 ```diff
-- await usersService.usersUpdate(index, user)
+- await usersServices.usersUpdate(index, user)
 ```
 ```js
-await usersService.usersUpdate(user.userPk, user)
+await usersServices.usersUpdate(user.userPk, user)
 ```
 
-services/usersService.js
+services/usersServices.js
 * `index`를 `userPk`로 바꾸기 
 
 ## API Search
@@ -864,9 +864,9 @@ export async function GET(request) {
 ```
 * http://localhost:3000/api/search?q=홍
 
-services/searchService.js
+services/searchServices.js
 ```js
-export const searchService = {
+export const searchServices = {
   searchRead: async (q) => {
     const res = await fetch('http://localhost:3000/api/search?q=' + q, { cache: 'no-store' })
     return res.json()
@@ -876,11 +876,11 @@ export const searchService = {
 
 app/search/page.js
 ```js
-import { searchService } from '@/services/searchService.js'
+import { searchServices } from '@/services/searchServices.js'
 
 const Search = async (request) => {
   const q = request.searchParams.q || ''
-  const users = await searchService.searchRead(q)
+  const users = await searchServices.searchRead(q)
   return (
     <div>
       <h3>Search</h3>
@@ -987,7 +987,7 @@ npm run build
 ### Error: connect ECONNREFUSED 127.0.0.1:3000 오류 발생시
 `Generating static pages (0/8)TypeError: fetch failed`
 
-services/usersService.js
+services/usersServices.js
 ```js
 usersRead: async () => {
   try {
