@@ -558,16 +558,6 @@ usersUpdate: async (index, user) => {
 }
 ```
 
-```js
-usersUpdate: async (index, user) => {
-  const res = await fetch('http://localhost:3000/api/users/' + index, {
-    method: 'PATCH',
-    body: JSON.stringify(user)
-  })
-  return res.json()
-}
-```
-
 app/users/page.js
 ```diff
 - import Delete from './delete.js'
@@ -721,7 +711,7 @@ libraries/mysql2Pool.js
 ```js
 import mysql2 from 'mysql2/promise'
 
-const mysqlPool = async () => {
+const mysql2Pool = async () => {
   if (!global.mysql2Connection) {
     const mysql2Init = async () => {
       const connection = await mysql2.createConnection({
@@ -741,7 +731,7 @@ const mysqlPool = async () => {
   return global.mysql2Connection
 }
 
-export default mysqlPool
+export default mysql2Pool
 ```
 * TS:
 ```ts
