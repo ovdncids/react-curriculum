@@ -919,8 +919,10 @@ npm install -D env-cmd
 .env.development
 ```env
 NEXT_PUBLIC_BACKEND_API_URL=http://backend.com
+NEXT_PRIVATE_MYSQL_HOST=localhost
 ```
 * `NEXT_PUBLIC_`를 붙히면 `클라이언트 사이드`에서도 사용 가능
+* `{process.env.NEXT_PUBLIC_BACKEND_API_URL}`
 
 package.json
 ```json
