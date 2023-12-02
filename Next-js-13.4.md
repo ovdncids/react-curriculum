@@ -29,7 +29,7 @@ npm run dev
 ```
 
 ## ESlint 설정
-* [Javascript & Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#only-eslint-in-nextjs-javascript--typescript)
+* [Javascript & Typescript](https://github.com/ovdncids/react-curriculum/blob/master/Prettier_ESLint.md#only-eslint-in-nextjs-javascript--typescript)
   * next.config.js
   ```js
   const nextConfig = {
@@ -38,7 +38,7 @@ npm run dev
     }
   }
   ```
-* [GTS (Typescript)](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#gts-google-typescript-style)
+* [GTS (Typescript)](https://github.com/ovdncids/react-curriculum/blob/master/Prettier_ESLint.md#gts-google-typescript-style)
 
 ## Markup + Layout
 app/globals.css
