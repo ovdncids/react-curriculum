@@ -120,7 +120,7 @@ input.error {
 
 app/layout.js
 ```js
-import Nav from './nav.js'
+import Nav from './nav'
 ```
 ```diff
 - <body className={inter.className}>{children}</body>
@@ -314,7 +314,7 @@ export const usersServices = {
 
 app/users/page.js
 ```js
-import { usersServices } from '@/services/usersServices.js'
+import { usersServices } from '@/services/usersServices'
 ```
 ```diff
 - const users = [{
@@ -357,7 +357,7 @@ app/users/page.js
 * ❕ `import { useState } from 'react'` `const [user, setUser] = useState()` 넣어보기
 
 ```js
-import Create from './create.js'
+import Create from './create'
 ```
 ```diff
 - <div>
@@ -383,7 +383,7 @@ app/users/create.js
   'use client'
   import { useRouter } from 'next/navigation'
   import { useForm } from 'react-hook-form'
-  import { usersServices } from '@/services/usersServices.js'
+  import { usersServices } from '@/services/usersServices'
   
   const Create = () => {
     const router = useRouter()
@@ -432,7 +432,7 @@ app/users/create.js
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { usersServices } from '@/services/usersServices.js'
+import { usersServices } from '@/services/usersServices'
 
 const Create = () => {
   const router = useRouter()
@@ -521,7 +521,7 @@ app/users/delete.js
 ```js
 'use client'
 import { useRouter } from 'next/navigation'
-import { usersServices } from '@/services/usersServices.js'
+import { usersServices } from '@/services/usersServices'
 
 const Delete = ({index}) => {
   const router = useRouter()
@@ -560,8 +560,8 @@ usersUpdate: async (index, user) => {
 
 app/users/page.js
 ```diff
-- import Delete from './delete.js'
-+ import Update from './update.js'
+- import Delete from './delete'
++ import Update from './update'
 ```
 ```diff
 - <tr key={index}>
@@ -582,8 +582,8 @@ app/users/update.js
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { usersServices } from '@/services/usersServices.js'
-import Delete from './delete.js'
+import { usersServices } from '@/services/usersServices'
+import Delete from './delete'
 
 const Update = (props) => {
   const { index } = props
@@ -650,7 +650,7 @@ useEffect(() => {
   'use client'
   import { useRouter } from 'next/navigation'
   import { useForm } from 'react-hook-form'
-  import { usersServices } from '@/services/usersServices.js'
+  import { usersServices } from '@/services/usersServices'
   import Delete from './delete'
   
   const Update = (props) => {
@@ -876,7 +876,7 @@ export const searchServices = {
 
 app/search/page.js
 ```js
-import { searchServices } from '@/services/searchServices.js'
+import { searchServices } from '@/services/searchServices'
 
 const Search = async (request) => {
   const q = request.searchParams.q || ''
@@ -924,7 +924,7 @@ export default Search
 ### Search 검색
 app/search/page.js
 ```js
-import SearchForm from './search-form.js'
+import SearchForm from './search-form'
 ```
 ```diff
 - <form>
