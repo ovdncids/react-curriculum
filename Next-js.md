@@ -937,7 +937,7 @@ package.json
 ```
 * local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
 * `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자.
-* 운영 환경 설정 파일을 `.gitignore`로 감추는 경우 `.env.development`는 감추지 않거나 `.env.example` 파일을 만들어서 기본 형식을 정의 해줌
+* `.env.prod` 파일을 `.gitignore`로 감추는 경우 `.env.development`는 감추지 않거나 `.env.example` 파일을 만들어서 기본 형식을 정의 해줌
 
 ## Proxy
 next.config.js
