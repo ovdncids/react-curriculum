@@ -954,8 +954,8 @@ const nextConfig = {
   }
 }
 ```
-* CORS를 피할 수 있다.
-* GET 통신은 `${process.env.NEXT_PRIVATE_BACKEND_API_URL}/api/users`
+* `CORS`를 피할 수 있다.
+* `GET 통신`은 `${process.env.NEXT_PRIVATE_BACKEND_API_URL}/api/users`
 * 나머지는 `proxy/api/users`
 
 ## cookies-next
