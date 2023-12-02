@@ -299,7 +299,7 @@ export async function GET() {
 }
 ```
 * http://localhost:3000/api/users
-* TS: `const _global: { users: User[] } = global as unknown as { users: User[] }`
+* TS: `declare global { var users: User[] }`
 
 services/usersServices.js
 ```js
