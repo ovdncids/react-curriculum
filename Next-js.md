@@ -943,21 +943,20 @@ package.json
 next.config.js
 ```js
 const nextConfig = {
-  ...
-}
-
-module.exports = {
-  ...nextConfig,
+  ...,
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/:path*`
+        source: "/proxy/api/:path*",
+        destination: `${process.env.NEXT_PRIVATE_BACKEND_API_URL}/api/:path*`,
       }
-    ]
+    ];
   }
 }
 ```
+* CORS를 피할 수 있다.
+* GET 통신은 `${process.env.NEXT_PRIVATE_BACKEND_API_URL}/api/users`
+* 나머지는 `proxy/api/users`
 
 ## cookies-next
 * https://www.npmjs.com/package/cookies-next
