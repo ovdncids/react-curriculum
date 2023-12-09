@@ -766,6 +766,12 @@ export async function POST(request) {
   })
 }
 ```
+* TS:
+```ts
+import { RowDataPacket, FieldPacket } from 'mysql2/promise'
+
+const [rows, _]: [RowDataPacket[], FieldPacket[]] = await mysql.execute(`
+```
 
 ### Create
 app/api/users/route.js
