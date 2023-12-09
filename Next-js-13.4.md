@@ -737,8 +737,8 @@ export default mysql2Pool
 ```ts
 import mysql2, { Connection } from 'mysql2/promise'
 
-const _global: { mysql2Connection: Connection } = global as unknown as {
-  mysql2Connection: Connection
+declare global {
+  var mysql2Connection: Connection
 }
 ```
 
