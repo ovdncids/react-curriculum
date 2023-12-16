@@ -35,7 +35,7 @@ Stepper: 단계를 표현 할때 사용
 import {Controller} from 'react-hook-form';
 
 <FormControl variant="standard">
-  <InputLabel id="status-label">상태</InputLabel>
+  <InputLabel shrink id="status-label">상태</InputLabel>
   <Controller
     control={control}
     name="status"
