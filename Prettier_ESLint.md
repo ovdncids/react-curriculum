@@ -193,8 +193,8 @@ eslint-plugin-react@latest eslint@latest Would you like to install them now? (Ja
 Which package manager do you want to use? npm
 ```
 ```sh
-npx eslin  .
-npx eslin  --fix .
+npx eslint .
+npx eslint --fix .
 ```
 
 package.json
