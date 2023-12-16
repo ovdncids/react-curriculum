@@ -148,6 +148,19 @@ export default ProgressBar;
 ```
 * `onChangeCommitted` 슬라이더가 이동 완료 되면 실행됨
 
+## Checkbox (Checked)
+```js
+<Controller
+  control={control}
+  name="is_main"
+  render={({field}) => (
+    <FormControlLabel control={
+      <Checkbox {...field} checked={field.value} />
+    } label="라벨" />
+  )}
+/>
+```
+
 ## Checkbox (배열, 쿼리스트링)
 * https://ultimatecourses.com/blog/navigate-to-url-query-strings-search-params-react-router
 ```js
