@@ -620,3 +620,44 @@ className="[&>h2]:text-2xl"
 ```css
 <img className="object-cover" ... />
 ```
+
+# CKEditor 5
+* https://ckeditor.com/ckeditor-5
+* [파일 업로드 테스트](https://ckeditor.com/docs/ckeditor5/latest/features/file-management/ckfinder.html)
+```sh
+npm install @ckeditor/ckeditor5-build-decoupled-document
+```
+```js
+useEffect(() => {
+  const DecoupledEditor = require('@ckeditor/ckeditor5-build-decoupled-document')
+  DecoupledEditor
+    .create(document.querySelector('#editor'), {
+      ckfinder: {
+        uploadUrl: '/api/ckeditor5/upload-images'
+      }
+    })
+    .then((editor: any) => {
+      const toolbarContainer: any = document.querySelector('#toolbar-container')
+      toolbarContainer.appendChild(editor.ui.view.toolbar.element)
+      contentsEditor = editor
+    })
+    .catch((error: unknown) => {
+      console.error(error)
+    })
+}, [])
+<div id="toolbar-container"></div>
+<div
+  id="editor"
+  className="h-[400px] [&>h2]:text-2xl [&>h3]:text-xl [&>h4]:text-lg"
+  dangerouslySetInnerHTML={{__html: productForm.getValues('contents')}}
+></div>
+```
+
+/api/ckeditor5/upload-images
+```js
+{
+  fileName: 'fileName.png',
+  uploaded: 1,
+  url: 'https://ckeditor.com/apps/ckfinder/userfiles/files/fileName.jpeg
+}
+```
