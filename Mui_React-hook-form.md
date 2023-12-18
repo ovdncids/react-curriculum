@@ -1,4 +1,4 @@
-# Material UI & React Hook Form & Tailwind
+# Material UI & React Hook Form & Tailwind & CKEditor 5
 * https://mui.com
 * https://react-hook-form.com/
 
