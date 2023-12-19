@@ -658,6 +658,6 @@ useEffect(() => {
 {
   fileName: 'fileName.png',
   uploaded: 1,
-  url: 'https://ckeditor.com/apps/ckfinder/userfiles/files/fileName.jpeg
+  url: 'https://ckeditor.com/apps/ckfinder/userfiles/files/fileName.jpeg'
 }
 ```
