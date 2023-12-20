@@ -1129,6 +1129,18 @@ const handler = (req, res) => {
 export default handler
 ```
 
+### Next.js 13.4 이후
+pages/api/upload.js
+```js
+import fs from 'fs'
+
+export const POST = async (request) => {
+  const formData = await request.formData()
+  const file = formData.get('file')
+  fs.writeFileSync(`./uploads/${file.name}`, Buffer.from(await file.arrayBuffer()))
+}
+```
+
 ## Next/Image 태그
 * https://velog.io/@joy37/NextImage%EC%97%90-%EB%8C%80%ED%95%B4-%EC%96%BC%EB%A7%8C%ED%81%BC-%EC%95%8C%EC%95%84
 
