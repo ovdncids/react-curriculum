@@ -60,3 +60,15 @@ axios.post('http://backend.test.com:3100', {}, {
   withCredentials: true
 });
 ```
+
+### Next.js
+```js
+export const getServerSideProps = async (context) => {
+  await axios.get('http://backend.test.com:3100', {
+    headers: {
+      Cookie: 'coo=' + encodeURIComponent(context.req.cookies.coo)
+    }
+  })
+}
+```
+* ❕ SSR에서는 `withCredentials: true`를 사용해도 Cookie가 전달되지 않으므로 `headers 안에 Cookie`를 넣어야 한다.
