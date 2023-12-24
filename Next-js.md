@@ -1180,6 +1180,11 @@ const formatSize = async (file) => {
 }
 await formatSize(files.file)
 ```
+* `npm run build` 실행중 `Module not found: Can't resolve 'encoding' in '.../node_modules/node-fetch/lib'` 발생
+```sh
+npm i -D encoding
+# 또는 Jimp.read 주석 처리
+```
 
 ## Head
 * https://nextjs.org/docs/api-reference/next/head
