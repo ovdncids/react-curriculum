@@ -1170,6 +1170,8 @@ export const GET = async () => {
 * https://velog.io/@joy37/NextImage%EC%97%90-%EB%8C%80%ED%95%B4-%EC%96%BC%EB%A7%8C%ED%81%BC-%EC%95%8C%EC%95%84
 
 ## Jimp (이미지 포맷, 크기 변경)
+* ❕ `Next.js`는 이미지 크기를 `.next/.cache/images` 안에 이미지 크기별로 저장해두므로 `Jimp`를 사용할 필요없다.
+* [Next.js 이미지 최적화](https://velog.io/@yesbb/Nextjs%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B5%9C%EC%A0%81%ED%99%94%ED%95%98%EA%B8%B0)
 * https://github.com/oliver-moran/jimp
 ```js
 import Jimp from 'jimp'
