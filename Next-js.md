@@ -1130,6 +1130,9 @@ export default handler
 ```
 
 ### Next.js 13.4 이후
+* [allowedOrigins, bodySizeLimit](https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#allowedorigins)
+* [Deploy, Docker](https://nextjs.org/docs/pages/building-your-application/deploying)
+
 pages/api/upload.js
 ```js
 import fs from 'fs'
@@ -1144,7 +1147,7 @@ export const POST = async (request) => {
 pages/api/download.js
 ```js
 import fs from 'fs'
-import {notFound} from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 export const GET = async () => {
   try {
