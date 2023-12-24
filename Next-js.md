@@ -1141,6 +1141,26 @@ export const POST = async (request) => {
 }
 ```
 
+pages/api/download.js
+```js
+import fs from 'fs'
+import {notFound} from 'next/navigation'
+
+export const GET = async () => {
+  try {
+    const headers = new Headers()
+    headers.append('Content-Disposition', `attachment; filename=${encodeURIComponent('file.png')}`)
+    headers.append('Content-Type', 'image/*')
+    const buffer = fs.readFileSync('./uploads/file.png')
+    return new Response(buffer, {
+      headers
+    })
+  } catch (error) {
+    notFound()
+  }
+}
+```
+
 ## Next/Image 태그
 * https://velog.io/@joy37/NextImage%EC%97%90-%EB%8C%80%ED%95%B4-%EC%96%BC%EB%A7%8C%ED%81%BC-%EC%95%8C%EC%95%84
 
