@@ -1151,10 +1151,12 @@ import { notFound } from 'next/navigation'
 
 export const GET = async () => {
   try {
+    const fileName = 'file.png'
     const headers = new Headers()
-    headers.append('Content-Disposition', `attachment; filename=${encodeURIComponent('file.png')}`)
-    headers.append('Content-Type', 'image/*')
-    const buffer = fs.readFileSync('./uploads/file.png')
+    // headers.append('Content-Disposition', `attachment; filename=${encodeURIComponent(fileName)}`)
+    headers.append('Content-Disposition', `filename=${encodeURIComponent(fileName)}`)
+    headers.append('Content-Type', `image/${fileName.split(".").pop()}`)
+    const buffer = fs.readFileSync(`./uploads/${fileName}`)
     return new Response(buffer, {
       headers
     })
