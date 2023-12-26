@@ -648,7 +648,7 @@ useEffect(() => {
 <div id="toolbar-container"></div>
 <div
   id="editor"
-  className="h-[400px] [&>h2]:text-2xl [&>h3]:text-xl [&>h4]:text-lg"
+  className="h-[800px] [&>h2]:text-2xl [&>h3]:text-xl [&>h4]:text-lg"
   dangerouslySetInnerHTML={{__html: productForm.getValues('contents')}}
 ></div>
 ```
@@ -660,4 +660,14 @@ useEffect(() => {
   uploaded: 1,
   url: 'https://ckeditor.com/apps/ckfinder/userfiles/files/fileName.jpeg'
 }
+```
+
+## 사용자 페이지
+* [CKEditor 5 스타일 적용](https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/content-styles.html)
+* [cheditor5-content-styles.css]()
+```js
+<div
+  className="ck-content [&>h2]:text-2xl [&>h3]:text-xl [&>h4]:text-lg"
+  dangerouslySetInnerHTML={{__html: product.contents}}
+></div>
 ```
