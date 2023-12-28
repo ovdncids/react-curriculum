@@ -655,7 +655,7 @@ useEffect(() => {
   dangerouslySetInnerHTML={{__html: productForm.getValues('contents')}}
 ></div>
 ```
-* `mediaEmbed`는 `유투브 링크` 가능
+* [mediaEmbed - YouTube 링크](https://stackoverflow.com/questions/57490383/ckeditor5-how-to-insert-youtube-video)
 
 /api/ckeditor5/upload-images
 ```js
