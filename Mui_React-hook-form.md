@@ -655,7 +655,7 @@ useEffect(() => {
   dangerouslySetInnerHTML={{__html: productForm.getValues('contents')}}
 ></div>
 ```
-* `mediaEmbed`는 유투브 링크 가능
+* `mediaEmbed`는 `유투브 링크` 가능
 
 /api/ckeditor5/upload-images
 ```js
