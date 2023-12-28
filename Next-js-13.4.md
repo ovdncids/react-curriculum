@@ -704,6 +704,7 @@ useEffect(() => {
 ### MySQL 연결
 * [MariaDB 설치](https://github.com/ovdncids/mysql-curriculum/blob/master/Install.md)
 * https://www.simplenextjs.com/posts/next-mysql
+* [Can't add new command when connection is in closed state](https://github.com/ovdncids/mysql-curriculum/blob/master/Express.md#node-mysql-2-promise)
 ```sh
 npm install mysql2
 ```
@@ -718,8 +719,7 @@ const mysql2Pool = async () => {
         host: 'localhost',
         user: 'user',
         password: 'password',
-        database: 'test',
-        enableKeepAlive: true
+        database: 'test'
       })
       const [rows, fields] = await connection.execute(`
         select 'MySQL Connected' as Result
