@@ -634,6 +634,9 @@ useEffect(() => {
     .create(document.querySelector('#editor'), {
       ckfinder: {
         uploadUrl: '/api/ckeditor5/upload-images'
+      },
+      mediaEmbed: {
+        previewsInData: true
       }
     })
     .then((editor: any) => {
@@ -652,6 +655,7 @@ useEffect(() => {
   dangerouslySetInnerHTML={{__html: productForm.getValues('contents')}}
 ></div>
 ```
+* `mediaEmbed`는 유투브 링크 가능
 
 /api/ckeditor5/upload-images
 ```js
