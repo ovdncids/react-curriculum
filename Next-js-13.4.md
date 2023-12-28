@@ -718,7 +718,8 @@ const mysql2Pool = async () => {
         host: 'localhost',
         user: 'user',
         password: 'password',
-        database: 'test'
+        database: 'test',
+        enableKeepAlive: true
       })
       const [rows, fields] = await connection.execute(`
         select 'MySQL Connected' as Result
