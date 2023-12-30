@@ -11,11 +11,14 @@ jsconfig.json
 ```json
 {
   "compilerOptions": {
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   }
 }
 ```
-* TS: `baseUrl`만 tsconfig.json
+* TS: tsconfig.json
 
 ## Users 리듀서 생성
 src/store/users/usersSlice.js
