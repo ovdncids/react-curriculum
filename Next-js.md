@@ -928,16 +928,17 @@ package.json
 ```json
 {
   "scripts": {
-    "build:dev": "env-cmd -f .env.development next build",
-    "start:dev": "env-cmd -f .env.development next start",
-    "build:prod": "env-cmd -f .env.prod next build",
-    "start:prod": "env-cmd -f .env.prod next start"
+    "build:development": "env-cmd -f .env.development next build",
+    "build:sandbox": "env-cmd -f .env.sandbox next build",
+    "build:beta": "env-cmd -f .env.beta next build",
+    "build:production": "env-cmd -f .env.production next build",
+    "start": "next start"
   }
 }
 ```
 * local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
-* `next build`나 `next start`는 자동으로 `.env.production` 파일을 읽으므로 `.env.prod` 파일로 사용 하자.
-* `.env.prod` 파일을 `.gitignore`로 감추는 경우 `.env.development`는 감추지 않거나 `.env.example` 파일을 만들어서 기본 형식을 정의 해줌
+* `npm run start`는 `환경 설정 파일`을 적용 할 수 없고 `build`의 `환경 설정 파일`에 의존한다.
+* `.env.production` 파일을 `.gitignore`로 감추는 경우 `.env.development`는 감추지 않거나 `.env.example` 파일을 만들어서 기본 형식을 정의 해줌
 
 ## Proxy
 next.config.js
