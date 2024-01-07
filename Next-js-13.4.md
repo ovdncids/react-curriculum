@@ -703,8 +703,12 @@ useEffect(() => {
 ## MySQL CRUD
 ### MySQL 연결
 * [MariaDB 설치](https://github.com/ovdncids/mysql-curriculum/blob/master/Install.md)
-* https://www.simplenextjs.com/posts/next-mysql
-* [Can't add new command when connection is in closed state](https://github.com/ovdncids/mysql-curriculum/blob/master/Express.md#node-mysql-2-promise)
+* [npm install mysql2](https://github.com/sidorares/node-mysql2)
+* [Next.js with Library](https://www.simplenextjs.com/posts/next-mysql)
+* [Next.js with MySQL 2](https://docs.pingcap.com/tidb/stable/dev-guide-sample-application-nextjs)
+* [Can't add new command when connection is in closed state](https://greedthread.github.io/2021/03/09/Mysql2-%EB%AA%A8%EB%93%88%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%9E%A5%EC%8B%9C%EA%B0%84-%EC%BC%9C%EB%86%93%EC%9D%84%EC%8B%9C-%EC%BB%A4%EB%84%A5%EC%85%98-%EC%98%88%EC%99%B8%EA%B0%80-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%8A%88.html)
+* `waitForConnections`부터 `enableKeepAlive`까지는 `pool`이 계속 살아있게 한다.
+
 ```sh
 npm install mysql2
 ```
@@ -713,23 +717,24 @@ libraries/mysql2Pool.js
 import mysql2 from 'mysql2/promise'
 
 const mysql2Pool = async () => {
-  if (!global.mysql2Connection) {
-    const mysql2Init = async () => {
-      const connection = await mysql2.createConnection({
-        host: 'localhost',
-        user: 'user',
-        password: 'password',
-        database: 'test'
-      })
-      const [rows, fields] = await connection.execute(`
-        select 'MySQL Connected' as Result
-      `)
-      console.log(rows)
-      global.mysql2Connection = connection
-    }
-    await mysql2Init()
+  if (!global.mysql2Pool) {
+    const mysql2Pool = mysql2.createPool({
+      host: "localhost",
+      user: "user",
+      password: "password",
+      database: "test",
+
+      connectionLimit: 1,
+      maxIdle: 1,
+      enableKeepAlive: true
+    })
+    const [rows, fields] = await mysql2Pool.execute(`
+      select 'MySQL Connected' as Result
+    `)
+    console.log(rows)
+    global.mysql2Pool = mysql2Pool
   }
-  return global.mysql2Connection
+  return global.mysql2Pool
 }
 
 export default mysql2Pool
