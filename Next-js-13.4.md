@@ -374,8 +374,6 @@ import Create from './create'
 app/users/create.js
 * <details><summary>react-hook-form</summary>
 
-  * https://medium.com/@prithvi128717/creating-a-form-in-react-with-react-hook-form-and-next-js-13-4-5dae780daaef
-
   ```sh
   npm install react-hook-form
   ```
@@ -640,8 +638,6 @@ useEffect(() => {
 ```
 
 * <details><summary>react-hook-form</summary>
-
-  * https://medium.com/@prithvi128717/creating-a-form-in-react-with-react-hook-form-and-next-js-13-4-5dae780daaef
 
   ```sh
   npm install react-hook-form
