@@ -957,7 +957,7 @@ const nextConfig = {
 ```
 * `CORS`를 피할 수 있다.
 * `GET 통신`은 `${process.env.NEXT_PRIVATE_BACKEND_API_URL}/api/users`
-* `POST, DELETE, PATCH 통신`은 환경설정 없이 `/proxy/api/users`
+* `POST, DELETE, PATCH 통신`은 환경 설정 없이 `/proxy/api/users`
 
 ## cookies-next
 * https://www.npmjs.com/package/cookies-next
