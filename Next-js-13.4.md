@@ -701,7 +701,7 @@ useEffect(() => {
 </details>
 
 ## MySQL CRUD
-### MySQL 연결
+### MySQL2 연결
 * [MariaDB 설치](https://github.com/ovdncids/mysql-curriculum/blob/master/Install.md)
 * [npm install mysql2](https://github.com/sidorares/node-mysql2)
 * [Next.js with Library](https://www.simplenextjs.com/posts/next-mysql)
