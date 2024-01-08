@@ -934,7 +934,6 @@ package.json
     "build:production": "env-cmd -f .env.production next build",
     "build": "next build",
     "start": "next start",
-    ...
   }
 }
 ```
