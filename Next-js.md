@@ -931,7 +931,10 @@ package.json
     "build:development": "env-cmd -f .env.development next build",
     "build:sandbox": "env-cmd -f .env.sandbox next build",
     "build:beta": "env-cmd -f .env.beta next build",
-    "build:production": "env-cmd -f .env.production next build"
+    "build:production": "env-cmd -f .env.production next build",
+    "build": "next build",
+    "start": "next start",
+    ...
   }
 }
 ```
