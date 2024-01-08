@@ -931,13 +931,13 @@ package.json
     "build:development": "env-cmd -f .env.development next build",
     "build:sandbox": "env-cmd -f .env.sandbox next build",
     "build:beta": "env-cmd -f .env.beta next build",
-    "build:production": "env-cmd -f .env.production next build",
-    "start": "next start"
+    "build:production": "env-cmd -f .env.production next build"
   }
 }
 ```
-* local(`npm run dev`)은 자동으로 `.env.development` 파일을 읽는다.
-* `npm run start`는 `환경 설정 파일`을 적용 할 수 없고 `build`의 `환경 설정 파일`에 의존한다.
+* ❕ `npm run dev`은 무조건 `.env.development` 파일을 읽는다.
+* ❕ `npm run build`는 무조건 `.env.production` 파일을 읽는다. 하지만 `env-cmd -f .env.{환경}` 명령이 해당 환경의 우선 순위를 올려준다.
+* ❕ `npm run start`는 `환경 설정 파일`을 적용 할 수 없고 `build`의 `환경 설정`에 의존한다.
 * `.env.production` 파일을 `.gitignore`로 감추는 경우 `.env.development`는 감추지 않거나 `.env.example` 파일을 만들어서 기본 형식을 정의 해줌
 
 ## Proxy
