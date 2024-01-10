@@ -55,6 +55,15 @@ import {Controller} from 'react-hook-form';
 ```
 * ❕ `select`, `checkbox`, `radio`는 `<Controller />`를 사용해야 불필요한 오류를 만나지 않는다.
 
+### Select shrink outlined 경우 라벨이 보더가 가리는 경우
+* https://github.com/mui/material-ui/issues/21394
+```js
+<FormControl variant="outlined">
+  <InputLabel shrink>{label}</InputLabel>
+  <Select input={<OutlinedInput notched label={label} />} />
+</FormControl>
+```
+
 ## Radio
 ```js
 <Controller
