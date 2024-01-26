@@ -42,10 +42,16 @@ export default NivoPie
 ```
 * TS:
 ```ts
-import {MayHaveLabel, PieSvgProps} from '@nivo/pie'
+import { MayHaveLabel, PieSvgProps } from '@nivo/pie'
 const ResponsivePie = dynamic(
   () => import('@nivo/pie').then(m => m.ResponsivePie), {ssr: false}
 ) as <RawDatum extends MayHaveLabel>(
   props: Omit<PieSvgProps<RawDatum>, 'height' | 'width'>
 ) => JSX.Element
+```
+
+## Next.js 13.4
+```js
+'use client'
+import { ResponsivePie } from '@nivo/pie'
 ```
