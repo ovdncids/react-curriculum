@@ -910,6 +910,12 @@ Page.getInitialProps = async (ctx) => {
 export default Page
 ```
 
+## router.push 할때 새로고침 하지 않기
+* https://stackoverflow.com/questions/61130038/next-js-router-push-reloads-page-automatically
+```js
+router.push('/?step=2', undefined, { shallow: true })
+```
+
 ## 환경 설정
 * https://nextjs.org/docs/basic-features/environment-variables
 ```sh
