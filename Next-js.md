@@ -967,6 +967,11 @@ const nextConfig = {
 * `GET 통신`은 `${process.env.NEXT_PRIVATE_BACKEND_API_URL}/api/users`
 * `POST, DELETE, PATCH 통신`은 환경 설정 없이 `/proxy/api/users`
 
+## Port 변경
+```sh
+npm run start -- -p 2999
+```
+
 ## cookies-next
 * https://www.npmjs.com/package/cookies-next
 * [Express Cookies - httpOnly](https://github.com/ovdncids/react-curriculum/blob/master/Express.md#%EC%84%9C%EB%A1%9C-%EB%8B%A4%EB%A5%B8-%EB%8F%84%EB%A9%94%EC%9D%B8-%EA%B0%84%EC%97%90-cookie-%EA%B3%B5%EC%9C%A0)
