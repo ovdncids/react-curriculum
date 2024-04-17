@@ -33,3 +33,6 @@ parseString(xml, function (err, result) {
   console.log(result);
 });
 ```
+
+## Image Zoom
+* https://github.com/rpearce/react-medium-image-zoom#readme
