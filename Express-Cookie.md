@@ -72,3 +72,4 @@ export const getServerSideProps = async (context) => {
 }
 ```
 * ❕ SSR에서는 `withCredentials: true`를 사용해도 Cookie가 전달되지 않으므로 `headers 안에 Cookie`를 넣어야 한다.
+* ❕ SSR에서는 `axios` 또는 `fetch` 통신한 API에서 Cookie를 생성하면 `같은 도메인`이라도 Cookie가 생성되지 않는다.
