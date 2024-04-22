@@ -716,6 +716,7 @@ const mysql2Pool = async () => {
   if (!global.mysql2Pool) {
     const mysql2Pool = mysql2.createPool({
       host: 'localhost',
+      port: 3306,
       database: 'test',
       user: 'user',
       password: 'password'
