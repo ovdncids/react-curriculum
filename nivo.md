@@ -4,6 +4,8 @@
 ```sh
 npm install @nivo/core @nivo/pie
 ```
+## Nivo Line Legend Dynamic Widths
+* https://codesandbox.io/p/sandbox/zealous-currying-eg5sz?file=%2Fsrc%2FApp.js%3A13%2C1
 
 ## Next.js
 ```js
