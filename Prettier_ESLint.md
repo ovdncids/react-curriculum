@@ -149,7 +149,8 @@ npx husky add .husky/pre-commit "npm run lint"
     "comma-dangle": "error",
     "array-bracket-spacing": "error",
     "object-curly-spacing": "error",
-    "arrow-parens": "error"
+    "arrow-parens": "error",
+    "no-trailing-spaces": "error"
   }
 }
 ```
@@ -162,6 +163,7 @@ comma-dangle: 마지막 배열과 마지막 오브젝트에 컴마 사용 유무
 array-bracket-spacing: 배열 안에 공백 유무
 object-curly-spacing: 오브젝트 안에 공백 유무
 arrow-parens: 화살표 함수에서 인자가 하나인 경우 () 사용 유무
+no-trailing-spaces: 줄 끝에 스페이스 있으면 에러
 ```
 
 package.json
