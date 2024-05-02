@@ -572,6 +572,7 @@ const userForm = useForm({
   resolver: yupResolver(yup.object().shape({
     name: yup.string().min(3).max(8).required("name is required."),
     age: yup.number().required("age is required.")
+    // yup.mixed<number | string>().required()
   }))
 });
 
