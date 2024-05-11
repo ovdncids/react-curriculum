@@ -1014,4 +1014,9 @@ npm run start
 ```
 
 ## Error: listen EACCES: permission denied 0.0.0.0:80
-* https://systorage.tistory.com/entry/Error-permission-denied-000080#%ED%95%B4%EA%B2%B0%EB%B0%A9%EB%B2%95-1
+* https://stackoverflow.com/questions/60372618/nodejs-listen-eacces-permission-denied-0-0-0-080
+```sh
+sudo apt-get install libcap2-bin 
+sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\`` 
+# `which node` 명령으로 node 경로가 뜨는지 확인
+```
