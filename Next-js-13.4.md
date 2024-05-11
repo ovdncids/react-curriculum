@@ -1017,8 +1017,9 @@ npm run start
 * https://stackoverflow.com/questions/60372618/nodejs-listen-eacces-permission-denied-0-0-0-080
 ```sh
 sudo apt-get install libcap2-bin 
-sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\`` 
+sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
 # `which node` 명령으로 node 경로가 뜨는지 확인
+sudo setcap cap_net_bind_service=+ep `readlink -f \`which fuser\``
 ```
 
 ### 포트 포워딩
