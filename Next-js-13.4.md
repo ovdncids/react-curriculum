@@ -1020,3 +1020,16 @@ sudo apt-get install libcap2-bin
 sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\`` 
 # `which node` 명령으로 node 경로가 뜨는지 확인
 ```
+
+### 포트 포워딩
+```sh
+# 포트 포워딩 생성
+sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
+
+# 포트 포워딩 확인
+sudo iptables -t nat -L --line-numbers
+
+# 포트 포워딩 삭제
+sudo iptables -t nat -D PREROUTING 1
+## 1 = 포트 포워딩 확인 했을때 부여 되어 있는 번호
+```
