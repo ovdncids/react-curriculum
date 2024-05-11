@@ -1012,3 +1012,6 @@ usersRead: async () => {
 # 운영 환경
 npm run start
 ```
+
+## [Error] permission denied 0.0.0.0:80
+* https://systorage.tistory.com/entry/Error-permission-denied-000080#%ED%95%B4%EA%B2%B0%EB%B0%A9%EB%B2%95-1
