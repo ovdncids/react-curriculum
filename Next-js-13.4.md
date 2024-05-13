@@ -991,6 +991,8 @@ npm run build
 # λ  (Server)
 # ○  (Static)
 ## route.js 파일 경로가 `Static`으로 잡힌다면 `cache: 'no-store'` 옵션이 있더라도 해당 `route.js` 파일을 다시 읽지 않는다.
+## https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic
+## export const dynamic = "force-dynamic"
 ```
 
 ### Error: connect ECONNREFUSED 127.0.0.1:3000 오류 발생시
