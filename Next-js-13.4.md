@@ -987,6 +987,10 @@ export default SearchForm
 ```sh
 # 운영 환경 배포전 빌드
 npm run build
+
+# λ  (Server)
+# ○  (Static)
+## route.js 파일 경로가 `Static`으로 잡힌다면 `cache: 'no-store'` 옵션이 있더라도 해당 `route.js` 파일을 다시 읽지 않는다.
 ```
 
 ### Error: connect ECONNREFUSED 127.0.0.1:3000 오류 발생시
