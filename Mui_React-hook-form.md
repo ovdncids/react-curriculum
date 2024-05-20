@@ -1251,7 +1251,7 @@ export const Parent = ({children}: {
     <div>
       {React.cloneElement(children, {
         onClick: () => {
-          children.props.onClick()
+          children.props.onClick?.()
           click()
         }
       })}
