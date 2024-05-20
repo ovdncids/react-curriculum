@@ -1236,3 +1236,26 @@ useEffect(() => {
   dangerouslySetInnerHTML={{__html: product.contents}}
 ></div>
 ```
+
+# React 자식에 추가 속성 넣기
+```ts
+<Parent>
+  <button onClick={() => {}}></button>
+</Parent>
+
+export const Parent = ({children}: {
+  children: React.ReactElement<{onClick: Function}>
+}) => {
+  const click = () => {}
+  return (
+    <div>
+      {React.cloneElement(children, {
+        onClick: () => {
+          children.props.onClick()
+          click()
+        }
+      })}
+    </div>
+  )
+}
+```
