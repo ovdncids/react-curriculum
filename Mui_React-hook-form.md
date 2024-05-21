@@ -30,8 +30,17 @@ Stepper: 단계를 표현 할때 사용
 ```
 
 ## Popper (부모에 종속되는 자식 레이어 팝업)
-```js
-<Popper>
+```tsx
+const ref = useRef(null)
+<Button ref={ref}>버튼</Button>
+<Popper
+  sx={{zIndex: 1}}
+  open={true}
+  anchorEl={ref}
+  nonce={undefined}
+  onResize={undefined}
+  onResizeCapture={undefined}
+>
   <Paper>
     <ClickAwayListener
       onClickAway={() => {}}
@@ -1253,7 +1262,7 @@ useEffect(() => {
 ```
 
 # React 자식에 추가 속성 넣기
-```ts
+```tsx
 <Parent>
   <button onClick={() => {}}></button>
 </Parent>
