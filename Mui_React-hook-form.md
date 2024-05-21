@@ -30,6 +30,7 @@ Stepper: 단계를 표현 할때 사용
 ```
 
 ## Popper (부모에 종속되는 자식 레이어 팝업)
+* `Popper`는 기본적으로 토글 형식이므로 `ESC키`로 닫고 싶을 경우 `Popover`를 사용한다.
 ```tsx
 const ref = useRef(null)
 <Button ref={ref}>버튼</Button>
