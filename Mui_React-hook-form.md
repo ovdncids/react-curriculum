@@ -182,6 +182,14 @@ export default ProgressBar;
 ```
 * `onChangeCommitted` 슬라이더가 이동 완료 되면 실행됨
 
+## Dialog
+```js
+<Dialog
+  // Dialog 화면 출력 후 실행
+  TransitionProps={{onEntered: () => {}}}
+><<Dialog>
+```
+
 ## Checkbox (Checked)
 ```js
 <Controller
