@@ -70,6 +70,7 @@ import {Controller} from 'react-hook-form';
         labelId="status-label"
         id="status-id"
         style={{backgroundColor: 'unset'}}
+        onChange={(event) => field.onChange(event)}
       >
         <MenuItem value="">전체</MenuItem>
         <MenuItem value="menu">메뉴</MenuItem>
