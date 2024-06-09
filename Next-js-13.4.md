@@ -1042,12 +1042,24 @@ sudo iptables -t nat -D PREROUTING 1
 ```
 
 ## SSL
+### localhost
 ### 손쉬운 https://localhost:3000
 ```sh
 next dev --experimental-https
 ```
 
-### ssl.key, ssl.crt 파일 .pem 변경
+#### localhost key.pem, cert.pem 발급
+* https://velog.io/@pikadev1771/Next.js-%EB%A1%9C%EC%BB%AClocalhost%EC%97%90-https-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
+```sh
+brew install mkcert
+mkcert -install
+mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1 ::1
+node server.js
+```
+* `server.js` 파일은 아래 참조
+
+### 운영서버
+#### ssl.key, ssl.crt 파일 .pem 변경
 * https://lahuman.github.io/cet_key_to_pem
 ```sh
 openssl rsa -in ssl.key -text > ssl_key.pem
@@ -1056,7 +1068,7 @@ openssl rsa -in ssl.key -text > ssl_key.pem
 openssl x509 -inform PEM -in ssl.crt > ssl_crt.pem
 ```
 
-### server.js
+#### server.js
 ```js
 const http = require("http")
 const https = require("https")
