@@ -1040,3 +1040,58 @@ sudo iptables -t nat -L --line-numbers
 sudo iptables -t nat -D PREROUTING 1
 ## 1 = 포트 포워딩 확인 했을때 부여 되어 있는 번호
 ```
+
+## SSL
+### 손쉬운 https://localhost:3000
+```sh
+next dev --experimental-https
+```
+
+### ssl.key, ssl.crt 파일 .pem 변경
+* https://lahuman.github.io/cet_key_to_pem
+```sh
+openssl rsa -in ssl.key -text > ssl_key.pem
+# Enter pass phrase for ssl.key: 카페24 사용자 비밀번호 또는 root 비밀번호
+
+openssl x509 -inform PEM -in ssl.crt > ssl_crt.pem
+```
+
+### server.js
+```js
+const {createServer} = require('https')
+const {parse} = require('url')
+const next = require('next')
+const fs = require('fs')
+
+const hostname = '도메인.com'
+const port = 443
+
+const app = next({dev: false, hostname, port})
+const handle = app.getRequestHandler()
+
+const httpsOptions = {
+  key: fs.readFileSync('../ssl_key.pem'),
+  cert: fs.readFileSync('../ssl_crt.pem'),
+  ca: fs.readFileSync('../chain_ssl_crt.pem')
+}
+
+app.prepare().then(() => {
+  try {
+    createServer(httpsOptions, async (req, res) => {
+      try {
+        const parsedUrl = parse(req.url, true)
+        await handle(req, res, parsedUrl)
+      } catch (err) {
+        console.error('Error occurred handling', req.url, err)
+        res.statusCode = 500
+        res.end('internal server error')
+      }
+    }).listen(port, (err) => {
+      if (err) throw err
+      console.log(`> Ready on https://${hostname}:${port}`)
+    })
+  } catch (err) {
+    throw err
+  }
+})
+```
