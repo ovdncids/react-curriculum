@@ -1058,40 +1058,55 @@ openssl x509 -inform PEM -in ssl.crt > ssl_crt.pem
 
 ### server.js
 ```js
-const {createServer} = require('https')
-const {parse} = require('url')
-const next = require('next')
-const fs = require('fs')
+const http = require("http")
+const https = require("https")
+const {parse} = require("url")
+const next = require("next")
+const fs = require("fs")
 
-const hostname = '도메인.com'
-const port = 443
+const hostname = "도메인.com"
+const port = 80
 
 const app = next({dev: false, hostname, port})
 const handle = app.getRequestHandler()
 
 const httpsOptions = {
-  key: fs.readFileSync('../ssl_key.pem'),
-  cert: fs.readFileSync('../ssl_crt.pem'),
-  ca: fs.readFileSync('../chain_ssl_crt.pem')
+  key: fs.readFileSync("../ssl_key.pem"),
+  cert: fs.readFileSync("../ssl_crt.pem"),
+  ca: fs.readFileSync("../chain_ssl_crt.pem")
 }
 
 app.prepare().then(() => {
   try {
-    createServer(httpsOptions, async (req, res) => {
+    http.createServer((req, res) => {
       try {
         const parsedUrl = parse(req.url, true)
-        await handle(req, res, parsedUrl)
+        handle(req, res, parsedUrl)
       } catch (err) {
-        console.error('Error occurred handling', req.url, err)
+        console.error("Error occurred handling", req.url, err)
         res.statusCode = 500
-        res.end('internal server error')
+        res.end("internal server error")
       }
     }).listen(port, (err) => {
       if (err) throw err
-      console.log(`> Ready on https://${hostname}:${port}`)
+      console.log(`> Ready on http://${hostname}`)
+    })
+    https.createServer(httpsOptions, (req, res) => {
+      try {
+        const parsedUrl = parse(req.url, true)
+        handle(req, res, parsedUrl)
+      } catch (err) {
+        console.error("Error occurred handling", req.url, err)
+        res.statusCode = 500
+        res.end("internal server error")
+      }
+    }).listen(443, (err) => {
+      if (err) throw err
+      console.log(`> Ready on https://${hostname}`)
     })
   } catch (err) {
-    throw err
+    console.error(err)
   }
 })
 ```
+* `upstream image response failed for /이미지경로 TypeError: fetch failed` 오류 없이 이미지도 정상적으로 나온다.
