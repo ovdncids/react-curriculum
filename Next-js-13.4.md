@@ -1141,7 +1141,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // static 경로는 http에서 https로 이동하지 방지
+  // static 경로는 http에서 https로 이동 방지
   matcher: '/((?!images|_next/static|_next/image|favicon.ico).*)'
 }
 ```
