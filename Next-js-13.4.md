@@ -1070,22 +1070,22 @@ openssl x509 -inform PEM -in ssl.crt > ssl_crt.pem
 
 #### server.js
 ```js
-const http = require("http")
-const https = require("https")
-const {parse} = require("url")
-const next = require("next")
-const fs = require("fs")
+const http = require('http')
+const https = require('https')
+const {parse} = require('url')
+const next = require('next')
+const fs = require('fs')
 
-const hostname = "도메인.com"
+const hostname = '도메인.com'
 const port = 80
 
 const app = next({dev: false, hostname, port})
 const handle = app.getRequestHandler()
 
 const httpsOptions = {
-  key: fs.readFileSync("../ssl_key.pem"),
-  cert: fs.readFileSync("../ssl_crt.pem"),
-  ca: fs.readFileSync("../chain_ssl_crt.pem")
+  key: fs.readFileSync('../ssl_key.pem'),
+  cert: fs.readFileSync('../ssl_crt.pem'),
+  ca: fs.readFileSync('../chain_ssl_crt.pem')
 }
 
 app.prepare().then(() => {
@@ -1095,9 +1095,9 @@ app.prepare().then(() => {
         const parsedUrl = parse(req.url, true)
         handle(req, res, parsedUrl)
       } catch (err) {
-        console.error("Error occurred handling", req.url, err)
+        console.error('Error occurred handling', req.url, err)
         res.statusCode = 500
-        res.end("internal server error")
+        res.end('internal server error')
       }
     }).listen(port, (err) => {
       if (err) throw err
@@ -1108,9 +1108,9 @@ app.prepare().then(() => {
         const parsedUrl = parse(req.url, true)
         handle(req, res, parsedUrl)
       } catch (err) {
-        console.error("Error occurred handling", req.url, err)
+        console.error('Error occurred handling', req.url, err)
         res.statusCode = 500
-        res.end("internal server error")
+        res.end('internal server error')
       }
     }).listen(443, (err) => {
       if (err) throw err
@@ -1122,3 +1122,26 @@ app.prepare().then(() => {
 })
 ```
 * `upstream image response failed for /이미지경로 TypeError: fetch failed` 오류 없이 이미지도 정상적으로 나온다.
+
+#### http to https
+middleware.ts
+```ts
+import {NextResponse} from 'next/server'
+import type {NextRequest} from 'next/server'
+
+export function middleware(request: NextRequest) {
+  if (
+    request.nextUrl.host === '도메인.com' &&
+    request.nextUrl.protocol === 'http:'
+  ) {
+    const url = new URL(request.url)
+    url.protocol = 'https'
+    return NextResponse.redirect(url)
+  }
+}
+
+export const config = {
+  // static 경로는 http에서 https로 이동하지 방지
+  matcher: '/((?!images|_next/static|_next/image|favicon.ico).*)'
+}
+```
