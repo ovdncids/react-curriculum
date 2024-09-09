@@ -9,6 +9,7 @@ function App() {
   const fileUpdate = (event) => {
     event.preventDefault();
     const formData = new FormData();
+    // formData.append('user', new Blob([JSON.stringify({name: '홍길동'})], {type: 'application/json'}))
     formData.append('file', event.target[0].files[0]);
     axios.post('http://localhost:3100/api/v1/files', formData);
   };
