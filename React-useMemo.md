@@ -89,14 +89,20 @@ const usersInit = useCallback(() => {
 ```js
 import { useRef } from 'react';
 
-function App() {
-  const refInput = useRef();
+function Child({refDiv}) {
   return (
-    <input
-      ref={refInput}
-      onChange={() => console.log(refInput)}
-    />
+    <div ref={refDiv}></div>
+  );
+}
+
+function App() {
+  const refDiv = useRef();
+  useEffect(() => {
+    console.log(refDiv.current.scrollTop);
+  }, [refDiv]);
+  return (
+    <Child ref={refDiv} />
   );
 }
 ```
-* `refInput`는 `{current: input}` 형식을 갖는다.
+* `refDiv`는 처음에 `{current: undefined}` -> `useEffect[refDiv]`에서 `{current: div}`가 된다.
