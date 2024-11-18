@@ -54,8 +54,18 @@ index.js
 * ❕ `useEffect`와 모양은 비슷하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
 
 # useCallback
-* ❕ `useMemo`와 비슷하지만 `useCallback`은 함수를 반환, `useMemo` 결과를 반환 한다.
+* ❕ 컴포넌트 안에 선언된 `abc`함수를 `useEffect[abc]`에서 의존성을 주입할 경우 `useCallback` 사용하라는 경고가 발생한다.
+```js
+const abc = () => {};
+useEffect(() => {
+  abc();
+}, [abc]);
+```
+* 해결 1. `[abc]` -> `[]` 변경하여 의존성 제거
+* 해결 2. `const abc = useCallback(() => {}, []);`
 
+## 사용 예제
+* ❕ `useMemo`와 비슷하지만 `useCallback`은 함수를 반환, `useMemo` 결과를 반환 한다.
 ```js
 const usersInit = () => {
   return [];
@@ -97,9 +107,10 @@ function Child({refDiv}) {
 
 function App() {
   const refDiv = useRef();
-  // const refDiv = useRef(123); // {current: 123}으로 초기화 된다.
+  // const refDiv = useRef({} as HTMLDivElement); // {current: {}}으로 초기화 된다.
   useEffect(() => {
     console.log(refDiv.current.scrollTop);
+    // refDiv.current = 456; // 자유롭게 current값을 수정 할 수 있다.
     return () => {
       console.log(refDiv);
     }
