@@ -54,12 +54,12 @@ index.js
 * ❕ `useEffect`와 모양은 비슷하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
 
 # useCallback
-* ❕ 컴포넌트 안에 선언된 `abc`함수를 `useEffect[abc]`에서 의존성을 주입할 경우 `useCallback` 사용하라는 경고가 발생한다.
+* ❕ 컴포넌트 안에 선언된 `abc`함수를 `useEffect[abc]`에서 의존성을 주입한 경우 `useCallback` 사용하라는 경고가 발생한다.
 ```js
 const abc = () => {};
 useEffect(() => {
   abc();
-}, [abc]);
+}, [abc]); // 리액트 버전에 따라 abc함수를 랜더링 마다 새로운 익명 함수로 받아서 무한루프에 빠질 수 있다.
 ```
 * 해결 1. `[abc]` -> `[]` 변경하여 의존성 제거
 * 해결 2. `const abc = useCallback(() => {}, []);`
