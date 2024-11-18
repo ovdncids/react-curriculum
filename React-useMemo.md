@@ -54,16 +54,21 @@ index.js
 * ❕ `useEffect`와 모양은 비슷하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
 
 # useCallback
-* ❕ 컴포넌트 안에 선언된 `abc`함수를 `useEffect[abc]`에서 의존성을 주입한 경우 `useCallback` 사용하라는 경고가 발생한다.
 ```js
-const abc = () => {};
+const [bool] = useState(false);
+const fn = () => {console.log(bool)};
 useEffect(() => {
-  abc();
-}, [abc]); // 리액트 버전에 따라 abc함수를 랜더링 마다 새로운 익명 함수로 받아서 무한루프에 빠질 수 있다.
+  fn();
+}, []);
 ```
-* 해결 1. `[abc]` -> `[]` 변경하여 의존성 제거
-* 해결 2. `const abc = useCallback(() => {}, []);`
+* `fn` 함수가 `bool` 변수를 사용하므로 `useEffect[fn]` 의존성 넣으라는 경고 발생.
+* `}, []);` -> `}, [fn]);` 추가하면 `useCallback` 넣으라는 경고 발생. (랜더링마다 `fn`이 사용하는 `익명 함수`가 새롭게 생성된어서 `useCallback`을 사용하라는 경고이다.)
+```js
+const fn = useCallback(() => {console.log(bool)}, [bool]);
+```
+* ❕ `useCallback` 사용을 줄이기 위해서는 `useEffect`에서 컴포넌트안의 함수 호출 대신 `store 또는 service`의 함수를 호출하고, 랜더링에 필요 없는 `useState` 상태값들은 컴포넌트 밖으로 뺀다.
 
+<!--
 ## 사용 예제
 * ❕ `useMemo`와 비슷하지만 `useCallback`은 함수를 반환, `useMemo` 결과를 반환 한다.
 ```js
@@ -94,6 +99,7 @@ const usersInit = useCallback(() => {
 }, []);
 ```
 * `useCallback` 사용하면 `usersInit 함수`는 렌터링이 되더라도 변하지 않는다. `[]` 안의 의존성이 변할때만 새로운 함수를 받는다.
+-->
 
 # useRef
 ```js
