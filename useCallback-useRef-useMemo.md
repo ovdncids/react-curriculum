@@ -65,14 +65,15 @@ function App() {
     return () => {
       console.log(refDiv);
     }
-  }, [refDiv]);
+  }, []);
+  // }, [refDiv]); // useRef는 렌더링과 관련이 없으므로 의존성 대상이 아니다.
   return (
     <Child refDiv={refDiv} />
   );
 }
 ```
-* `refDiv`는 `{current: undefined}`로 선언되고 -> `useEffect[refDiv]`에서 `{current: 엘리먼트}` 엘리먼트가 지정 되어 있고 -> `useEffect[return]`에서 `{current: null}`이 된다.
-* ❕ `refDiv.current`가 변경 되어도 `useEffect[refDiv]`는 1번만 호출 된다.
+* `refDiv`는 `{current: undefined}`로 선언되고 -> `useEffect`에서 `{current: 엘리먼트}` 엘리먼트가 지정 되어 있고 -> `useEffect[return]`에서 `{current: null}`이 된다.
+* ❕ `자식 useEffect`가 `부모 useEffect`보다 항상 우선 실행되므로 `부모 useEffect`는`refDiv.current.scrollTop`값을 가지고 있는다.
 
 # useMemo
 https://www.daleseo.com/react-hooks-use-memo
