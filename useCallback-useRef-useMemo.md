@@ -1,58 +1,3 @@
-# useMemo
-https://www.daleseo.com/react-hooks-use-memo
-
-* 부모 컴포넌트가 redering 되어 자식까지 redering 되는 경우, 자식에서 사용되는 일정 부분의 함수를 다시 실행하지 않기
-
-## useMemo 사용전
-index.js
-```js
-import { useState } from 'react';
-
-function Users(props) {
-  const { users } = props;
-  console.warn(users);
-  return (
-    <div>
-    {users.map((user, index) => (
-      <div key={index}>{user}</div>
-    ))}
-    </div>
-  );
-}
-
-function App() {
-  const [users, setUsers] = useState([]);
-  const [user, setUser] = useState('');
-  return (
-    <div>
-      <Users users={users}></Users>
-      <input
-        type="text" placeholder="User" value={user}
-        onChange={(event) => setUser(event.target.value)}
-      />
-      <button onClick={() => setUsers([...users, user])}>Create</button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-## useMemo 사용후
-index.js
-```diff
-- import { useState } from 'react';
-+ import { useState, useMemo } from 'react';
-
-- <Users users={users}></Users>
-```
-```js
-{useMemo(() => (
-  <Users users={users}></Users>
-), [users])}
-```
-* ❕ `useEffect`와 모양은 비슷하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
-
 # useCallback
 ```js
 const [bool] = useState(false);
@@ -128,3 +73,58 @@ function App() {
 ```
 * `refDiv`는 `{current: undefined}`로 선언되고 -> `useEffect[refDiv]`에서 `{current: 엘리먼트}` 엘리먼트가 지정 되어 있고 -> `useEffect[return]`에서 `{current: null}`이 된다.
 * ❕ `refDiv.current`가 변경 되어도 `useEffect[refDiv]`는 1번만 호출 된다.
+
+# useMemo
+https://www.daleseo.com/react-hooks-use-memo
+
+* 부모 컴포넌트가 redering 되어 자식까지 redering 되는 경우, 자식에서 사용되는 일정 부분의 함수를 다시 실행하지 않기
+
+## useMemo 사용전
+index.js
+```js
+import { useState } from 'react';
+
+function Users(props) {
+  const { users } = props;
+  console.warn(users);
+  return (
+    <div>
+    {users.map((user, index) => (
+      <div key={index}>{user}</div>
+    ))}
+    </div>
+  );
+}
+
+function App() {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState('');
+  return (
+    <div>
+      <Users users={users}></Users>
+      <input
+        type="text" placeholder="User" value={user}
+        onChange={(event) => setUser(event.target.value)}
+      />
+      <button onClick={() => setUsers([...users, user])}>Create</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## useMemo 사용후
+index.js
+```diff
+- import { useState } from 'react';
++ import { useState, useMemo } from 'react';
+
+- <Users users={users}></Users>
+```
+```js
+{useMemo(() => (
+  <Users users={users}></Users>
+), [users])}
+```
+* ❕ `useEffect`와 모양은 비슷하다. 차이점은 `useMemo`는 렌더링 중에 실행, `useEffect`는 렌더링 후 실행 한다.
