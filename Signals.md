@@ -32,4 +32,5 @@ effect(() => {
   console.log(s.value);
 });
 // effect 함수안에 `signal 함수`로 생성한 `s`가 있으므로 생성 또는 `s.value`가 변할때 마다 함수가 실행 된다.
+// GPT: effect 함수는 내부적으로 의존성을 추적하기 위해 즉시 실행되어야 한다.
 ```
