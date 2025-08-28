@@ -44,35 +44,19 @@ export default function Component() {
 ```
 * ❕ `{s.value}`는 `1.3.8 버전`까지 Re render 지원했지만, `2 버전`부터는 지원안하고 `computed`가 권장됨
 
-### effect
-```jsx
-import { signal, effect } from '@preact/signals-react';
-
-const s = signal(null);
-effect(() => {
-  console.log(s.value);
-  if (s.value === null) return;
-  // `s.value`를 Component에서 값을 초기화 후에 `API 통신`등을 호출 해야 하는 경우
-  console.log('API 통신');
-});
-// `effect() 함수`를 호출하면 `effect 안의 익명 함수`도 내부적 의존성을 추적하기 위해 즉시 호출 시킨다.
-// `s.value`가 의존적이므로 `s.value`가 변할때 마다 `effect 안의 익명 함수`가 다시 호출 된다.
-
-export default function Component() {
-  s.value = 's';
-  return <div>{s}</div>;
-}
-```
-* ❕ `effect 안의 익명 함수`도 `async/await` 사용 가능. `effect(async () => {await axios.get('')})`
-
-### batch
+### effect, batch
 ```jsx
 import { signal, effect, batch } from '@preact/signals-react';
 
 const s = signal(0);
 effect(() => {
   console.log(s.value);
+  // s.value = 1;
 });
+// `effect() 함수`를 호출하면 `effect 안의 익명 함수`도 내부적 의존성을 추적하기 위해 즉시 호출 시킨다.
+// `s.value`는 읽기이므로 의존성이 추적된다. `s.value`가 변할때 마다 `effect 안의 익명 함수`가 다시 호출 된다.
+// `s.value = 1;`는 쓰기이므로 의존성이 추적되지 않는다.
+// `s.value++;`는 읽고 쓰기이다.
 s.value++;
 s.value++;
 batch(() => {
@@ -81,4 +65,23 @@ batch(() => {
 });
 // `effect 안의 익명 함수`에서 `0, 1, 2, 4` 이렇게 출력한다.
 // `batch` 함수는 여러번의 수정을 모아서 한번만 `effect 안의 익명 함수`를 호출한다.
+```
+
+### Component with effect
+```jsx
+import { signal, effect } from '@preact/signals-react';
+
+const s = signal(null);
+effect(async () => {
+  console.log(s.value);
+  if (s.value === null) return;
+  // `s.value`를 Component에서 값을 초기화 후에 `API 통신`등을 호출 해야 하는 경우
+  console.log('API 통신');
+  // s.value = await axios.get('');
+});
+
+export default function Component() {
+  s.value = 's';
+  return <div>{s}</div>;
+}
 ```
