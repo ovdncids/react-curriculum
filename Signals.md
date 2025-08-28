@@ -63,6 +63,7 @@ export default function Component() {
   return <div>{s}</div>;
 }
 ```
+* ❕ `effect 안의 익명 함수`도 `async/await` 사용 가능. `effect(async () => {await axios.get('')})`
 
 ### batch
 ```jsx
