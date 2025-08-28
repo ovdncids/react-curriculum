@@ -15,7 +15,7 @@ import { signal, computed } from '@preact/signals-react';
 
 const s = signal(0);
 const c = computed(() => {
-  return 'c' + s.value;
+  return <span>{s}</span>;
 });
 // `Signals`는 컴포넌트와 독립적인 사용가능도 하다.
 
@@ -37,7 +37,7 @@ export default function Component() {
         {s.value}{/*    No render again */}
       </div>
       <Button />{/*     No render again */}
-      <div>{c}</div>{/* Re render only {c} */}
+      <div>{c}</div>{/* Re render only part of {c} */}
     </div>
   );
 }
@@ -58,7 +58,25 @@ effect(() => {
 // `s.value`가 의존적이므로 `s.value`가 변할때 마다 `effect 안의 익명 함수`가 다시 호출 된다.
 
 export default function Component() {
-  s.value = 's1';
+  s.value = 's';
   return <div>{s}</div>;
 }
+```
+
+### batch
+```jsx
+import { signal, effect, batch } from '@preact/signals-react';
+
+const s = signal(0);
+effect(() => {
+  console.log(s.value);
+});
+s.value++;
+s.value++;
+batch(() => {
+  s.value++;
+  s.value++;
+});
+// `effect 안의 익명 함수`에서 `0, 1, 2, 4` 이렇게 출력한다.
+// `batch` 함수는 여러번의 수정을 모아서 한번만 `effect 안의 익명 함수`를 호출한다.
 ```
