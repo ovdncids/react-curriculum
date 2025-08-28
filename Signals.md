@@ -42,7 +42,7 @@ export default function Component() {
   );
 }
 ```
-* ❕ `{s.value}`는 1.3.8 버전까지 Re render 지원했지만, 2 버전부터는 지원안하고 `computed`가 권장됨
+* ❕ `{s.value}`는 `1.3.8 버전`까지 Re render 지원했지만, `2 버전`부터는 지원안하고 `computed`가 권장됨
 
 ### signal, effect
 ```jsx
