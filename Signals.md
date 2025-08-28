@@ -1,7 +1,7 @@
 # Signals
 * https://github.com/preactjs/signals
-* `useState`의 변화는 컴포넌트 전체가 리렌더링 되는데 `signal`을 사용하면 `signal` 적용 부분만 렌더링 한다.
-* 렌더링 방지 목적의 `useMemo`, `useCallback` 등의 사용할 필요가 없어진다.
+* `useState`의 변화는 컴포넌트 전체가 다시 렌더링 되는데 `Signals`를 사용하면 `{시그널스변수}` 부분만 다시 렌더링 한다.
+* 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어진다.
 
 ## 설치
 ```sh
@@ -9,28 +9,53 @@ npm install @preact/signals-react
 ```
 
 ## 사용
+### signal, computed
 ```jsx
-import { signal } from '@preact/signals-react';
-const s = signal(null);
-// signal은 컴포넌트와 독립적으로 사용가능 하다.
-function Component() {
-  s.value = 's2';
-  return <div>{s}</div>
+import { signal, computed } from '@preact/signals-react';
+
+const s = signal(0);
+const c = computed(() => {
+  return 'c' + s.value;
+});
+// `Signals`는 컴포넌트와 독립적인 사용가능도 하다.
+
+function Button() {
+  console.log('Button ' + s.value + ' - Render only one time');
+  return (
+    <button onClick={() => {s.value++}}>Change {s}</button>
+  );
+}
+
+export default function Component() {
+  console.log('Component ' + s + ' - Render only one time');
+  return (
+    <div>
+      <div>
+        {s}{/*          Re render */}
+      </div>
+      <Button />{/*     No render again */}
+      <div>{c}</div>{/* Re render only {c} */}
+    </div>
+  );
 }
 ```
 
+### signal, effect
 ```jsx
-import { computed } from '@preact/signals-react';
-const c1 = computed(() => s.value + ' ss');
-<div>{c1}</div>
-```
+import { signal, effect } from '@preact/signals-react';
 
-```jsx
-import { effect } from '@preact/signals-react';
+const s = signal(null);
 effect(() => {
-  if (s.value === null) return; // `const s = signal(null);` 이렇게 생성시에도 `effect 안에 함수`가 실행되므로 생성시는 실행시키지 않는 방법
   console.log(s.value);
+  if (s.value === null) return;
+  // `s.value`를 Component에서 값을 초기화 후에 `API 통신`등을 호출 해야 하는 경우
+  console.log('API 통신');
 });
-// effect 함수안에 `signal 함수`로 생성한 `s`가 있으므로 생성 또는 `s.value`가 변할때 마다 함수가 실행 된다.
-// GPT: effect 함수는 내부적으로 의존성을 추적하기 위해 즉시 실행되어야 한다.
+// `effect() 함수`를 호출하면 `effect 안의 익명 함수`도 내부적 의존성을 추적하기 위해 즉시 호출 시킨다.
+// `s.value`가 의존적이므로 `s.value`가 변할때 마다 `effect 안의 익명 함수`가 다시 호출 된다.
+
+export default function Component() {
+  s.value = 's1';
+  return <div>{s}</div>;
+}
 ```
