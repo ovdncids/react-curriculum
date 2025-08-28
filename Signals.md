@@ -33,6 +33,9 @@ export default function Component() {
       <div>
         {s}{/*          Re render */}
       </div>
+      <div>
+        {s.value}{/*    No render again */}
+      </div>
       <Button />{/*     No render again */}
       <div>{c}</div>{/* Re render only {c} */}
     </div>
