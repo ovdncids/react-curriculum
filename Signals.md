@@ -2,6 +2,7 @@
 * https://github.com/preactjs/signals
 * `useState`의 변화는 컴포넌트 전체가 다시 렌더링 되는데 `Signals`를 사용하면 `{시그널스변수}` 부분만 다시 렌더링 한다.
 * 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어져 `더 이해하기 쉬운 코딩`이 가능하다.
+* 결론: 1. `Vue.js`나 `Svelte`와 구조가 비슷해는 느낌이다. 2. `useState`, `Store`를 사용하지 않고 `Signals`만으로 프로젝트가 가능하다.
 
 ## 설치
 ```sh
