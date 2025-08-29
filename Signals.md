@@ -4,9 +4,8 @@
 * 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어져 `더 이해하기 쉬운 코딩`이 가능하다.
 
 ## 결론
-* `Vue.js`나 `Svelte`와 구조가 비슷해는 느낌이다. (`리렌더링`해야 하는 부분만 선택하는 느낌)
-* `useEffect`, `Store`를 사용하지 않고 `Signals`로 프로젝트가 가능하다.
-* `className 속성`은 `useState`로 `리렌더` 해야 한다.
+* `Vue.js`나 `Svelte`와 구조가 비슷한 느낌이다. (`리렌더링`해야 하는 부분만 `useComputed`로 감싸는 느낌)
+* `useState`, `Store`를 사용하지 않고 `Signals`만으로 프로젝트가 가능하다.
 
 ## 설치
 ```sh
@@ -74,7 +73,7 @@ batch(() => {
 // `batch` 함수는 여러번의 수정을 모아서 한번만 `effect 안의 익명 함수`를 호출한다.
 ```
 
-### Component with effect, useComputed
+### Component with effect
 ```jsx
 import { signal, effect, useComputed } from '@preact/signals-react';
 
@@ -89,35 +88,49 @@ effect(async () => {
 
 export default function Component() {
   s.value = true;
-  return (
-    <button onClick={() => s.value = !s.value}>
-      {useComputed(() => s.value ? 'true' : 'false')}
-    </button>
-  );
+  return <div>{s}</div>;
 }
 ```
 * ❕ `useComputed`는 컴포넌트 안에서 사용한다. `useEffect`는 라이브러리안에 없다.
 
-### className with useSignalEffect
+### Component with useComputed
+```jsx
+import { signal, useComputed } from '@preact/signals-react';
+
+const s = signal(null);
+
+export default function Component() {
+  s.value = true;
+  const c = useComputed(() => s.value ? 'true' : 'false');
+  return (
+    <div className={c}>{/* 리렌더 안된다. className={c} 속성은 문자로만 받기때문에 추적할 수 없다. */}
+      {useComputed(() => (
+        <button
+          className={c.value}
+          onClick={() => s.value = !s.value}
+        >
+          {s.value ? 'true' : 'false'}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+* ❕ `useComputed` 안에서는 `s.value`로 사용하고 `s`의 사용을 피하자.
+
+### Component with useSignalEffect
 ```jsx
 import { signal, useSignalEffect } from '@preact/signals-react';
-import { useState } from 'react';
 
 const s = signal(0);
 
 export default function Component() {
-  const [u, setU] = useState(s.value);
   useSignalEffect(() => {
-    setU(s.value);
+    console.log(s.value);
+    // s.value의 값이 변하면 실행됨
   });
-  console.log('Component render');
   return (
-    <button
-      className={u}
-      onClick={() => s.value += 1}
-    >{s}</button>
+    <button onClick={() => s.value += 1}>{s}</button>
   );
 }
 ```
-* ❕ `className={s}` 이렇게 사용하여도 `className 속성`은 문자로만 받아서 리렌더 되지 않는다.
-* 속성에서 `Signals`를 사용하려면 `useState`를 사용해야 한다.
