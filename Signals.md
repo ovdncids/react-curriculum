@@ -5,7 +5,8 @@
 
 ## 결론
 * `Vue.js`나 `Svelte`와 구조가 비슷해는 느낌이다. (`리렌더링`해야 하는 부분만 선택하는 느낌)
-* `useState`, `Store`를 사용하지 않고 `Signals`만으로 프로젝트가 가능하다.
+* `useEffect`, `Store`를 사용하지 않고 `Signals`로 프로젝트가 가능하다.
+* `className 속성`은 `useState`로 `리렌더` 해야 한다.
 
 ## 설치
 ```sh
@@ -94,6 +95,29 @@ export default function Component() {
     </button>
   );
 }
-
 ```
 * ❕ `useComputed`는 컴포넌트 안에서 사용한다. `useEffect`는 라이브러리안에 없다.
+
+### className with useSignalEffect
+```jsx
+import { signal, useSignalEffect } from '@preact/signals-react';
+import { useState } from 'react';
+
+const s = signal(0);
+
+export default function Component() {
+  const [u, setU] = useState(s.value);
+  useSignalEffect(() => {
+    setU(s.value);
+  });
+  console.log('Component render');
+  return (
+    <button
+      className={u}
+      onClick={() => s.value += 1}
+    >{s}</button>
+  );
+}
+```
+* ❕ `className={s}` 이렇게 사용하여도 `className 속성`은 문자로만 받아서 리렌더 되지 않는다.
+* 속성에서 `Signals`를 사용하려면 `useState`를 사용해야 한다.
