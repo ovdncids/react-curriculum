@@ -2,7 +2,10 @@
 * https://github.com/preactjs/signals
 * `useState`의 변화는 컴포넌트 전체가 다시 렌더링 되는데 `Signals`를 사용하면 `{시그널스변수}` 부분만 다시 렌더링 한다.
 * 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어져 `더 이해하기 쉬운 코딩`이 가능하다.
-* 결론: 1. `Vue.js`나 `Svelte`와 구조가 비슷해는 느낌이다. 2. `useState`, `Store`를 사용하지 않고 `Signals`만으로 프로젝트가 가능하다.
+
+## 결론
+* `Vue.js`나 `Svelte`와 구조가 비슷해는 느낌이다. (`리렌더링`해야 하는 부분만 선택하는 느낌)
+* `useState`, `Store`를 사용하지 않고 `Signals`만으로 프로젝트가 가능하다.
 
 ## 설치
 ```sh
@@ -52,12 +55,14 @@ import { signal, effect, batch } from '@preact/signals-react';
 const s = signal(0);
 effect(() => {
   console.log(s.value);
-  // s.value = 1;
+  // s.value = s.peek() + 1;
 });
 // `effect() 함수`를 호출하면 `effect 안의 익명 함수`도 내부적 의존성을 추적하기 위해 즉시 호출 시킨다.
 // `s.value`는 읽기이므로 의존성이 추적된다. `s.value`가 변할때 마다 `effect 안의 익명 함수`가 다시 호출 된다.
 // `s.value = 1;`는 쓰기이므로 의존성이 추적되지 않는다.
-// `s.value++;`는 읽고 쓰기이다.
+// `s.value = s.value + 1` 이렇게 사용하면 `s.value`을 읽었으므로 추적되지만
+// `s.value = s.peek() + 1` 이렇게 사용하면 `peek` 함수가 `s.value`의 읽기를 회피할 수 있다.
+// `peek` 함수는 `effect` 함수에서만 사용하면 된다.
 s.value++;
 s.value++;
 batch(() => {
@@ -68,9 +73,9 @@ batch(() => {
 // `batch` 함수는 여러번의 수정을 모아서 한번만 `effect 안의 익명 함수`를 호출한다.
 ```
 
-### Component with effect
+### Component with effect, useComputed
 ```jsx
-import { signal, effect } from '@preact/signals-react';
+import { signal, effect, useComputed } from '@preact/signals-react';
 
 const s = signal(null);
 effect(async () => {
@@ -82,7 +87,13 @@ effect(async () => {
 });
 
 export default function Component() {
-  s.value = 's';
-  return <div>{s}</div>;
+  s.value = true;
+  return (
+    <button onClick={() => s.value = !s.value}>
+      {useComputed(() => s.value ? 'true' : 'false')}
+    </button>
+  );
 }
+
 ```
+* ❕ `useComputed`는 컴포넌트 안에서 사용한다. `useEffect`는 라이브러리안에 없다.
