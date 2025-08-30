@@ -1,12 +1,12 @@
 # Signals (@preact/signals-react@3.3.0)
 * https://github.com/preactjs/signals
-* `useState`의 변화는 컴포넌트 전체가 리렌더링 되는데 `Signals`를 사용하면 `{시그널스변수}` 부분만 리렌더링 한다.
-* 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어져 `더 이해하기 쉬운 코딩`이 가능하다.
+* `useState`, `Store`의 변화는 컴포넌트 전체가 리렌더링 되는데, `Signals`는 `리렌더링`해야 하는 부분만 신경써서 코딩 해야한다.
+* 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어지고 `useEffect`의 의존성이 약화되어 `더 이해하기 쉬운 코딩`이 가능하다.
 
 ## 결론
+* `Signals`의 `useComputed`는 `리렌더링`해야 하는 부분을 감싸고, `useMemo`는 `리렌더링`하지 말아야 할 부분을 감싼다.
+* `useState`, `Store`등의 `리렌더링`를 도구를 사용하지 않고, `Signals`의 `리렌더링` 방식으로 프로젝트가 가능하다.
 * `Vue.js`나 `Svelte`와 구조가 비슷해지는 느낌이다.
-* `Signals`의 `useComputed`는 `리렌더링`돼야 하는 부분을 감싸고, `useMemo`는 `리렌더링`하지 말아야 할 부분을 감싼다.
-* `useState`, `Store`등의 리렌더링를 도구를 사용하지 않고, `Signals`의 리렌더링 방식으로 프로젝트가 가능하다.
 
 ## 설치
 ```sh
@@ -118,7 +118,7 @@ export default function Component() {
 }
 ```
 * `useComputed`는 `use`로 시작하므로 컴포넌트 안에서 사용하는 `Hook 함수`이다.
-* ❕ `useComputed` 안에서 className={c}로 사용하면 `리렌더링` 되지 않는다. `useComputed` 안에서 `{c}`의 사용을 피하자.
+* ❕ `useComputed` 안에서 `className={c}`로 사용하면 `리렌더링` 되지 않는다. `useComputed` 안에서 `{c}`의 사용을 피하자.
 
 ### Component with useSignalEffect
 * `useSignalEffect` 함수는 `s.value`가 변경되면 실행된다. 필요할때 찾아보자.
