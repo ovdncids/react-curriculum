@@ -117,7 +117,7 @@ export default function Component() {
   );
 }
 ```
-* `useComputed`는 `use`로 시작하므로 컴포넌트 안에서 사용해야하는 `Hook 함수`이다.
+* `useComputed`는 `use`로 시작하므로 컴포넌트 안에서만 사용하는 `Hook 함수`이다.
 * ❕ `useComputed` 안에서 `className={c}`로 사용하면 `리렌더링` 되지 않는다. `useComputed` 안에서 `{c}`의 사용을 피하자.
 
 ### Component with useSignalEffect
