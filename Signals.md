@@ -104,7 +104,7 @@ export default function Component() {
   s.value = true;
   const c = useComputed(() => s.value ? 'true' : 'false');
   return (
-    <div className={c}>{/* 리렌더링 안된다. className={c} 속성은 문자로만 받기때문에 추적할 수 없다. */}
+    <div className={c}>{/* 리렌더링 안된다. `className 속성`은 `{c}`를 문자로만 받기때문에 추적할 수 없다. */}
       {useComputed(() => (
         <button
           className={c.value}
