@@ -6,7 +6,7 @@
 npm install react-redux @reduxjs/toolkit
 ```
 
-### 상대 경로 절대 경로로 수정하기 (import 자동 완성)
+### 상대 경로 절대 경로로 수정하기
 jsconfig.json
 ```json
 {
