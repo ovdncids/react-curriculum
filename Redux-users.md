@@ -19,6 +19,7 @@ jsconfig.json
 }
 ```
 * TS: tsconfig.json
+* ❕ `import { usersState } from 'store/users/usersSlice.js';` 이런식으로 사용한다.
 
 ## Users 리듀서 생성
 src/store/users/usersSlice.js
