@@ -765,9 +765,10 @@ import { searchActions } from '../../stores/searchStore.js';
 
 function Search() {
   const users = usersStore((state) => state).users;
-  console.log(users);
+  const q = '';
+  console.log(q, users);
   useEffect(() => {
-    searchActions.searchRead('');
+    searchActions.searchRead(q);
   }, []);
   return (
     <div>
@@ -805,50 +806,54 @@ function Search() {
 export default Search;
 ```
 
-## Search Component에서만 사용 가능한 state값 적용
+## SearchBar Component에서만 사용 가능한 state값 적용
 src/components/contents/Search.js
 ```diff
 - import { useEffect } from 'react';
 + import { useState, useEffect } from 'react';
 ```
 ```js
-const [ q, setQ ] = useState('');
-const searchRead = (event) => {
-  event.preventDefault();
-  searchActions.searchRead(q);
-};
+function SearchBar(props) {
+  const [ q, setQ ] = useState('');
+  console.log('SearchBar', props.q);
+  return (
+    <div>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        searchActions.searchRead(q);
+      }}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
+  );
+}
 ```
 ```diff
-- <form>
--   <input type="text" placeholder="Search" />
--   <button>Search</button>
-- </form>
-```
-```js
-<form onSubmit={(event) => {searchRead(event)}}>
-  <input
-    type="text" placeholder="Search"
-    value={q}
-    onChange={(event) => {setQ(event.target.value)}}
-  />
-  <button>Search</button>
-</form>
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
++ <SearchBar q={q} />
 ```
 
 ## Search Component 쿼리스트링 변경
 src/components/contents/Search.js
+```js
+import { useNavigate } from 'react-router-dom';
+```
 ```diff
-- function Search() {
+- function SearchBar(props) {
 ```
 ```js
-import { useLocation, useNavigate } from 'react-router-dom';
-
-function Search() {
-  const location = useLocation();
+function SearchBar(props) {
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
-  const _q = searchParams.get('q') || '';
-  console.log(_q);
 ```
 ```diff
 - searchActions.searchRead(q);
@@ -858,30 +863,31 @@ function Search() {
 
 ## Search Component 새로고침 적용
 ```diff
-- useEffect(() => {
--   searchActions.searchRead('');
-- }, []);
+- import { useNavigate } from 'react-router-dom';
++ import { useNavigate, useLocation } from 'react-router-dom';
+```
+```diff
+- const q = '';
 ```
 ```js
-useEffect(() => {
-  searchActions.searchRead(_q);
-  setQ(_q);
-}, [_q]);
+const location = useLocation();
+const searchParams = new URLSearchParams(location.search);
+const q = searchParams.get('q') || '';
 ```
-* ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
-* <details><summary>정답</summary>
+`검색`, `새로고침` 해보기
 
-  ```diff
-  - const [ q, setQ ] = useState('');
-  + const [ q, setQ ] = useState(_q);
-  ```
-  ```js
-  // 그래도 3번 랜더링 된다면
-  if (q !== _q) setQ(_q);
-  <button type="button" onClick={() => setQ('')}>3번 눌러보기</button>
-  ```
+```diff
+useEffect(() => {
+  searchActions.searchRead(q);
+- }, []);
++ }, [q]);
+```
+`검색`, `새로고침` 해보기
 
-</details>
+```diff
+- const [ q, setQ ] = useState('');
++ const [ q, setQ ] = useState(props.q);
+```
 
 ## Proxy 설정
 package.json
