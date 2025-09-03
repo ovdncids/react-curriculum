@@ -809,6 +809,7 @@ function SearchBar(props) {
 - </div>
 + <SearchBar q={q} />
 ```
+* `useSignal`은 `use`로 시작하므로 컴포넌트 안에서만 사용하는 `Hook 함수`이다.
 * `useSignal`과 `useState` 비교하기
 
 ## Search Component 쿼리스트링 변경
@@ -845,9 +846,16 @@ q.value = searchParams.get('q') || '';
 console.log(q.value);
 ```
 * `새로고침`, `검색`, `뒤로가기` 해보기
+<!--
 * `const q = useSignal(props.q);` -> `const q = useSignal(props.q.vlaue);` 변경 후 `새로고침`, `검색`, `뒤로가기` 해보기
 * `ChatGPT`에 이유 물어보기
-
+```jsx
+Search.js 복사
+```
+여기에서
+const q = useSignal(props.q); 이렇게 하면 <input />에서 리렌더 되고
+const q = useSignal(props.q.value); 이렇게 하면 <input />에서 리렌더 안되는 이유는?
+-->
 * ❔ `새로고침`하면 API 호출이 2번 되고 있다. API 호출이 1번만 되게 하려면 (`const q = signal('');`와 `effect 안`의 함수 수정)
 * <details><summary>정답</summary>
 
