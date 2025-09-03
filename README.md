@@ -1,4 +1,4 @@
-# React
+# React (19.1.1)
 [데모](https://curriculums-min.web.app)
 
 <!-- ## 용어
@@ -6,7 +6,7 @@
 
 **Markdown**: 주로 README.md 파일로 많이 쓰이고, 현재 이 문서도 Markdown으로 만들어짐. 화려한 레이아웃 업이 Text로 정보 전달 할때 많이 사용한다. -->
 
-## Node.js
+## Node.js (20.19.4)
 https://nodejs.org
 
 ## NVM (Node Version Manager)
@@ -237,17 +237,17 @@ https://www.youtube.com/watch?v=eprXmC_j9A4
 
 **현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능. -->
 
-## React Component 만들기
+## React Layout Component 만들기
 Header, Nav, Footer 이렇게 Component 별로 파일을 나눈다.
 
 src/App.js
 ```js
-import Header from './components/Header.js';
-import Nav from './components/Nav.js';
-import Footer from './components/Footer.js';
+import Header from './components/layout/Header.js';
+import Nav from './components/layout/Nav.js';
+import Footer from './components/layout/Footer.js';
 ```
 
-src/components/Header.js
+src/components/layout/Header.js
 ```js
 function Header(props) {
   console.log(props);
@@ -281,7 +281,7 @@ src/App.js
 ```
 * `props`: 설명, `Properties`의 줄임말
 
-## React Router DOM
+## React Router DOM (7.8.2)
 https://reacttraining.com/react-router
 
 ### 설치
@@ -290,33 +290,47 @@ npm install react-router-dom
 ```
 
 ### Router 만들기
+src/index.js
+```js
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import Users from './pages/Users.js';
+import Search from './pages/Search.js';
+
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: [
+        { path: '/users', element: <Users /> },
+        { path: '/search', element: <Search /> },
+        {
+          index: true,
+          element: <Navigate replace to="/users" />
+        }
+      ]
+    }
+  ]
+);
+```
+```diff
+- <App />
++ <RouterProvider router={router} />
+```
+
 src/App.js
 ```js
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Users from './components/contents/Users.js';
-import Search from './components/contents/Search.js';
+import { Outlet } from 'react-router-dom';
 ```
 ```diff
 - <div>
 -   <h3>Users</h3>
 -   <p>Contents</p>
 - </div>
++ <Outlet />
 ```
-```js
-<BrowserRouter>
-  <Routes>
-    <Route path="/users" element={<Users />} />
-    <Route path="/search" element={<Search />} />
-    <Route path="*" element={<Navigate replace to="/users" />} />
-  </Routes>
-</BrowserRouter>
-```
-<!--
-<Route exact={true} path="/users" render={props => <Users {...props} testProps={true} />} />
-render는 render={Users} 이렇게 사용할 수 없다.
--->
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 function Users() {
   return (
@@ -330,33 +344,17 @@ function Users() {
 export default Users;
 ```
 
-src/components/contents/Search.js (동일)
+src/pages/Search.js (동일)
 
 **주소 창에서 router 바꾸어 보기**
 
-src/components/Nav.js
+src/components/layout/Nav.js
 ```js
 import { NavLink } from 'react-router-dom';
 
 <li><h2><NavLink to="users" className={({ isActive }) => isActive ? 'active' : ''}>Users</NavLink></h2></li>
 <li><h2><NavLink to="search" className={({ isActive }) => isActive ? 'active' : ''}>Search</NavLink></h2></li>
 ```
-**You should not use `<Link>` outside a `<Router>` 설명**
-
-<!-- history.push 자식으로 넘기기
-```js
-<A1 {...props}></A1>
-
-function A1(props) {
-  return (
-    <button onClick={() => {props.history.push('/b')}}>
-      A1
-    </button>
-  );
-}
-``` -->
-
-<!-- **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함 -->
 
 **React.StrictMode 설명**
 
@@ -372,36 +370,46 @@ Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽�
 
 Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한다.
 
-## Zustand 설치
-https://github.com/pmndrs/zustand
+## Signals 설치 (3.3.0)
+* https://github.com/preactjs/signals
 ```sh
-npm install zustand
+npm install @preact/signals-react
 ```
 
 ## Users Store 생성
 src/stores/usersStore.js
 ```js
-import { create } from 'zustand';
+import { signal } from '@preact/signals-react';
 
-export const usersStore = create(() => ({
-  users: [],
-  user: {
+export const usersState = {
+  users: signal([]),
+  user: signal({
     name: '',
     age: ''
-  }
-}));
+  })
+};
 ```
+* <details><summary>TS: (state: UsersStore)</summary>
 
-## Users Component Zustand Store 주입
-src/components/contents/Users.js
+  ```ts
+  interface User {
+    name: string
+    age: string | number
+  }
+  interface UsersStore {
+    users: User[]
+    user: User
+  }
+  ```
+</details>
+
+## Users Component Signals Store 주입
+src/pages/Users.js
 ```js
-import { usersStore } from '../../stores/usersStore.js';
+import { usersState } from '../stores/usersStore.js';
 
 function Users() {
-  const usersState = usersStore((state) => state);
-  const user = usersState.user;
-  const users = usersState.users;
-  console.log(user, users);
+  console.log(usersState.users.value, usersState.user.value);
   return (
     <div>
       <h3>Users</h3>
@@ -442,99 +450,86 @@ function Users() {
 export default Users;
 ```
 
+### 상대 경로 절대 경로로 수정하기
+jsconfig.json
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  }
+}
+```
+* TS: tsconfig.json
+
+```diff
+- import { usersState } from '../stores/usersStore.js';
++ import { usersState } from 'stores/usersStore.js';
+```
+* `npm start` 재시작
+
 ## Users Store CRUD
 ### Create
 src/stores/usersStore.js
 ```js
 export const usersActions = {
-  userSet: (user) => {
-    usersStore.setState({ user });
-  },
   usersCreate: (user) => {
-    usersStore.setState((state) => {
-      state.users.push({
-        ...user
-      });
-      return {
-        users: state.users
-      };
-    });
+    const users = [...usersState.users.value];
+    users.push({...user.value});
+    usersState.users.value = users;
+    console.log(usersState.users.value);
   }
 };
 ```
-* `전개 구조` 설명 하기
-* `action` 안에서 `state` 사용 `usersStore.getState().user`
-* <details><summary>TS: (state: UsersStore)</summary>
 
-  ```ts
-  interface User {
-    name: string
-    age: string | number
-  }
-  interface UsersStore {
-    users: User[]
-    user: User
-  }
-  ```
-</details>
-
-### Zustand 특징
-* `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
-* `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
-
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
-- import { usersStore } from '../../stores/usersStore.js';
-+ import { usersStore, usersActions } from '../../stores/usersStore.js';
+- import { usersState } from 'stores/usersStore.js';
++ import { usersState, usersActions } from 'stores/usersStore.js';
 ```
 ```js
 <input
-  type="text" placeholder="Name" value={user.name}
+  type="text" placeholder="Name" value={usersState.user.name}
   onChange={(event) => {
-    user.name = event.target.value;
-    usersActions.userSet(user);
+    usersState.user.value.name = event.target.value;
   }}
 />
 <input
-  type="text" placeholder="Age" value={user.age}
+  type="text" placeholder="Age" value={usersState.user.age}
   onChange={(event) => {
-    user.age = event.target.value;
-    usersActions.userSet(user);
+    usersState.user.value.age = event.target.value;
   }}
 />
 <button onClick={() => {
-  usersActions.usersCreate(user);
+  usersActions.usersCreate(usersState.user);
 }}>Create</button>
 ```
+* `전개 구조` 설명 하기
 
 ### Read
 src/stores/usersStore.js
 ```js
 usersRead: () => {
-  usersStore.setState((state) => {
-    state.users.push({
+  usersState.users.value = [
+    {
       name: '홍길동',
       age: 20
     }, {
       name: '춘향이',
       age: 16
-    });
-    return {
-      users: state.users
-    };
-  });
+    }
+  ];
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 import { useEffect } from 'react';
+import { useComputed } from '@preact/signals-react';
 
 useEffect(() => {
-  usersActions.userSet({
-    name: '',
-    age: ''
-  });
   usersActions.usersRead();
 }, []);
 ```
@@ -550,32 +545,33 @@ useEffect(() => {
 - </tr>
 ```
 ```js
-{users.map((user, index) => (
-  <tr key={index}>
-    <td>{user.name}</td>
-    <td>{user.age}</td>
-    <td>
-      <button>Update</button>
-      <button>Delete</button>
-    </td>
-  </tr>
-))}
+{useComputed(() => {
+  console.log('usersState.users - 렌더링', usersState.users.value);
+  return usersState.users.value.map((user, index) => (
+    <tr key={index}>
+      <td>{user.name}</td>
+      <td>{user.age}</td>
+      <td>
+        <button>Update</button>
+        <button>Delete</button>
+      </td>
+    </tr>
+  ));
+})}
 ```
+* [Signals 특징](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md)
 
 ### Delete
 src/stores/usersStore.js
 ```js
 usersDelete: (index) => {
-  usersStore.setState((state) => {
-    state.users.splice(index, 1);
-    return {
-      users: state.users
-    };
-  });
+  const users = [...usersState.users.value];
+  users.splice(index, 1);
+  usersState.users.value = users;
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <button>Delete</button>
 ```
@@ -589,22 +585,14 @@ src/components/contents/Users.js
 ### Update
 src/stores/usersStore.js
 ```js
-usersSet: (users) => {
-  usersStore.setState({ users });
-},
-```
-```js
 usersUpdate: (index, user) => {
-  usersStore.setState((state) => {
-    state.users[index] = user;
-    return {
-      users: state.users
-    };
-  });
+  const users = [...usersState.users.value];
+  users[index] = user;
+  usersState.users.value = users;
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <td>{user.name}</td>
 - <td>{user.age}</td>
@@ -614,8 +602,9 @@ src/components/contents/Users.js
   <input
     type="text" placeholder="Name" value={user.name}
     onChange={(event) => {
-      user.name = event.target.value;
-      usersActions.usersSet(users);
+      const users = [...usersState.users.value];
+      users[index].name = event.target.value;
+      usersState.users.value = users;
     }}
   />
 </td>
@@ -623,8 +612,9 @@ src/components/contents/Users.js
   <input
     type="text" placeholder="Age" value={user.age}
     onChange={(event) => {
-      user.age = event.target.value;
-      usersActions.usersSet(users);
+      const users = [...usersState.users.value];
+      users[index].age = event.target.value;
+      usersState.users.value = users;
     }}
   />
 </td>
@@ -656,32 +646,19 @@ https://github.com/axios/axios
 npm install axios
 ```
 
-### Axios common 에러 처리
-src/stores/common.js
-```js
-export const axiosError = (error) => {
-  console.error(error.response || error.message || error);
-};
-```
-
 ### Read
 src/stores/usersStore.js
 ```js
 import axios from 'axios';
-import { axiosError } from './common.js';
 ```
 ```diff
 - usersRead: () => {
 ```
 ```js
 usersRead: async () => {
-  try {
-    const response = await axios.get('http://localhost:3100/api/v1/users');
-    console.log('Done usersRead', response);
-    usersActions.usersSet(response.data.users);
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.get('http://localhost:3100/api/v1/users');
+  console.log('Done usersRead', response);
+  usersState.users.value = response.data.users;
 },
 ```
 
@@ -709,13 +686,9 @@ src/stores/usersStore.js
 ```
 ```js
 usersDelete: async (index) => {
-  try {
-    const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
-    console.log('Done usersDelete', response);
-    usersActions.usersRead();
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
+  console.log('Done usersDelete', response);
+  usersActions.usersRead();
 },
 ```
 
@@ -726,49 +699,41 @@ src/stores/usersStore.js
 ```
 ```js
 usersUpdate: async (index, user) => {
-  try {
-    const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
-    console.log('Done usersUpdate', response);
-    usersActions.usersRead();
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
+  console.log('Done usersUpdate', response);
+  usersActions.usersRead();
 }
 ```
 
 ## Search Store 만들기
 src/stores/searchStore.js
 ```js
-import { usersActions } from './usersStore.js';
 import axios from 'axios';
-import { axiosError } from './common.js';
+import { usersState } from './usersStore.js';
 
 export const searchActions = {
   searchRead: async (q) => {
-    try {
-      const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
-      console.log('Done searchRead', response);
-      usersActions.usersSet(response.data.users);
-    } catch(error) {
-      axiosError(error);
-    }
+    const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
+    console.log('Done searchRead', response);
+    usersState.users.value = response.data.users;
   }
 };
 ```
 
-### Search Component Zustand Store 주입
-src/components/contents/Search.js
+### Search Component Signals Store 주입
+src/pages/Search.js
 ```js
-import { useEffect } from 'react';
-import { usersStore } from '../../stores/usersStore.js';
-import { searchActions } from '../../stores/searchStore.js';
+import { signal, effect, useComputed } from '@preact/signals-react';
+import { usersState } from 'stores/usersStore.js';
+import { searchActions } from 'stores/searchStore.js';
+
+const q = signal('');
+effect(() => {
+  searchActions.searchRead(q.value);
+});
 
 function Search() {
-  const users = usersStore((state) => state).users;
-  console.log(users);
-  useEffect(() => {
-    searchActions.searchRead('');
-  }, []);
+  console.log(usersState.users.value);
   return (
     <div>
       <h3>Search</h3>
@@ -789,12 +754,15 @@ function Search() {
             </tr>
           </thead>
           <tbody>
-          {users.map((user, index) => (
-            <tr key={index}>
-              <td>{user.name}</td>
-              <td>{user.age}</td>
-            </tr>
-          ))}
+            {useComputed(() => {
+              console.log('usersState.users - 렌더링', usersState.users.value);
+              return usersState.users.value.map((user, index) => (
+                <tr key={index}>
+                  <td>{user.name}</td>
+                  <td>{user.age}</td>
+                </tr>
+              ));
+            })}
           </tbody>
         </table>
       </div>
@@ -805,80 +773,93 @@ function Search() {
 export default Search;
 ```
 
-## Search Component에서만 사용 가능한 state값 적용
-src/components/contents/Search.js
+## SearchBar Component에서만 사용 가능한 state값 적용
+src/pages/Search.js
 ```diff
-- import { useEffect } from 'react';
-+ import { useState, useEffect } from 'react';
+- import { signal, effect, useComputed } from '@preact/signals-react';
++ import { signal, effect, useComputed, useSignal } from '@preact/signals-react';
 ```
 ```js
-const [ q, setQ ] = useState('');
-const searchRead = (event) => {
-  event.preventDefault();
-  searchActions.searchRead(q);
-};
+function SearchBar(props) {
+  const q = useSignal('');
+  console.log('SearchBar');
+  return (
+    <div>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        props.q.value = q.value;
+      }}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {q.value = event.target.value}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
+  );
+}
 ```
 ```diff
-- <form>
--   <input type="text" placeholder="Search" />
--   <button>Search</button>
-- </form>
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
++ <SearchBar q={q} />
 ```
-```js
-<form onSubmit={(event) => {searchRead(event)}}>
-  <input
-    type="text" placeholder="Search"
-    value={q}
-    onChange={(event) => {setQ(event.target.value)}}
-  />
-  <button>Search</button>
-</form>
-```
+* `useSignal`과 `useState` 비교하기
 
 ## Search Component 쿼리스트링 변경
-src/components/contents/Search.js
+src/pages/Search.js
+```js
+import { useNavigate } from 'react-router-dom';
+```
 ```diff
-- function Search() {
+- const q = useSignal('');
 ```
 ```js
-import { useLocation, useNavigate } from 'react-router-dom';
-
-function Search() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
-  const _q = searchParams.get('q') || '';
-  console.log(_q);
+const navigate = useNavigate();
+const q = useSignal(props.q);
 ```
 ```diff
-- searchActions.searchRead(q);
-+ navigate('/search?q=' + q);
+- props.q.value = q.value;
++ navigate('/search?q=' + q.value);
 ```
-`검색`, `뒤로가기` 해보기
+* `검색`, `뒤로가기` 해보기
 
 ## Search Component 새로고침 적용
+src/pages/Search.js
 ```diff
-- useEffect(() => {
--   searchActions.searchRead('');
-- }, []);
+- import { useNavigate } from 'react-router-dom';
++ import { useNavigate, useLocation } from 'react-router-dom';
+```
+```diff
+- console.log(usersState.users.value);
 ```
 ```js
-useEffect(() => {
-  searchActions.searchRead(_q);
-  setQ(_q);
-}, [_q]);
+const location = useLocation();
+const searchParams = new URLSearchParams(location.search);
+q.value = searchParams.get('q') || '';
+console.log(q.value);
 ```
-* ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
+* `새로고침`, `검색`, `뒤로가기` 해보기
+* `const q = useSignal(props.q);` -> `const q = useSignal(props.q.vlaue);` 변경 후 `새로고침`, `검색`, `뒤로가기` 해보기
+* `ChatGPT`에 이유 물어보기
+
+* ❔ `새로고침`하면 API 호출이 2번 되고 있다. API 호출이 1번만 되게 하려면 (`const q = signal('');`와 `effect 안`의 함수 수정)
 * <details><summary>정답</summary>
 
   ```diff
-  - const [ q, setQ ] = useState('');
-  + const [ q, setQ ] = useState(_q);
+  - const q = signal('');
+  + const q = signal(null);
   ```
   ```js
-  // 그래도 3번 랜더링 된다면
-  if (q !== _q) setQ(_q);
-  <button type="button" onClick={() => setQ('')}>3번 눌러보기</button>
+  effect(() => {
+    if (q.value === null) return;
+    searchActions.searchRead(q.value);
+  });
   ```
 
 </details>
@@ -900,33 +881,4 @@ package.json
 npm start
 ```
 
-<!-- ## Express에 build된 파일 넣기
-package.json
-```json
-"build": "react-scripts build && rm -fr ../express/public && mv build ../express/public",
-``` -->
-
-<!-- ## React for IE11
-```sh
-npm install react-app-polyfill
-```
-
-package.json
-```diff
-"browserslist": {
-  "development": [
-+   "ie 11",
-```
-
-src/index.js
-```js
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
-``` -->
-
 # 수고 하셨습니다.
-
-<!--
-예전 라이프 사이클(Life cycle)
-https://coding-hyeok.tistory.com/5
--->
