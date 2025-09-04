@@ -394,12 +394,16 @@ export const usersState = {
   ```ts
   interface User {
     name: string
-    age: string | number
+    age: string
   }
-  interface UsersStore {
-    users: User[]
-    user: User
-  }
+  
+  export const usersState = {
+    users: signal<User[]>([]),
+    user: signal<User>({
+      name: '',
+      age: ''
+    })
+  };
   ```
 </details>
 
@@ -507,6 +511,36 @@ src/pages/Users.js
 }}>Create</button>
 ```
 * `전개 구조` 설명 하기
+* <details><summary>TS: Property 'age' does not exist on type 'Signal<User>'.</summary>
+
+  ```tsx
+  {useComputed(() => {
+    console.log('Create', usersState.user.value);
+    return (
+      <>
+        <input
+          type="text" placeholder="Name" value={usersState.user.value.name}
+          onChange={(event) => {
+            usersState.user.value = {
+              ...usersState.user.value,
+              name: event.target.value
+            }
+          }}
+        />
+        <input
+          type="text" placeholder="Age" value={usersState.user.value.age}
+          onChange={(event) => {
+            usersState.user.value = {
+              ...usersState.user.value,
+              age: event.target.value
+            }
+          }}
+        />
+      </>
+    );
+  })}
+  ```
+</details>
 
 ### Read
 src/stores/usersStore.js
