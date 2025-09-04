@@ -799,7 +799,7 @@ src/pages/Search.js
 ```js
 function SearchBar(props) {
   const q = signal('');
-  console.log('SearchBar');
+  console.log('SearchBar', q.value);
   return (
     <div>
       <form onSubmit={(event) => {
@@ -824,7 +824,7 @@ function SearchBar(props) {
 -     <button>Search</button>
 -   </form>
 - </div>
-+ <SearchBar q={q.value} />
++ <SearchBar q={q} />
 ```
 * <details><summary>TS: Type 'Signal<string>' is not assignable to type 'string | number | readonly string[] | undefined'.</summary>
 
