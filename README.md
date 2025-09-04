@@ -413,7 +413,7 @@ src/pages/Users.js
 import { usersState } from '../stores/usersStore.js';
 
 function Users() {
-  console.log(usersState.users.value, usersState.user.value);
+  console.log('Users', usersState.users.value, usersState.user.value);
   return (
     <div>
       <h3>Users</h3>
@@ -504,28 +504,31 @@ import { useComputed } from '@preact/signals-react';
 ```
 ```js
 {useComputed(() => {
-  console.log('Create', usersState.user.value);
+  console.log('Create.name', usersState.user.value.name);
   return (
-    <>
-      <input
-        type="text" placeholder="Name" value={usersState.user.value.name}
-        onChange={(event) => {
-          usersState.user.value = {
-            ...usersState.user.value,
-            name: event.target.value
-          }
-        }}
-      />
-      <input
-        type="text" placeholder="Age" value={usersState.user.value.age}
-        onChange={(event) => {
-          usersState.user.value = {
-            ...usersState.user.value,
-            age: event.target.value
-          }
-        }}
-      />
-    </>
+    <input
+      type="text" placeholder="Name" value={usersState.user.value.name}
+      onChange={(event) => {
+        usersState.user.value = {
+          ...usersState.user.value,
+          name: event.target.value
+        }
+      }}
+    />
+  );
+})}
+{useComputed(() => {
+  console.log('Create.age', usersState.user.value.age);
+  return (
+    <input
+      type="text" placeholder="Age" value={usersState.user.value.age}
+      onChange={(event) => {
+        usersState.user.value = {
+          ...usersState.user.value,
+          age: event.target.value
+        }
+      }}
+    />
   );
 })}
 <button onClick={() => {
@@ -845,7 +848,7 @@ import { useNavigate } from 'react-router-dom';
 ```
 ```js
 const navigate = useNavigate();
-const q = signal(props.q);
+const q = signal(props.q.value);
 ```
 ```diff
 - props.q.value = q.value;
