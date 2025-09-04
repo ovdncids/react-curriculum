@@ -394,7 +394,7 @@ export const usersState = {
   ```ts
   interface User {
     name: string
-    age: string
+    age: string | number
   }
   
   export const usersState = {
@@ -489,58 +489,44 @@ export const usersActions = {
 ```
 
 src/pages/Users.js
+```js
+import { useComputed } from '@preact/signals-react';
+```
 ```diff
 - import { usersState } from 'stores/usersStore.js';
 + import { usersState, usersActions } from 'stores/usersStore.js';
 ```
 ```js
-<input
-  type="text" placeholder="Name" value={usersState.user.name}
-  onChange={(event) => {
-    usersState.user.value.name = event.target.value;
-  }}
-/>
-<input
-  type="text" placeholder="Age" value={usersState.user.age}
-  onChange={(event) => {
-    usersState.user.value.age = event.target.value;
-  }}
-/>
+{useComputed(() => {
+  console.log('Create', usersState.user.value);
+  return (
+    <>
+      <input
+        type="text" placeholder="Name" value={usersState.user.value.name}
+        onChange={(event) => {
+          usersState.user.value = {
+            ...usersState.user.value,
+            name: event.target.value
+          }
+        }}
+      />
+      <input
+        type="text" placeholder="Age" value={usersState.user.value.age}
+        onChange={(event) => {
+          usersState.user.value = {
+            ...usersState.user.value,
+            age: event.target.value
+          }
+        }}
+      />
+    </>
+  );
+})}
 <button onClick={() => {
   usersActions.usersCreate(usersState.user);
 }}>Create</button>
 ```
 * `전개 구조` 설명 하기
-* <details><summary>TS: Property 'age' does not exist on type 'Signal<User>'.</summary>
-
-  ```tsx
-  {useComputed(() => {
-    console.log('Create', usersState.user.value);
-    return (
-      <>
-        <input
-          type="text" placeholder="Name" value={usersState.user.value.name}
-          onChange={(event) => {
-            usersState.user.value = {
-              ...usersState.user.value,
-              name: event.target.value
-            }
-          }}
-        />
-        <input
-          type="text" placeholder="Age" value={usersState.user.value.age}
-          onChange={(event) => {
-            usersState.user.value = {
-              ...usersState.user.value,
-              age: event.target.value
-            }
-          }}
-        />
-      </>
-    );
-  })}
-  ```
-</details>
 
 ### Read
 src/stores/usersStore.js
@@ -561,7 +547,6 @@ usersRead: () => {
 src/pages/Users.js
 ```js
 import { useEffect } from 'react';
-import { useComputed } from '@preact/signals-react';
 
 useEffect(() => {
   usersActions.usersRead();
@@ -580,7 +565,7 @@ useEffect(() => {
 ```
 ```js
 {useComputed(() => {
-  console.log('usersState.users - 렌더링', usersState.users.value);
+  console.log('Read', usersState.users.value);
   return usersState.users.value.map((user, index) => (
     <tr key={index}>
       <td>{user.name}</td>
@@ -789,7 +774,7 @@ function Search() {
           </thead>
           <tbody>
             {useComputed(() => {
-              console.log('usersState.users - 렌더링', usersState.users.value);
+              console.log('Search', usersState.users.value);
               return usersState.users.value.map((user, index) => (
                 <tr key={index}>
                   <td>{user.name}</td>
