@@ -886,7 +886,7 @@ useEffect(() => {
   searchActions.searchRead(q);
 }, [q]);
 ```
-* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더`될 일이 없으므로 `useEffect의 [q]` 의존성을 정상 동작한다.
+* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더`될 일이 없으므로 `useEffect의 [q]` 의존성을 지워도 `무한 리렌더` 되지 않는다.
 ```diff
 - }, [q]);
 + });
