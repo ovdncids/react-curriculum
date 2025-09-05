@@ -747,17 +747,17 @@ export const searchActions = {
 ### Search Component Signals Store 주입
 src/pages/Search.js
 ```js
-import { signal, effect, useComputed } from '@preact/signals-react';
-import { usersState } from 'stores/usersStore.js';
-import { searchActions } from 'stores/searchStore.js';
-
-const q = signal('');
-effect(() => {
-  searchActions.searchRead(q.value);
-});
+import { useEffect } from 'react';
+import { useComputed } from '@preact/signals-react';
+import { usersState } from 'stores/usersStore';
+import { searchActions } from 'stores/searchStore';
 
 function Search() {
-  console.log('Search', q.value, usersState.users.value);
+  const q = '';
+  useEffect(() => {
+    searchActions.searchRead(q);
+  });
+  console.log('Search', q, usersState.users.value);
   return (
     <div>
       <h3>Search</h3>
@@ -799,21 +799,31 @@ export default Search;
 
 ## SearchBar Component에서만 사용 가능한 state값 적용
 src/pages/Search.js
+```diff
+- import { useComputed } from '@preact/signals-react';
++ import { signal, useComputed } from '@preact/signals-react';
+```
 ```js
-function SearchBar(props) {
-  const q = signal('');
-  console.log('SearchBar', q.value);
+const stateQ = signal('');
+
+function SearchBar() {
+  console.log('SearchBar', stateQ.value);
   return (
     <div>
       <form onSubmit={(event) => {
         event.preventDefault();
-        props.q.value = q.value;
+        searchActions.searchRead(stateQ.value);
       }}>
-        <input
-          type="text" placeholder="Search"
-          value={q}
-          onChange={event => {q.value = event.target.value}}
-        />
+        {useComputed(() => {
+          console.log('SearchBar.stateQ', stateQ.value);
+          return (
+            <input
+              type="text" placeholder="Search"
+              value={stateQ.value}
+              onChange={event => {stateQ.value = event.target.value}}
+            />
+          );
+        })}
         <button>Search</button>
       </form>
     </div>
@@ -827,15 +837,8 @@ function SearchBar(props) {
 -     <button>Search</button>
 -   </form>
 - </div>
-+ <SearchBar q={q} />
++ <SearchBar />
 ```
-* <details><summary>TS: Type 'Signal<string>' is not assignable to type 'string | number | readonly string[] | undefined'.</summary>
-
-  ```diff
-  - value={q}
-  + value={q as unknown as string}
-  ```
-</details>
 * `signal`과 `useState` 비교하기
 
 ## Search Component 쿼리스트링 변경
@@ -843,16 +846,12 @@ src/pages/Search.js
 ```js
 import { useNavigate } from 'react-router-dom';
 ```
-```diff
-- const q = signal('');
-```
 ```js
 const navigate = useNavigate();
-const q = signal(props.q.value);
 ```
 ```diff
-- props.q.value = q.value;
-+ navigate('/search?q=' + q.value);
+- searchActions.searchRead(stateQ.value);
++ navigate('/search?q=' + stateQ.value);
 ```
 * `검색`, `뒤로가기` 해보기
 
@@ -863,30 +862,35 @@ src/pages/Search.js
 + import { useNavigate, useLocation } from 'react-router-dom';
 ```
 ```diff
-- console.log('Search', q.value, usersState.users.value);
+- const q = '';
 ```
 ```js
 const location = useLocation();
 const searchParams = new URLSearchParams(location.search);
-q.value = searchParams.get('q') || '';
-console.log('Search', q.value, usersState.users.value);
+const q = searchParams.get('q') || '';
 ```
-* `새로고침`, `검색`, `뒤로가기` 해보기
-* ❔ `새로고침`하면 API 호출이 2번 되고 있다. API 호출이 1번만 되게 하려면 (`const q = signal('');`와 `effect 안`의 함수 수정)
-* <details><summary>정답</summary>
+`검색`, `새로고침` 해보기
 
-  ```diff
-  - const q = signal('');
-  + const q = signal(null);
-  ```
-  ```js
-  effect(() => {
-    if (q.value === null) return;
-    searchActions.searchRead(q.value);
-  });
-  ```
+```diff
+useEffect(() => {
+  searchActions.searchRead(q);
+- }, []);
++ }, [q]);
+```
+`검색`, `새로고침` 해보기
 
-</details>
+```diff
+useEffect(() => {
++ console.warn('useEffect', q, stateQ.value);
++ stateQ.value = q;
+  searchActions.searchRead(q);
+}, [q]);
+```
+* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더`될 일이 없으므로 `useEffect의 [q]` 의존성을 정상 동작한다.
+```diff
+- }, [q]);
++ });
+```
 
 ## Proxy 설정
 package.json
