@@ -1,7 +1,7 @@
 # Signals (@preact/signals-react@3.3.0)
 * https://github.com/preactjs/signals
 * `useState`, `Store`의 변화는 컴포넌트 전체가 리렌더링 되는데, `Signals`는 `리렌더링`해야 하는 부분만 신경써서 코딩 해야한다.
-* 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어지고, `useEffect`의 의존성이 약화되어 `더 이해하기 쉬운 코딩`이 가능하다.
+* 렌더링 방지 목적의 `useMemo`, `useCallback` 등을 사용할 필요가 없어지고, `useEffect`의 의존성을 심플하게 줄일 수 있어 `더 이해하기 쉬운 코딩`이 가능하다.
 
 ## 결론
 * `Signals`의 `useComputed`는 `리렌더링`해야 하는 부분을 감싸고, `useMemo`는 `리렌더링`하지 말아야 할 부분을 감싼다.
@@ -93,6 +93,7 @@ export default function Component() {
 }
 ```
 * ❕ `useEffect`는 `Signals 라이브러리` 안에 없다.
+* ❕ `API 통신`등을 호출 해야 하는 경우는 `react의 useEffect`를 사용해서 `if문`을 줄이자.
 
 ### Component with useComputed
 ```jsx
