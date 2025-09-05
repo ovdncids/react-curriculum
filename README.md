@@ -749,8 +749,8 @@ src/pages/Search.js
 ```js
 import { useEffect } from 'react';
 import { useComputed } from '@preact/signals-react';
-import { usersState } from 'stores/usersStore';
-import { searchActions } from 'stores/searchStore';
+import { usersState } from 'stores/usersStore.js';
+import { searchActions } from 'stores/searchStore.js';
 
 function Search() {
   const q = '';
