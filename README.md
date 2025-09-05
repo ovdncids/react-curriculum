@@ -804,7 +804,7 @@ src/pages/Search.js
 + import { useComputed, useSignal } from '@preact/signals-react';
 ```
 ```js
-function SearchBar(props: {q: string}) {
+function SearchBar(props) {
   const q = useSignal('');
   console.log('SearchBar', props.q, q.value);
   return (
@@ -814,7 +814,7 @@ function SearchBar(props: {q: string}) {
         searchActions.searchRead(q.value);
       }}>
         {useComputed(() => {
-          console.log('SearchBar.stateQ', q.value);
+          console.log('SearchBar.q', q.value);
           return (
             <input
               type="text" placeholder="Search"
@@ -847,7 +847,7 @@ src/pages/Search.js
 import { useNavigate } from 'react-router-dom';
 ```
 ```js
-function SearchBar(props: {q: string}) {
+function SearchBar(props) {
   const navigate = useNavigate();
 ```
 ```diff
