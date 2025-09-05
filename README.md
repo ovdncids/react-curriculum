@@ -756,7 +756,7 @@ function Search() {
   const q = '';
   useEffect(() => {
     searchActions.searchRead(q);
-  });
+  }, []);
   console.log('Search', q, usersState.users.value);
   return (
     <div>
