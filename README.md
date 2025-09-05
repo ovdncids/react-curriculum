@@ -801,26 +801,25 @@ export default Search;
 src/pages/Search.js
 ```diff
 - import { useComputed } from '@preact/signals-react';
-+ import { signal, useComputed } from '@preact/signals-react';
++ import { useComputed, useSignal } from '@preact/signals-react';
 ```
 ```js
-const stateQ = signal('');
-
-function SearchBar() {
-  console.log('SearchBar', stateQ.value);
+function SearchBar(props: {q: string}) {
+  const q = useSignal('');
+  console.log('SearchBar', props.q, q.value);
   return (
     <div>
       <form onSubmit={(event) => {
         event.preventDefault();
-        searchActions.searchRead(stateQ.value);
+        searchActions.searchRead(q.value);
       }}>
         {useComputed(() => {
-          console.log('SearchBar.stateQ', stateQ.value);
+          console.log('SearchBar.stateQ', q.value);
           return (
             <input
               type="text" placeholder="Search"
-              value={stateQ.value}
-              onChange={event => {stateQ.value = event.target.value}}
+              value={q.value}
+              onChange={event => {q.value = event.target.value}}
             />
           );
         })}
@@ -837,9 +836,10 @@ function SearchBar() {
 -     <button>Search</button>
 -   </form>
 - </div>
-+ <SearchBar />
++ <SearchBar q={q} />
 ```
-* `signal`과 `useState` 비교하기
+* `useSignal`는 `use`로 시작하므로 컴포넌트 안에서만 사용하는 `Hook 함수`이다. `signal`은 컴포넌트 밖에서 사용한다.
+* `useSignal`과 `useState` 비교하기
 
 ## Search Component 쿼리스트링 변경
 src/pages/Search.js
@@ -847,11 +847,12 @@ src/pages/Search.js
 import { useNavigate } from 'react-router-dom';
 ```
 ```js
-const navigate = useNavigate();
+function SearchBar(props: {q: string}) {
+  const navigate = useNavigate();
 ```
 ```diff
-- searchActions.searchRead(stateQ.value);
-+ navigate('/search?q=' + stateQ.value);
+- searchActions.searchRead(q.value);
++ navigate('/search?q=' + q.value);
 ```
 * `검색`, `뒤로가기` 해보기
 
@@ -869,7 +870,7 @@ const location = useLocation();
 const searchParams = new URLSearchParams(location.search);
 const q = searchParams.get('q') || '';
 ```
-`검색`, `새로고침` 해보기
+* `검색`, `새로고침` 해보기
 
 ```diff
 useEffect(() => {
@@ -877,19 +878,29 @@ useEffect(() => {
 - }, []);
 + }, [q]);
 ```
-`검색`, `새로고침` 해보기
+* `검색`, `새로고침` 해보기
 
 ```diff
-useEffect(() => {
-+ console.warn('useEffect', q, stateQ.value);
-+ stateQ.value = q;
-  searchActions.searchRead(q);
-}, [q]);
+- const q = useSignal(''); 
 ```
-* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더`될 일이 없으므로 `useEffect의 [q]` 의존성을 지워도 `무한 리렌더` 되지 않는다.
+```js
+const q = useSignal(props.q);
+useEffect(() => {
+  console.warn('SearchBar.useEffect', props.q, q.value);
+  q.value = props.q;
+}, [q, props.q]);
+```
+* `검색`, `새로고침`, `뒤로가기` 해보기
+
+## Search Component Signals의 특징
+* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더`될 일이 없으므로 `useEffect`를 지워도 `무한 리렌더` 되지 않는다.
 ```diff
+- useEffect(() => {
+-   searchActions.searchRead(q);
 - }, [q]);
-+ });
+```
+```js
+searchActions.searchRead(q);
 ```
 
 ## Proxy 설정
