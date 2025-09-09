@@ -838,8 +838,49 @@ function SearchBar(props) {
 - </div>
 + <SearchBar q={q} />
 ```
-* `useSignal`는 `use`로 시작하므로 컴포넌트 안에서만 사용하는 `Hook 함수`이다. `signal`은 컴포넌트 밖에서 사용한다.
-* `useSignal`과 `useState` 비교하기
+* <details><summary><code>useSignal</code>과 <code>useState</code> 비교하기</summary>
+
+  ```js
+  function SearchBar(props: {q: string}) {
+    const [s, sSet] = useState('');
+  
+  <input
+    type="text" placeholder="Search"
+    value={s}
+    onChange={event => {sSet(event.target.value)}}
+  />
+  ```
+</details>
+
+* <details><summary><code>useSignal</code>과 <code>signal</code> 비교하기</summary>
+
+  ```diff
+  - useSignal
+  + signal
+  ```
+  * `signal`은 `useState`의 `s` 값이 변하면 `리렌더` 되면서 `signal`의 값도 초기화 되지만, `useSignal`은 초기화 되지 않는다.
+  * 이유 확인
+  ```js
+  const hooks = [];
+
+  function SearchBar(props: {q: string}) {
+    const q = signal('');
+    hooks.push(q);
+    console.warn(hooks, hooks[0] === hooks[hooks.length - 1]);
+  ```
+  * `signal`를 `useSignal`로 변경해 보기
+  * `hooks.push(sSet);`로 변경해 보기
+  * `hooks.push(sSet);`로 변경해 보기
+  * `useRef`도 확인해 보기
+  ```diff
+  - hooks.push(sSet);
+  ```
+  ```js
+  const r = useRef(null);
+  hooks.push(r);
+  ```
+  * 결론: `useSignal`는 `use`로 시작하므로 컴포넌트 안에서만 사용 가능한 `Hook 함수`이다.
+</details>
 
 ## Search Component 쿼리스트링 변경
 src/pages/Search.js
