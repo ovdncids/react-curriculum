@@ -879,7 +879,7 @@ function SearchBar(props) {
   const r = useRef(null);
   hooks.push(r);
   ```
-  * 결론: `useSignal`는 `use`로 시작하므로 컴포넌트 안에서만 사용 가능한 `Hook 함수`이다.
+  * 결론: `useSignal`는 `use`로 시작하므로 컴포넌트 안에서만 사용 가능한 `Hook 함수`이다. 소스 코드를 보면 `useRef`를 사용하고 있다.
 </details>
 
 ## Search Component 쿼리스트링 변경
