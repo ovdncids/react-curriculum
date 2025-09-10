@@ -858,7 +858,7 @@ function SearchBar(props) {
   - useSignal
   + signal
   ```
-  * `signal`은 `useState`의 `s` 값이 변하면 `리렌더` 되면서 `signal`의 값도 초기화 되지만, `useSignal`은 초기화 되지 않는다.
+  * `signal`은 `useState`의 `s` 값이 변하면 `리렌더링` 되면서 `signal`의 값도 초기화 되지만, `useSignal`은 초기화 되지 않는다.
   * 이유 확인
   ```js
   const hooks = [];
@@ -934,7 +934,7 @@ useEffect(() => {
 * `검색`, `새로고침`, `뒤로가기` 해보기
 
 ## Search Component Signals의 특징
-* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더`될 일이 없으므로 `useEffect`를 지워도 `무한 리렌더` 되지 않는다.
+* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더링`될 일이 없으므로 `useEffect`를 지워도 `무한 리렌더링` 되지 않는다.
 ```diff
 - useEffect(() => {
 -   searchActions.searchRead(q);
