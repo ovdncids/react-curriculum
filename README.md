@@ -844,11 +844,7 @@ function SearchBar(props) {
   function SearchBar(props: {q: string}) {
     const [s, sSet] = useState('');
   
-  <input
-    type="text" placeholder="Search"
-    value={s}
-    onChange={event => {sSet(event.target.value)}}
-  />
+  <button onClick={() => sSet(s + 1)}>{s}</button>
   ```
 </details>
 
