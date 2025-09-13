@@ -1,3 +1,52 @@
+# React Hook의 특징
+Hooks.js
+```js
+const hooks = [];
+
+function Hooks() {
+  const [s, sSet] = useState(0);
+  hooks.push(s);
+  console.log('hooks', hooks, hooks[0] === hooks[hooks.length - 1]);
+  return (
+    <button onClick={() => sSet(s + 1)}>{s}</button>
+  );
+}
+```
+* `리렌더링` 될때마다 `hooks`에 현재 상태 `s`가 쌓이게 된다.
+
+```diff
+- hooks.push(s);
++ hooks.push(sSet);
+```
+* `sSet` 함수는 항상 같은 함수가 리턴된다.
+
+```diff
+- hooks.push(sSet);
+```
+```js
+const r = useRef();
+hooks.push(r);
+```
+* `r` 객체 역시 항상 같은 객체가 리턴된다.
+* ChatGPT: `const [s, sSet] = useState(''); 에서 리렌더링 되어도 sSet은 항상 동일한 함수인 이유는?`
+* ChatGPT: `React가 내부적으로 상태 저장소를 “위치(index)”로 기억는 코드는?`
+```js
+ if (Math.random() < 0.5) {
+  useState(0);
+}
+```
+* Hook 함수를 if문 안에서 호출하면 React 내부적으로 index가 달라지므로 사용할 수 없다.
+
+```diff
+- const r = useRef();
+- hooks.push(r);
+```
+```js
+const c = useCallback();
+hooks.push(c);
+```
+* 함수 안에서 사용하는 값들이 바뀌면, 그 값을 반영한 최신 함수가 필요하니까!
+
 # useRef
 * 주로 `자식 컴포넌트`의 `Element`에 접근하기 위해 사용한다. 
 
@@ -40,30 +89,9 @@ function UseRefTest() {
 
 * `refDiv`는 `{current: undefined}`로 선언되고 -> `useEffect`에서 `{current: 엘리먼트}` 엘리먼트가 지정 되어 있고 -> `useEffect[return]`에서 `{current: null}`이 된다.
 
-## React Hook의 특징(리렌더 될때 마다 refDiv 객체가 변하는지 확인)
-```js
-const hooks = [];
-
-function UseRefTest() {
-  ...
-  const [s, sSet] = useState('');
-  hooks.push(sSet);
-  console.warn('hooks', hooks, hooks[0] === hooks[hooks.length - 1]);
-  return (
-    <div>
-      <input
-        type="text" placeholder="Search"
-        value={s}
-        onChange={event => {sSet(event.target.value)}}
-      />
-      <Child refDiv={refDiv} />
-    </div>
-  );
-```
-
 # useMemo
 * https://www.daleseo.com/react-hooks-use-memo
-* 컴포넌트가 `리렌더` 될때 특정 부분만 `리렌더`를 방지하기 위해 사용
+* 컴포넌트가 `리렌더링` 될때 특정 부분만 `리렌더링`를 방지하기 위해 사용
 
 ## useMemo 사용전
 UseMemoTest.js
