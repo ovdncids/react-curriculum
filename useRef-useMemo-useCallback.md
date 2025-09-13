@@ -65,7 +65,7 @@ function UseRefTest() {
   useEffect(() => {
     refDiv.current.innerHTML = 'Child.div';
     console.log(refDiv.current.clientWidth);
-    // refDiv.current = {}; // refDiv.current는 수정도 가능하지만 복잡도가 증가하므로 하지 않는다.
+    // refDiv.current = {}; // refDiv.current는 수정도 가능하지만 코드의 복잡도가 증가한다.
     return () => {
       console.log(refDiv);
     };
@@ -87,6 +87,8 @@ function UseRefTest() {
   ```
 </details>
 
+* ❕ `Child`가 `리렌더링` 되어도 `refDiv.current` 객체는 처음에 지정된 `div` 객체가 유지 된다.
+* ❕ `useRef`를 사용하지 않고 `id`와 `document.getElementById`를 사용해도 처음에 지정된 객체가 유지 된다.
 * `refDiv`는 `{current: undefined}`로 선언되고 -> `useEffect`에서 `{current: 엘리먼트}` 엘리먼트가 지정 되어 있고 -> `useEffect[return]`에서 `{current: null}`이 된다.
 
 # useMemo
@@ -113,6 +115,7 @@ function Users(props) {
 function UseMemoTest() {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState('');
+  console.log('UseMemoTest', users, user);
   return (
     <div>
       <Users users={users}></Users>
