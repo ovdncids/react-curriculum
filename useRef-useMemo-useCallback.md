@@ -4,8 +4,9 @@ Hooks.js
 const hooks = [];
 
 function Hooks() {
-  const f = () => {};
   const [s, sSet] = useState(0);
+  const f = function() { return s; };
+  console.warn('f', f());
   hooks.push(f);
   console.log('hooks', hooks, hooks[0] === hooks[hooks.length - 1]);
   return (
@@ -13,7 +14,8 @@ function Hooks() {
   );
 }
 ```
-* `리렌더링` 될때마다 `hooks`에 새로운 `f` 함수가 쌓이게 된다.
+* `리렌더링` 될때마다 `hooks`에 새로운 `f 함수`가 쌓이게 된다.
+* ❕ 새로운 `f 함수`가 생성되므로 `f 함수`를 호출하면 `s`값이 달라지게 된다.
 
 ```diff
 - hooks.push(f);
@@ -25,7 +27,7 @@ function Hooks() {
 - hooks.push(s);
 + hooks.push(sSet);
 ```
-* `sSet` 함수는 `s` 상태를 변경해야 하므로 항상 같은 함수가 리턴된다.
+* ❕ `sSet` 함수는 `s` 상태를 변경해야 하므로 항상 같은 함수가 리턴된다.
 
 ```diff
 - hooks.push(sSet);
@@ -38,21 +40,85 @@ hooks.push(r);
 * ChatGPT: `const [s, sSet] = useState(''); 에서 리렌더링 되어도 sSet은 항상 동일한 함수인 이유는?`
 * ChatGPT: `React가 내부적으로 상태 저장소를 “위치(index)”로 기억는 코드는?`
 ```js
- if (Math.random() < 0.5) {
+if (Math.random() < 0.5) {
   useState(0);
 }
 ```
-* Hook 함수를 if문 안에서 호출하면 React 내부적으로 index가 달라지므로 사용할 수 없다.
+* `Hook 함수`를 `if문` 안에서 호출하면 React 내부적으로 `index`가 달라지므로 사용하면 안된다.
 
 ```diff
+- console.log('f', f());
 - const r = useRef();
 - hooks.push(r);
 ```
 ```js
-const c = useCallback();
-hooks.push(c);
+const m = useMemo(f, []);
+hooks.push(m);
+console.log('f', f(), 'm', m);
 ```
-* 함수 안에서 사용하는 값들이 바뀌면, 그 값을 반영한 최신 함수가 필요하니까!
+* `useMemo`는 `f 함수`를 호출하고 결과를 `m 변수`에 리턴한다.
+* ❕ `useMemo`는 `의존성 배열`이 비어 있으면 처음 한번만 `f 함수`를 호출하므로 `m` 값이 변하지 않는다.
+
+```diff
+- const m = useMemo(f, []);
++ const m = useMemo(f, [f]);
+```
+* `의존성 배열`에 `리렌더링`마다 새로 생성되는 `f 함수`를 넣었으므로 매번 `f 함수`가 호출되어 `m` 값이 변하게 된다.
+
+```diff
+- const m = useMemo(f, [f]);
++ const m = useMemo(f, [s]);
+```
+* `f 함수`가 `s` 값을 사용하고 있고 `s` 역시 `리렌더링`마다 변하므로 결과는 동일하다.
+
+```diff
+- const m = useMemo(f, [s]);
+- hooks.push(m);
+- console.log('f', f(), 'm', m);
+```
+```js
+const c = useCallback(f, []);
+hooks.push(c);
+console.log('f', f(), 'c', c());
+```
+* ❕ `useMemo`와 `useCallback`의 차이는 `useMemo`는 함수를 호출한 결과를 반환하고, `useCallback`는 해당 함수를 반환한다.
+* ❕ `useCallback` 또한 `의존성 배열`이 비어 있으면 처음 받은 `f 함수`만 반환한다.
+
+```diff
+- const c = useCallback(f, []);
++ const c = useCallback(f, [f]);
+```
+* `의존성 배열`은 `useMemo` 동일하게 새로운 `f 함수`를 반환한다.
+
+```diff
+- const c = useCallback(f, [f]);
++ const c = useCallback(f, [s]);
+```
+* 동일
+
+```diff
+- hooks.push(c);
+```
+```js
+const e = function() { console.error('effect', c()); };
+useEffect(e, []);
+hooks.push(e);
+```
+* `useEffect`는 반환값 없으므로 항상 `undefined`를 반환한다. `console.log(useEffect(e, []));`
+* ❕ `useEffect`는 리턴부분의 `HTML`이 모두 그려진 다음에 `e 함수`를 호출한다.
+* ❕ `의존성 배열`이 비어 있으면 처음 한번만 `e 함수`를 호출한다.
+
+```diff
+- useEffect(e, []);
++ useEffect(e, [e]);
+```
+* `e 함수`는 리랜더링 될때마다 새로 생성되므로 `의존성 배열` 넣으면 매번 리랜더링 될때마다 `useEffect`가 `e 함수`를 호출한다.
+
+```diff
+- useEffect(e, [e]);
++ useEffect(e, [c]);
+```
+* 현재 코드상으로 `c`가 리랜더링 될때마다 생성되므로 `e`와 동일하다.
 
 # useRef
 * 주로 `자식 컴포넌트`의 `Element`에 접근하기 위해 사용한다. 
