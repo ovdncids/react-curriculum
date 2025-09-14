@@ -134,7 +134,7 @@ function Child({refDiv}) {
 }
 
 function UseRefTest() {
-  const refDiv = useRef();
+  const refDiv = useRef({});
   useEffect(() => {
     refDiv.current.innerHTML = 'Child.div';
     console.log(refDiv.current.clientWidth);
@@ -148,10 +148,10 @@ function UseRefTest() {
   );
 }
 ```
-* <details><summary>TS: <code>const refDiv = useRef();</code></summary>
+* <details><summary>TS: <code>const refDiv = useRef({});</code></summary>
 
   ```diff
-  - const refDiv = useRef();
+  - const refDiv = useRef({});
   + const refDiv = useRef({} as HTMLDivElement);
   ```
   ```diff
@@ -201,7 +201,7 @@ function UseMemoTest() {
   );
 }
 
-export default App;
+export default UseMemoTest;
 ```
 
 ## useMemo 사용후
@@ -224,53 +224,32 @@ export default App;
 UseCallbackTest.js
 ```js
 function UseCallbackTest() {
-  const [bool] = useState(false);
-  const fn = () => {console.log(bool)};
+  const [s] = useState(0);
+  const f = function () { console.log(s); };
   useEffect(() => {
-    fn();
+    f();
   }, []);
   return <></>;
 }
 ```
-* `fn` 함수가 `bool` 변수를 사용하므로 `useEffect[fn]` 의존성 넣으라는 경고 발생.
-* `}, []);` -> `}, [fn]);` 추가하면 `useCallback` 넣으라는 경고 발생. (랜더링마다 `fn`이 사용하는 `익명 함수`가 새롭게 생성된어서 `useCallback`을 사용하라는 경고이다.)
-```js
-const fn = useCallback(() => {console.log(bool)}, [bool]);
-```
-* ❕ `useCallback` 사용을 줄이기 위해서는 `useEffect`에서 컴포넌트안의 함수 호출 대신 `store 또는 service`의 함수를 호출하고, 랜더링에 필요 없는 `useState` 상태값들은 컴포넌트 밖으로 뺀다.
-* ❕ `useCallback`의 과도한 사용으로 소스의 가독성이 떨어진다면 [Signals](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md) 사용을 고려해 보자.
-
-<!--
-## useCallback 필요 예제
-* ❕ `useMemo`와 비슷하지만 `useCallback`은 함수를 반환, `useMemo` 결과를 반환 한다.
-
-UseMemoTest.js
-```js
-const usersInit = () => {
-  return [];
-};
-const usersInitCopy = usersInit;
-useEffect(() => {
-  setUsers(usersInitCopy());
-}, []);
-```
-* `useEffect` 함수 안에서 `usersInitCopy 상수`를 사용하면 `React Hook useEffect has a missing dependency: 'usersInitCopy'.` 발생한다.
+* `f 함수`가 `s 변수`를 사용하므로 `useEffect[f]` 의존성 넣으라는 경고 발생.
 
 ```diff
 - }, []);
-+ }, [usersInitCopy]);
+- }, [f]);
 ```
-* 해결하기 위해여 `useEffect`에서 `usersInitCopy` 의존성을 추가하면 무한루프가 발생한다.
+* 이제는 `useCallback` 넣으라는 경고 발생. (랜더링마다 `f 함수`가 새로 생성된어서 `useCallback`을 사용하라는 경고이다.)
 
 ```diff
-- const usersInit = () => {
--   return [];
-- };
+- useEffect(() => {
+-   f();
+- }, [f]);
 ```
 ```js
-const usersInit = useCallback(() => {
-  return [];
-}, []);
+const c = useCallback(f, [f]);
+useEffect(() => {
+  c();
+}, [c]);
 ```
-* `useCallback` 사용하면 `usersInit 함수`는 렌터링이 되더라도 변하지 않는다. `[]` 안의 의존성이 변할때만 새로운 함수를 받는다.
--->
+* ❕ `useCallback` 사용을 줄이기 위해서는 `useEffect`에서 `useState`의 `상태값`의 사용을 줄이자.
+* ❕ `useCallback`의 과도한 사용으로 소스의 가독성이 떨어진다면 [Signals](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md) 사용을 고려해 보자.
