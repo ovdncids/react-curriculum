@@ -4,13 +4,20 @@ Hooks.js
 const hooks = [];
 
 function Hooks() {
+  const f = () => {};
   const [s, sSet] = useState(0);
-  hooks.push(s);
+  hooks.push(f);
   console.log('hooks', hooks, hooks[0] === hooks[hooks.length - 1]);
   return (
     <button onClick={() => sSet(s + 1)}>{s}</button>
   );
 }
+```
+* `리렌더링` 될때마다 `hooks`에 새로운 `f` 함수가 쌓이게 된다.
+
+```diff
+- hooks.push(f);
++ hooks.push(s);
 ```
 * `리렌더링` 될때마다 `hooks`에 현재 상태 `s`가 쌓이게 된다.
 
@@ -18,7 +25,7 @@ function Hooks() {
 - hooks.push(s);
 + hooks.push(sSet);
 ```
-* `sSet` 함수는 항상 같은 함수가 리턴된다.
+* `sSet` 함수는 `s` 상태를 변경해야 하므로 항상 같은 함수가 리턴된다.
 
 ```diff
 - hooks.push(sSet);
