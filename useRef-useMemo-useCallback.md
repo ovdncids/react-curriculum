@@ -14,7 +14,7 @@ function Hooks() {
   );
 }
 ```
-* `리렌더링` 될때마다 `hooks`에 새로운 `f 함수`가 쌓이게 된다.
+* `리렌더링` 될때마다 `hooks`에 새로 생성된 `f 함수`가 쌓이게 된다.
 * ❕ 새로운 `f 함수`가 생성되므로 `f 함수`를 호출하면 `s`값이 달라지게 된다.
 
 ```diff
@@ -33,7 +33,7 @@ function Hooks() {
 - hooks.push(sSet);
 ```
 ```js
-const r = useRef();
+const r = useRef({});
 hooks.push(r);
 ```
 * `r` 객체 역시 항상 같은 객체가 리턴된다.
@@ -44,7 +44,7 @@ if (Math.random() < 0.5) {
   useState(0);
 }
 ```
-* `Hook 함수`를 `if문` 안에서 호출하면 React 내부적으로 `index`가 달라지므로 사용하면 안된다.
+* `Hook 함수`를 `if문` 안에서 호출하면 React 내부적으로 `index`가 달라지므로 사용하면 에러가 발생한다.
 
 ```diff
 - console.log('f', f());
@@ -88,7 +88,7 @@ console.log('f', f(), 'c', c());
 - const c = useCallback(f, []);
 + const c = useCallback(f, [f]);
 ```
-* `의존성 배열`은 `useMemo` 동일하게 새로운 `f 함수`를 반환한다.
+* `의존성 배열`은 `useMemo` 동일하므로 새로운 `f 함수`를 반환한다.
 
 ```diff
 - const c = useCallback(f, [f]);
@@ -104,7 +104,7 @@ const e = function() { console.error('effect', c()); };
 useEffect(e, []);
 hooks.push(e);
 ```
-* `useEffect`는 반환값 없으므로 항상 `undefined`를 반환한다. `console.log(useEffect(e, []));`
+* `useEffect`는 반환값이 없으므로 항상 `undefined`를 반환한다. `console.log(useEffect(e, []));`
 * ❕ `useEffect`는 리턴부분의 `HTML`이 모두 그려진 다음에 `e 함수`를 호출한다.
 * ❕ `의존성 배열`이 비어 있으면 처음 한번만 `e 함수`를 호출한다.
 
