@@ -252,4 +252,4 @@ useEffect(() => {
 }, [c]);
 ```
 * ❕ `useCallback` 사용을 줄이기 위해서는 `useEffect`에서 `useState`의 `상태값`의 사용을 줄이자.
-* ❕ `useCallback`의 과도한 사용으로 소스의 가독성이 떨어진다면 [Signals](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md) 사용을 고려해 보자.
+* ❕ [Signals](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md)를 사용하면 `useState`의 리렌더링 개념과 반대로 리렌더 하고 싶은 부분만 `useComputed`로 리렌더링 시킬 수 있다.
