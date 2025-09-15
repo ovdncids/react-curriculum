@@ -501,7 +501,13 @@ function Users() {
       <div>
         <h4>Create</h4>
         <input type="text" placeholder="Name" {...userRegister('name')} />
-        <input type="text" placeholder="Age" {...userRegister('age')} />
+        <input
+          type="text"
+          placeholder="Age"
+          {...userRegister('age'), {
+            onChange: (event) => {console.log(event)}
+          }}
+        />
         <button onClick={() => usersFieldArray.append(userForm.getValues())}>Create</button>
       </div>
     </div>
