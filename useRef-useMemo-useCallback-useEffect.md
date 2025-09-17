@@ -257,3 +257,4 @@ useEffect(() => {
 ```
 * ❕ `useCallback` 사용을 줄이기 위해서 `useEffect`에서 변화 할 수 있는 `useState 또는 props` 상태값은 고정적인 `store 또는 service`의 함수의 파라미터로 사용해야 한다.
 * ❕ [Signals](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md)를 사용하면 `useState`의 리렌더링 개념과 반대로 리렌더 해야할 부분만 `useComputed`(`useMemo`의 반대)로 리렌더링 시킬 수 있다.
+* `Signals`와 `React hook form` 조합도 좋다.
