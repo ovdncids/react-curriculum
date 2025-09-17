@@ -1,6 +1,8 @@
 # React Hook의 특징
 Hooks.js
 ```js
+import { useState } from 'react';
+
 const hooks = [];
 
 function Hooks() {
@@ -13,6 +15,8 @@ function Hooks() {
     <button onClick={() => sSet(s + 1)}>{s}</button>
   );
 }
+
+export default Hooks;
 ```
 * `리렌더링` 될때마다 `hooks`에 새로 생성된 `f 함수`가 쌓이게 된다.
 * ❕ 새로운 `f 함수`가 생성되므로 `f 함수`를 호출하면 `s`값이 달라지게 된다.
