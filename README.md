@@ -31,12 +31,18 @@ https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
 https://github.com/facebook/create-react-app
 ```sh
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
-# npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
-# npm install -g create-react-app
-# create-react-app react-study
+# JS
 npx create-react-app react-study
+
+# JS with Vite
+npm create vite@latest react-study -- --template react
+
 # Typescript
 npx create-react-app react-study-typescript --template typescript
+
+# Typescript with Vite
+npm create vite@latest react-study-typescript -- --template react-ts
+
 cd react-study
 code .
 
