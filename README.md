@@ -9,6 +9,8 @@
 ## Node.js (20.19.4)
 https://nodejs.org
 
+https://nodejs.org/download/release
+
 ## NVM (Node Version Manager)
 https://github.com/ovdncids/react-curriculum/blob/master/NVM.md
 
