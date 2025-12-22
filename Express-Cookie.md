@@ -50,6 +50,24 @@ app.listen(port, function() {
 });
 ```
 * ❕ `httpOnly: true`인 경우 `document.cookie`에 값이 사라진다.
+* ❕ `Access-Control-Allow-Origin`은 하나만 사용 가능하다.
+* <details><summary>여러개 사용법</summary>
+
+  ```js
+  const allowedOrigins = [
+    'http://frontend.test.com:3000',
+    'http://backend.test.com:3100'
+  ];
+  
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    ...
+  }
+  ```
+</details>
 
 ### React
 ```js
