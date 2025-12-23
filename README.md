@@ -475,6 +475,18 @@ jsconfig.json
 }
 ```
 * TS: tsconfig.json
+* <details><summary>Vite</summary>
+
+  ```js
+  import path from 'path'
+
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  }
+  ```
+</details>
 
 ```diff
 - import { usersState } from '../stores/usersStore.js';
@@ -953,6 +965,21 @@ package.json
 ```json
 "proxy": "http://localhost:3100"
 ```
+
+* <details><summary>Vite</summary>
+
+  ```js
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3100',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  }
+  ```
+</details>
 
 모든 파일 수정
 ```diff
