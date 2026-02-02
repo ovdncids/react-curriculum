@@ -137,6 +137,20 @@ npx husky add .husky/pre-commit "npm run lint"
 ```
 * `.husky/pre-commit` 파일이 생성된다. 이제 부터 `git commit` 마다 `npm run lint`가 먼저 실행 된다.
 
+## husky@9.1.7 + lint-staged@16.2.7
+```sh
+npm install -D husky lint-staged
+npx husky init
+
+# .husky/pre-commit (1줄로 끝)
+npx lint-staged
+
+# package.json
+  "lint-staged": {
+    "*.{js,jsx,mjs,ts,tsx}": "eslint --fix"
+  }
+```
+
 # Only ESLint in Next.js (Javascript & Typescript)
 .eslintrc.json
 ```json
