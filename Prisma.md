@@ -1,4 +1,4 @@
-# Prisma@7.3.0
+# Prisma@7.3.0 (Prisma@6.21 안정적인 버전)
 * [Next.js + Prisma postgres cloud 설치 방법 (node@20.19.6, react@19.2.3, next@16.1.6, tailwindcss@4.1.18)](https://www.prisma.io/docs/guides/nextjs)
 
 ## Next.js + Prisma + MariaDB
