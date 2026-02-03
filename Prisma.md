@@ -8,7 +8,9 @@ npx create-next-app@latest nextjs-prisma
 
 npm install prisma tsx --save-dev
 npm install @prisma/client @prisma/adapter-mariadb dotenv
+
 npx prisma init --output ../app/generated/prisma
+# prisma.config.ts, prisma/schema.prisma, .env 파일이 생성된다.
 # --db는 Prisma의 Postgres Cloud를 생성하는 옵션
 ```
 
@@ -134,7 +136,13 @@ export async function main() {
   }
 }
 
-main()
+main().then(async () => {
+  await prisma.$disconnect()
+}).catch(async (error) => {
+  console.error(error)
+  await prisma.$disconnect()
+  process.exit(1)
+})
 ```
 
 prisma.config.ts
@@ -145,8 +153,68 @@ prisma.config.ts
 ```
 
 ```sh
-# Data 생성 (Running seed command `tsx prisma/seed.ts` ... 여기서 멈출 수 있음)
+# Data 생성
+set DEBUG=prisma:*
 npx prisma db seed
 
-# 
+# Prisma Studio (localhost에서 DB 정보 확인)
+npx prisma studio
+
+# 좀 더 자세한 정보 보기
+npx prisma db pull --print
+```
+
+### Next.js Pages
+app/users/page.tsx
+```tsx
+import prisma from "@/lib/prisma"
+
+export default async function Home() {
+  const users = await prisma.user.findMany()
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center -mt-16">
+      <h1 className="text-4xl font-bold mb-8 font-[family-name:var(--font-geist-sans)] text-[#333333]">
+        Superblog
+      </h1>
+      <ol className="list-decimal list-inside font-[family-name:var(--font-geist-sans)]">
+        {users.map((user) => (
+          <li key={user.id} className="mb-2">
+            {user.name}
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+```
+
+app/posts/page.tsx
+```tsx
+import prisma from "@/lib/prisma"
+
+export default async function Posts() {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: true
+    }
+  })
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center -mt-16 text-[#333333]">
+      <h1 className="text-4xl font-bold mb-8 font-[family-name:var(--font-geist-sans)]">
+        Posts
+      </h1>
+      <ul className="font-[family-name:var(--font-geist-sans)] max-w-2xl space-y-4">
+        {posts.map((post) => (
+          <li key={post.id}>
+            <span className="font-semibold">{post.title}</span>
+            <span className="text-sm text-gray-600 ml-2">
+              by {post.author.name}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 ```
