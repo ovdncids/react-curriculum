@@ -163,55 +163,6 @@ set DEBUG=prisma:*
 npx prisma db seed
 
 # Prisma Studio (localhost에서 DB 정보 확인)
-# Prisma postgres cloud는 정상 작동하지만 MariaDB는 ""introspect" operation failed" 오류 날 수 있음 (Prisma@6 다운 그래이드         title: "Prisma on YouTube",
-          content: "https://pris.ly/youtube"
-        }
-      ]
-    }
-  },
-  {
-    name: "Bob",
-    email: "bob@prisma.io",
-    posts: {
-      create: [
-        {
-          title: "Follow Prisma on Twitter",
-          content: "https://www.twitter.com/prisma",
-          published: true
-        }
-      ]
-    }
-  }
-]
-
-export async function main() {
-  for (const u of userData) {
-    await prisma.user.create({data: u})
-  }
-}
-
-main().then(async () => {
-  await prisma.$disconnect()
-}).catch(async (error) => {
-  console.error(error)
-  await prisma.$disconnect()
-  process.exit(1)
-})
-```
-
-prisma.config.ts
-```ts
-  migrations: {
-    seed: "tsx prisma/seed.ts"
-  }
-```
-
-```sh
-# Data 생성
-set DEBUG=prisma:*
-npx prisma db seed
-
-# Prisma Studio (localhost에서 DB 정보 확인)
 # Prisma postgres cloud는 정상 작동하지만 MariaDB는 ""introspect" operation failed" 오류 날 수 있음 (Prisma@6 다운 그레이드)
 # 결론: Prisma postgres cloud는 https://console.prisma.io에서도 볼 수 있으므로 MariaDB는 DBeaver 사용
 npx prisma studio
