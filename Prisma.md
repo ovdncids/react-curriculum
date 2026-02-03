@@ -35,11 +35,11 @@ prisma/schema.prisma
 .env
 * root 계정을 사용해야 테이블이 생성된다. testuser을 사용할 경우 `테이블이 생성 권한`을 줘야 한다.
 ```env
-DATABASE_URL="mysql://root:rootpassword@localhost:3306/testdb"
+DATABASE_URL="mysql://testuser:testpass@localhost:3306/testdb"
 DATABASE_HOST="localhost"
 DATABASE_PORT=3306
-DATABASE_USER="root"
-DATABASE_PASSWORD="rootpassword"
+DATABASE_USER="testuser"
+DATABASE_PASSWORD="testpass"
 DATABASE_NAME="testdb"
 ```
 
@@ -65,6 +65,11 @@ model Post {
 ```sh
 # MariaDB에 테이블 생성
 npx prisma migrate dev --name init
+
+# 권한 부족한 경우 (root 계정)
+GRANT ALL PRIVILEGES ON *.* TO 'testuser'@'%' IDENTIFIED BY 'testpass';
+GRANT CREATE, DROP, REFERENCES, ALTER ON *.* TO 'testuser'@'%';
+FLUSH PRIVILEGES;
 
 # Prisma Client 생성 (app/generated/client.ts)
 npx prisma generate
@@ -158,6 +163,56 @@ set DEBUG=prisma:*
 npx prisma db seed
 
 # Prisma Studio (localhost에서 DB 정보 확인)
+# Prisma postgres cloud는 정상 작동하지만 MariaDB는 ""introspect" operation failed" 오류 날 수 있음 (Prisma@6 다운 그래이드         title: "Prisma on YouTube",
+          content: "https://pris.ly/youtube"
+        }
+      ]
+    }
+  },
+  {
+    name: "Bob",
+    email: "bob@prisma.io",
+    posts: {
+      create: [
+        {
+          title: "Follow Prisma on Twitter",
+          content: "https://www.twitter.com/prisma",
+          published: true
+        }
+      ]
+    }
+  }
+]
+
+export async function main() {
+  for (const u of userData) {
+    await prisma.user.create({data: u})
+  }
+}
+
+main().then(async () => {
+  await prisma.$disconnect()
+}).catch(async (error) => {
+  console.error(error)
+  await prisma.$disconnect()
+  process.exit(1)
+})
+```
+
+prisma.config.ts
+```ts
+  migrations: {
+    seed: "tsx prisma/seed.ts"
+  }
+```
+
+```sh
+# Data 생성
+set DEBUG=prisma:*
+npx prisma db seed
+
+# Prisma Studio (localhost에서 DB 정보 확인)
+# Prisma postgres cloud는 정상 작동하지만 MariaDB는 ""introspect" operation failed" 오류 날 수 있음 (Prisma@6 다운 그레이드)
 npx prisma studio
 
 # 좀 더 자세한 정보 보기
