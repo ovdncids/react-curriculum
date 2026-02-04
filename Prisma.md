@@ -97,7 +97,7 @@ const adapter = new PrismaMariaDb(
 export default new PrismaClient({adapter})
 ```
 * ❕ `import "dotenv/config"`는 `.env 파일`의 `process.env.DATABASE_HOST` 읽을 수 있다.
-* ❕ `Next.js`에서는 `import "dotenv/config` 없이 `process.env.DATABASE_HOST` 읽을 수 있다.
+* ❕ `Next.js`에서는 `npm install dotenv` 없이 `import "dotenv/config` 사용 가능하다.
 
 prisma/seed.ts
 ```ts
