@@ -79,6 +79,12 @@ model Post {
 npx prisma migrate dev --name init
 
 # 권한 부족한 경우 (root 계정)
+# MySQL
+ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpass';
+GRANT CREATE, DROP, REFERENCES, ALTER ON *.* TO 'testuser'@'%';
+FLUSH PRIVILEGES;
+
+# MariaDB
 GRANT ALL PRIVILEGES ON *.* TO 'testuser'@'%' IDENTIFIED BY 'testpass';
 GRANT CREATE, DROP, REFERENCES, ALTER ON *.* TO 'testuser'@'%';
 FLUSH PRIVILEGES;
