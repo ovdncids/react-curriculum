@@ -26,6 +26,17 @@ docker run -d ^
   -e MARIADB_PASSWORD=testpass ^
   mariadb:10.6
 ```
+```sh
+docker run -d ^
+  --name mysql ^
+  -p 3306:3306 ^
+  -e MYSQL_ROOT_PASSWORD=rootpassword ^
+  -e MYSQL_DATABASE=testdb ^
+  -e MYSQL_USER=testuser ^
+  -e MYSQL_PASSWORD=testpass ^
+  mysql:8.0 ^
+  --default-authentication-plugin=mysql_native_password
+```
 
 prisma/schema.prisma
 ```diff
