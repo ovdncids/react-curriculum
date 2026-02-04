@@ -15,7 +15,7 @@ npx prisma init --datasource-provider mysql --output ../app/generated/prisma
 # --db는 Prisma의 Postgres Cloud를 생성하는 옵션
 ```
 
-### Docker@29.1.5에 MySQL@8.0.45 또는 MariaDB@10.6.24 생성
+### Docker@29.1.5에 MySQL@8.0.45 또는 MariaDB@10.11.15 생성
 ```sh
 docker run -d ^
   --name mysql ^
@@ -35,7 +35,7 @@ docker run -d ^
   -e MARIADB_DATABASE=testdb ^
   -e MARIADB_USER=testuser ^
   -e MARIADB_PASSWORD=testpass ^
-  mariadb:10.6
+  mariadb:10.11
 ```
 
 prisma/schema.prisma
