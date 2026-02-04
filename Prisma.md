@@ -1,5 +1,6 @@
 # Prisma@7.3.0 (Prisma@6.21 안정적인 버전)
 * [Next.js + Prisma postgres cloud 설치 방법 (node@20.19.6, react@19.2.3, next@16.1.6, tailwindcss@4.1.18)](https://www.prisma.io/docs/guides/nextjs)
+* https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/mysql
 
 ## Next.js + Prisma + MariaDB
 ```sh
@@ -9,7 +10,7 @@ npx create-next-app@latest nextjs-prisma
 npm install prisma tsx --save-dev
 npm install @prisma/client @prisma/adapter-mariadb dotenv
 
-npx prisma init --output ../app/generated/prisma
+npx prisma init --datasource-provider mysql --output ../app/generated/prisma
 # prisma.config.ts, prisma/schema.prisma, .env 파일이 생성된다.
 # --db는 Prisma의 Postgres Cloud를 생성하는 옵션
 ```
