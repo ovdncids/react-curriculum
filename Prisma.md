@@ -160,7 +160,10 @@ prisma.config.ts
 ```
 
 ```sh
-# Data 생성
+# Data 생성 (Mac)
+DEBUG=prisma:* npx prisma db seed
+
+# Data 생성 (Windows)
 set DEBUG=prisma:*
 npx prisma db seed
 
