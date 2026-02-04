@@ -186,8 +186,7 @@ set DEBUG=prisma:*
 npx prisma db seed
 
 # Prisma Studio (localhost에서 DB 정보 확인)
-# Prisma postgres cloud는 정상 작동하지만 MariaDB는 ""introspect" operation failed" 오류 날 수 있음 (꼭 필요하면 Prisma@6 다운 그레이드)
-# 결론: Prisma postgres cloud는 https://console.prisma.io에서도 볼 수 있으므로 MariaDB는 DBeaver 사용
+# Prisma postgres cloud는 정상 작동하지만 MariaDB는 `"introspect" operation failed` 오류 날 수 있음 (MySQL은 정상 동작)
 npx prisma studio
 
 # 좀 더 자세한 정보 보기
