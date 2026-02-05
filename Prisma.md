@@ -1,8 +1,7 @@
 # Prisma@7.3.0
 * [Next.js + Prisma postgres cloud 설치 방법 (node@20.19.6, react@19.2.3, next@16.1.6, tailwindcss@4.1.18)](https://www.prisma.io/docs/guides/nextjs)
-* https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/mysql
 
-## Next.js + Prisma + MariaDB
+## Next.js + Prisma + MySQL, MaraiDB
 ```sh
 # node@20.19.6, react@19.2.3, next@16.1.6, tailwindcss@4.1.18
 npx create-next-app@latest nextjs-prisma
@@ -75,7 +74,7 @@ model Post {
 }
 ```
 ```sh
-# MariaDB에 테이블 생성
+# Table 생성
 npx prisma migrate dev --name init
 
 # 권한 부족한 경우 (root 계정)
@@ -94,6 +93,7 @@ npx prisma generate
 ```
 
 ### Data 생성
+* https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/mysql
 * https://www.prisma.io/docs/orm/overview/databases/mysql#using-the-mariadb-driver
 
 lib/prisma.ts
