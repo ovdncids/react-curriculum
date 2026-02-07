@@ -9,7 +9,7 @@ npx create-next-app@latest nextjs-prisma
 npm install prisma tsx --save-dev
 npm install @prisma/client @prisma/adapter-mariadb dotenv
 
-npx prisma init --datasource-provider mysql --output ../app/generated/prisma
+npx prisma init --datasource-provider mysql --output ../generated/prisma
 # prisma.config.ts, prisma/schema.prisma, .env 파일이 생성된다.
 # --db는 Prisma의 Postgres Cloud를 생성하는 옵션
 ```
@@ -88,7 +88,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'testuser'@'%' IDENTIFIED BY 'testpass';
 GRANT CREATE, DROP, REFERENCES, ALTER ON *.* TO 'testuser'@'%';
 FLUSH PRIVILEGES;
 
-# Prisma Client 생성 (app/generated/client.ts)
+# Prisma Client 생성 (/generated/client.ts)
 npx prisma generate
 ```
 
@@ -100,7 +100,7 @@ lib/prisma.ts
 ```ts
 import "dotenv/config"
 import {PrismaMariaDb} from "@prisma/adapter-mariadb"
-import {PrismaClient} from "../app/generated/prisma/client"
+import {PrismaClient} from "../generated/prisma/client"
 
 const adapter = new PrismaMariaDb(
   {
@@ -119,7 +119,7 @@ export default new PrismaClient({adapter})
 
 prisma/seed.ts
 ```ts
-import {Prisma} from "../app/generated/prisma/client"
+import {Prisma} from "../generated/prisma/client"
 import prisma from "@/lib/prisma"
 
 const userData: Prisma.UserCreateInput[] = [
