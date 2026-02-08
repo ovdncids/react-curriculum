@@ -250,9 +250,16 @@ export default async function Posts() {
 
 ### SQL문 사용하기
 ```ts
-const users: User[] = await prisma.$queryRaw`
+// Server
+import type { UserModel } from '@/generated/prisma/models/User';
+
+const users: UserModel[] = await prisma.$queryRaw`
   SELECT * FROM User
 `;
 ```
-* `import { User } from '@/generated/prisma/client';` <- `use client`에서 모든 DB가 노출될 수 있다.
+```ts
+// 'use client'에서 사용할 DTO
+import type { UserModel } from '@/generated/prisma/models/User';
+export type UserDTO = Pick<UserModel, 'id' | 'email' | 'name'>;
+```
 * TODO: Zod + Prisma → DTO 자동 동기화
