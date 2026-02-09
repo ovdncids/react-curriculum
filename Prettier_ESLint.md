@@ -149,6 +149,9 @@ npx lint-staged
   "lint-staged": {
     "*.{js,jsx,mjs,ts,tsx}": "eslint --fix"
   }
+
+# eslint.config.mjs
+rules 추가
 ```
 
 # Only ESLint in Next.js (Javascript & Typescript)
