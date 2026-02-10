@@ -79,7 +79,7 @@ npx prisma migrate dev --name init
 
 # root 계정
 # MySQL
-CREATE USER 'testuser'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'testpass';
+CREATE USER 'testuser'@'%' IDENTIFIED WITH caching_sha2_password BY 'testpass';
 ALTER USER 'testuser'@'%' IDENTIFIED WITH mysql_native_password BY 'testpass';
 GRANT CREATE, DROP, REFERENCES, ALTER ON *.* TO 'testuser'@'%';
 FLUSH PRIVILEGES;
