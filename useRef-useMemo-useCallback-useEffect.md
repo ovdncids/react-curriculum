@@ -240,7 +240,7 @@ function UseCallbackTest() {
 
 ```diff
 - }, []);
-- }, [f]);
++ }, [f]);
 ```
 * 이제는 `useCallback` 넣으라는 경고 발생. (랜더링마다 `f 함수`가 새로 생성된어서 `useCallback`을 사용하라는 경고이다.)
 
