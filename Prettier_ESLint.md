@@ -267,8 +267,27 @@ npm run fix
   "jest": true
 }
 ```
-
 * [`husky` 연동](https://github.com/ovdncids/react-curriculum/blob/master/Prettier.md#husky)
+
+# Oxlint@1.75.0, Oxfmt@0.60.0
+* [Oxlint - 빠른 린트](https://www.oxcjs.com/ko/guide/usage/linter/quickstart.html)
+* [Oxfmt - Format](https://www.oxcjs.com/ko/guide/usage/formatter/quickstart.html)
+
+.oxfmtrc.json
+```json
+{
+  "printWidth": 88,
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "trailingComma": "none",
+  "insertFinalNewline": true,
+  "sortImports": true,
+  "singleAttributePerLine": true,
+  "bracketSameLine": false
+}
+```
 
 # React Native
 * https://github.com/ovdncids/react-native-curriculum/blob/master/ESLint.md
