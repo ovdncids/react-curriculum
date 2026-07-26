@@ -474,10 +474,25 @@ jsconfig.json
   }
 }
 ```
-* TS: tsconfig.json
+* <details><summary>TS: tsconfig.app.json 파일이 있는 경우</summary>
+
+  * `tsconfig.json`에 넣지 말고 `baseUrl`도 없다.
+
+  tsconfig.app.json
+  ```ts
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+  ```
+</details>
+
 * <details><summary>Vite</summary>
 
-  vite.config.js
+  * `jsconfig.json` 설정이 있어야 `VSCode`에서 오류 없다.
+
+  vite.config.js 
   ```js
   import path from 'path'
 
@@ -492,6 +507,8 @@ jsconfig.json
 ```diff
 - import { usersState } from '../stores/usersStore.js';
 + import { usersState } from 'stores/usersStore.js';
+또는
++ import { usersState } from '@/stores/usersStore.js';
 ```
 * `npm start` 재시작
 
