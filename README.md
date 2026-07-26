@@ -477,6 +477,7 @@ jsconfig.json
 * TS: tsconfig.json
 * <details><summary>Vite</summary>
 
+  vite.config.js
   ```js
   import path from 'path'
 
