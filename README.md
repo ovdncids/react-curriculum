@@ -1,4 +1,4 @@
-# React (19.1.1)
+# React (19.2.7)
 [데모](https://curriculums-min.web.app)
 
 <!-- ## 용어
@@ -6,7 +6,7 @@
 
 **Markdown**: 주로 README.md 파일로 많이 쓰이고, 현재 이 문서도 Markdown으로 만들어짐. 화려한 레이아웃 업이 Text로 정보 전달 할때 많이 사용한다. -->
 
-## Node.js (20.19.4)
+## Node.js (20.20.2)
 https://nodejs.org
 
 https://nodejs.org/download/release
@@ -121,7 +121,7 @@ git add .
 git rebase --continue
 ``` -->
 
-## Sass 설치
+## Sass 설치 (sass@1.102.0, sass-loader@16.0.8)
 css를 프로그램화 하여 색상 테마를 변수에 넣을 수 있고, 반복 부분을 저장하고 불러 올 수 있다. 이름은 Sass지만 파일명은 scss이다.
 
 https://sass-guidelin.es/ko
@@ -289,7 +289,7 @@ src/App.js
 ```
 * `props`: 설명, `Properties`의 줄임말
 
-## React Router DOM (7.8.2)
+## React Router DOM (7.18.1)
 https://reacttraining.com/react-router
 
 ### 설치
@@ -378,24 +378,24 @@ Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽�
 
 Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한다.
 
-## Signals 설치 (3.3.0)
-* https://github.com/preactjs/signals
+## Zustand 설치 (5.0.14)
+https://github.com/pmndrs/zustand
 ```sh
-npm install @preact/signals-react
+npm install zustand
 ```
 
 ## Users Store 생성
 src/stores/usersStore.js
 ```js
-import { signal } from '@preact/signals-react';
+import { create } from 'zustand';
 
-export const usersState = {
-  users: signal([]),
-  user: signal({
+export const usersStore = create(() => ({
+  users: [],
+  user: {
     name: '',
     age: ''
-  })
-};
+  }
+}));
 ```
 * <details><summary>TS: (state: UsersStore)</summary>
 
@@ -404,24 +404,32 @@ export const usersState = {
     name: string
     age: string | number
   }
+
+  interface UsersStore {
+    users: User[]
+    user: User
+  }
   
-  export const usersState = {
-    users: signal<User[]>([]),
-    user: signal<User>({
+  export const usersStore = create<UsersStore>(() => ({
+    users: [],
+    user: {
       name: '',
       age: ''
-    })
-  };
+    }
+  }));
   ```
 </details>
 
-## Users Component Signals Store 주입
+## Users Component Zustand Store 주입
 src/pages/Users.js
 ```js
-import { usersState } from '../stores/usersStore.js';
+import { usersStore } from '../stores/usersStore.js';
 
 function Users() {
-  console.log('Users', usersState.users.value, usersState.user.value);
+  const usersState = usersStore((state) => state);
+  const user = usersState.user;
+  const users = usersState.users;
+  console.log(user, users);
   return (
     <div>
       <h3>Users</h3>
@@ -517,77 +525,73 @@ jsconfig.json
 src/stores/usersStore.js
 ```js
 export const usersActions = {
+  userSet: (user) => {
+    usersStore.setState({ user });
+  },
   usersCreate: (user) => {
-    const users = [...usersState.users.value];
-    users.push({...user.value});
-    usersState.users.value = users;
-    console.log(usersState.users.value);
+    usersStore.setState((state) => {
+      state.users.push({
+        ...user
+      });
+      return {
+        users: state.users
+      };
+    });
   }
 };
 ```
-* <details><summary>TS: usersCreate: (user) => {</summary>
+* `전개 구조` 설명 하기
+* `action` 안에서 `state` 사용 `usersStore.getState().user`
 
-  ```ts
-  usersCreate: (user: Signal<User>) => {
-  ```
-</details>
+### Zustand 특징
+* `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
+* `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
 
 src/pages/Users.js
-```js
-import { useComputed } from '@preact/signals-react';
-```
 ```diff
-- import { usersState } from 'stores/usersStore.js';
-+ import { usersState, usersActions } from 'stores/usersStore.js';
+- import { usersStore } from '../stores/usersStore.js';
++ import { usersStore, usersActions } from '../stores/usersStore.js';
 ```
 ```js
-{useComputed(() => {
-  console.log('Create.name', usersState.user.value.name);
-  return (
-    <input
-      type="text" placeholder="Name" value={usersState.user.value.name}
-      onChange={(event) => {
-        usersState.user.value = {
-          ...usersState.user.value,
-          name: event.target.value
-        }
-      }}
-    />
-  );
-})}
-{useComputed(() => {
-  console.log('Create.age', usersState.user.value.age);
-  return (
-    <input
-      type="text" placeholder="Age" value={usersState.user.value.age}
-      onChange={(event) => {
-        usersState.user.value = {
-          ...usersState.user.value,
-          age: event.target.value
-        }
-      }}
-    />
-  );
-})}
+<input
+  type="text" placeholder="Name" value={user.name}
+  onChange={(event) => {
+    usersActions.userSet({
+      ...user,
+      name: event.target.value
+    });
+  }}
+/>
+<input
+  type="text" placeholder="Age" value={user.age}
+  onChange={(event) => {
+    usersActions.userSet({
+      ...user,
+      age: event.target.value
+    });
+  }}
+/>
 <button onClick={() => {
-  usersActions.usersCreate(usersState.user);
+  usersActions.usersCreate(user);
 }}>Create</button>
 ```
-* `전개 구조` 설명 하기
 
 ### Read
 src/stores/usersStore.js
 ```js
 usersRead: () => {
-  usersState.users.value = [
-    {
+  usersStore.setState((state) => {
+    state.users.push({
       name: '홍길동',
       age: 20
     }, {
       name: '춘향이',
       age: 16
-    }
-  ];
+    });
+    return {
+      users: state.users
+    };
+  });
 }
 ```
 
@@ -596,6 +600,10 @@ src/pages/Users.js
 import { useEffect } from 'react';
 
 useEffect(() => {
+  usersActions.userSet({
+    name: '',
+    age: ''
+  });
   usersActions.usersRead();
 }, []);
 ```
@@ -611,29 +619,28 @@ useEffect(() => {
 - </tr>
 ```
 ```js
-{useComputed(() => {
-  console.log('Read', usersState.users.value);
-  return usersState.users.value.map((user, index) => (
-    <tr key={index}>
-      <td>{user.name}</td>
-      <td>{user.age}</td>
-      <td>
-        <button>Update</button>
-        <button>Delete</button>
-      </td>
-    </tr>
-  ));
-})}
+{users.map((user, index) => (
+  <tr key={index}>
+    <td>{user.name}</td>
+    <td>{user.age}</td>
+    <td>
+      <button>Update</button>
+      <button>Delete</button>
+    </td>
+  </tr>
+))}
 ```
-* [Signals 특징](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md)
 
 ### Delete
 src/stores/usersStore.js
 ```js
 usersDelete: (index) => {
-  const users = [...usersState.users.value];
-  users.splice(index, 1);
-  usersState.users.value = users;
+  usersStore.setState((state) => {
+    state.users.splice(index, 1);
+    return {
+      users: state.users
+    };
+  });
 }
 ```
 
@@ -651,10 +658,18 @@ src/pages/Users.js
 ### Update
 src/stores/usersStore.js
 ```js
+usersSet: (users) => {
+  usersStore.setState({ users });
+},
+```
+```js
 usersUpdate: (index, user) => {
-  const users = [...usersState.users.value];
-  users[index] = user;
-  usersState.users.value = users;
+  usersStore.setState((state) => {
+    state.users[index] = user;
+    return {
+      users: state.users
+    };
+  });
 }
 ```
 
@@ -668,9 +683,9 @@ src/pages/Users.js
   <input
     type="text" placeholder="Name" value={user.name}
     onChange={(event) => {
-      const users = [...usersState.users.value];
-      users[index].name = event.target.value;
-      usersState.users.value = users;
+      const users = [...usersState.users]
+      users[index].name = event.target.value
+      usersActions.usersSet(users)
     }}
   />
 </td>
@@ -678,9 +693,9 @@ src/pages/Users.js
   <input
     type="text" placeholder="Age" value={user.age}
     onChange={(event) => {
-      const users = [...usersState.users.value];
-      users[index].age = event.target.value;
-      usersState.users.value = users;
+      const users = [...usersState.users]
+      users[index].age = event.target.value
+      usersActions.usersSet(users)
     }}
   />
 </td>
@@ -706,7 +721,7 @@ node index.js
 Ctrl + c
 ```
 
-## Axios 서버 연동
+## Axios 서버 연동 (1.18.1)
 https://github.com/axios/axios
 ```sh
 npm install axios
@@ -724,7 +739,7 @@ import axios from 'axios';
 usersRead: async () => {
   const response = await axios.get('http://localhost:3100/api/v1/users');
   console.log('Done usersRead', response);
-  usersState.users.value = response.data.users;
+  usersActions.usersSet(response.data.users);
 },
 ```
 
@@ -735,7 +750,7 @@ src/stores/usersStore.js
 ```
 ```js
 usersCreate: async (user) => {
-  const response = await axios.post('http://localhost:3100/api/v1/users', user.value);
+  const response = await axios.post('http://localhost:3100/api/v1/users', user);
   console.log('Done usersCreate', response);
   usersActions.usersRead();
 },
@@ -770,32 +785,32 @@ usersUpdate: async (index, user) => {
 ## Search Store 만들기
 src/stores/searchStore.js
 ```js
+import { usersActions } from './usersStore.js';
 import axios from 'axios';
-import { usersState } from './usersStore.js';
 
 export const searchActions = {
   searchRead: async (q) => {
     const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
     console.log('Done searchRead', response);
-    usersState.users.value = response.data.users;
+    usersActions.usersSet(response.data.users);
   }
 };
 ```
 
-### Search Component Signals Store 주입
+### Search Component Zustand Store 주입
 src/pages/Search.js
 ```js
 import { useEffect } from 'react';
-import { useComputed } from '@preact/signals-react';
-import { usersState } from 'stores/usersStore.js';
-import { searchActions } from 'stores/searchStore.js';
+import { usersStore } from '../stores/usersStore.js';
+import { searchActions } from '../stores/searchStore.js';
 
 function Search() {
+  const users = usersStore((state) => state).users;
   const q = '';
+  console.log(q, users);
   useEffect(() => {
     searchActions.searchRead(q);
   }, []);
-  console.log('Search', q, usersState.users.value);
   return (
     <div>
       <h3>Search</h3>
@@ -816,15 +831,12 @@ function Search() {
             </tr>
           </thead>
           <tbody>
-            {useComputed(() => {
-              console.log('Search.users', usersState.users.value);
-              return usersState.users.value.map((user, index) => (
-                <tr key={index}>
-                  <td>{user.name}</td>
-                  <td>{user.age}</td>
-                </tr>
-              ));
-            })}
+          {users.map((user, index) => (
+            <tr key={index}>
+              <td>{user.name}</td>
+              <td>{user.age}</td>
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>
@@ -838,29 +850,24 @@ export default Search;
 ## SearchBar Component에서만 사용 가능한 state값 적용
 src/pages/Search.js
 ```diff
-- import { useComputed } from '@preact/signals-react';
-+ import { useComputed, useSignal } from '@preact/signals-react';
+- import { useEffect } from 'react';
++ import { useState, useEffect } from 'react';
 ```
 ```js
 function SearchBar(props) {
-  const q = useSignal('');
-  console.log('SearchBar', props.q, q.value);
+  const [ q, setQ ] = useState('');
+  console.log('SearchBar', props.q);
   return (
     <div>
       <form onSubmit={(event) => {
         event.preventDefault();
-        searchActions.searchRead(q.value);
+        searchActions.searchRead(q);
       }}>
-        {useComputed(() => {
-          console.log('SearchBar.q', q.value);
-          return (
-            <input
-              type="text" placeholder="Search"
-              value={q.value}
-              onChange={event => {q.value = event.target.value}}
-            />
-          );
-        })}
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {setQ(event.target.value)}}
+        />
         <button>Search</button>
       </form>
     </div>
@@ -876,63 +883,26 @@ function SearchBar(props) {
 - </div>
 + <SearchBar q={q} />
 ```
-* <details><summary><code>useSignal</code>과 <code>useState</code> 비교하기</summary>
-
-  ```js
-  function SearchBar(props: {q: string}) {
-    const [s, sSet] = useState('');
-  
-  <button onClick={() => sSet(s + 1)}>{s}</button>
-  ```
-</details>
-
-* <details><summary><code>useSignal</code>과 <code>signal</code> 비교하기</summary>
-
-  ```diff
-  - useSignal
-  + signal
-  ```
-  * `signal`은 `useState`의 `s` 값이 변하면 `리렌더링` 되면서 `signal`의 값도 초기화 되지만, `useSignal`은 초기화 되지 않는다.
-  * 이유 확인
-  ```js
-  const hooks = [];
-
-  function SearchBar(props: {q: string}) {
-    const q = signal('');
-    hooks.push(q);
-    console.warn(hooks, hooks[0] === hooks[hooks.length - 1]);
-  ```
-  * `signal`를 `useSignal`로 변경해 보기
-  * `hooks.push(sSet);`로 변경해 보기
-  * `hooks.push(sSet);`로 변경해 보기
-  * `useRef`도 확인해 보기
-  ```diff
-  - hooks.push(sSet);
-  ```
-  ```js
-  const r = useRef(null);
-  hooks.push(r);
-  ```
-  * 결론: `useSignal`는 `use`로 시작하므로 컴포넌트 안에서만 사용 가능한 `Hook 함수`이다. 소스 코드를 추적하면 `useRef`가 사용되고 있다.
-</details>
 
 ## Search Component 쿼리스트링 변경
 src/pages/Search.js
 ```js
 import { useNavigate } from 'react-router-dom';
 ```
+```diff
+- function SearchBar(props) {
+```
 ```js
 function SearchBar(props) {
   const navigate = useNavigate();
 ```
 ```diff
-- searchActions.searchRead(q.value);
-+ navigate('/search?q=' + q.value);
+- searchActions.searchRead(q);
++ navigate('/search?q=' + q);
 ```
 * `검색`, `뒤로가기` 해보기
 
 ## Search Component 새로고침 적용
-src/pages/Search.js
 ```diff
 - import { useNavigate } from 'react-router-dom';
 + import { useNavigate, useLocation } from 'react-router-dom';
@@ -956,8 +926,8 @@ useEffect(() => {
 * `검색`, `새로고침` 해보기
 
 ```diff
-- const q = useSignal(''); 
-+ const q = useSignal(props.q);
+- const [ q, setQ ] = useState('');
++ const [ q, setQ ] = useState(props.q);
 ```
 * `새로고침`, `뒤로가기` 해보기
 
@@ -967,17 +937,6 @@ useEffect(() => {
 ```
 * `새로고침`, `뒤로가기`, `검색` 해보기
 * `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
-
-## Search Component Signals의 특징
-* `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더링`될 일이 없으므로 `useEffect`를 지워도 `무한 리렌더링` 되지 않는다.
-```diff
-- useEffect(() => {
--   searchActions.searchRead(q);
-- }, [q]);
-```
-```js
-searchActions.searchRead(q);
-```
 
 ## Proxy 설정
 package.json
