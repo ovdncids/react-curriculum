@@ -957,15 +957,16 @@ useEffect(() => {
 
 ```diff
 - const q = useSignal(''); 
++ const q = useSignal(props.q);
 ```
-```js
-const q = useSignal(props.q);
-useEffect(() => {
-  console.warn('SearchBar.useEffect', props.q, q.value);
-  q.value = props.q;
-}, [q, props.q]);
+* `새로고침`, `뒤로가기` 해보기
+
+```diff
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
 ```
-* `검색`, `새로고침`, `뒤로가기` 해보기
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
 
 ## Search Component Signals의 특징
 * `Signals`를 사용하는 `Search` 컴포넌트는 `useState`, `타 Store`등으로 `리렌더링`될 일이 없으므로 `useEffect`를 지워도 `무한 리렌더링` 되지 않는다.
