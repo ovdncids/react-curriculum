@@ -900,7 +900,7 @@ function SearchBar(props) {
 - searchActions.searchRead(q);
 + navigate('/search?q=' + q);
 ```
-`검색`, `뒤로가기` 해보기
+* `검색`, `뒤로가기` 해보기
 
 ## Search Component 새로고침 적용
 ```diff
@@ -915,7 +915,7 @@ const location = useLocation();
 const searchParams = new URLSearchParams(location.search);
 const q = searchParams.get('q') || '';
 ```
-`검색`, `새로고침` 해보기
+* `검색`, `새로고침` 해보기
 
 ```diff
 useEffect(() => {
@@ -923,20 +923,20 @@ useEffect(() => {
 - }, []);
 + }, [q]);
 ```
-`검색`, `새로고침` 해보기
+* `검색`, `새로고침` 해보기
 
 ```diff
 - const [ q, setQ ] = useState('');
 + const [ q, setQ ] = useState(props.q);
 ```
-`새로고침`, `뒤로가기` 해보기
+* `새로고침`, `뒤로가기` 해보기
 
 ```diff
 - <SearchBar q={q} />
 + <SearchBar key={q} q={q} />
 ```
-`새로고침`, `뒤로가기`, `검색` 해보기
-`key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
 
 ## Proxy 설정
 package.json
