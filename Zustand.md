@@ -1,4 +1,4 @@
-# React
+# React (19.2.7)
 [데모](https://curriculums-min.web.app)
 
 <!-- ## 용어
@@ -6,8 +6,10 @@
 
 **Markdown**: 주로 README.md 파일로 많이 쓰이고, 현재 이 문서도 Markdown으로 만들어짐. 화려한 레이아웃 업이 Text로 정보 전달 할때 많이 사용한다. -->
 
-## Node.js
+## Node.js (20.20.2)
 https://nodejs.org
+
+https://nodejs.org/download/release
 
 ## NVM (Node Version Manager)
 https://github.com/ovdncids/react-curriculum/blob/master/NVM.md
@@ -31,12 +33,18 @@ https://stackoverflow.com/questions/29972396/how-to-set-tab-space-style
 https://github.com/facebook/create-react-app
 ```sh
 # React의 스케폴딩을 쉽게 만들고 작업 후 쉽게 빌드 할 수 있다.
-# npx는 npm v.5.2 이후 부터 npm과 같이 설치 된다.
-# npm install -g create-react-app
-# create-react-app react-study
+# JS
 npx create-react-app react-study
+
+# JS with Vite
+npm create vite@latest react-study -- --template react
+
 # Typescript
 npx create-react-app react-study-typescript --template typescript
+
+# Typescript with Vite
+npm create vite@latest react-study-typescript -- --template react-ts
+
 cd react-study
 code .
 
@@ -113,7 +121,7 @@ git add .
 git rebase --continue
 ``` -->
 
-## Sass 설치
+## Sass 설치 (sass@1.102.0, sass-loader@16.0.8)
 css를 프로그램화 하여 색상 테마를 변수에 넣을 수 있고, 반복 부분을 저장하고 불러 올 수 있다. 이름은 Sass지만 파일명은 scss이다.
 
 https://sass-guidelin.es/ko
@@ -237,17 +245,17 @@ https://www.youtube.com/watch?v=eprXmC_j9A4
 
 **현재 브라우저 상황**: YouTube IE11 부터 지원. IE11 부터 Flex 사용 가능. -->
 
-## React Component 만들기
+## React Layout Component 만들기
 Header, Nav, Footer 이렇게 Component 별로 파일을 나눈다.
 
 src/App.js
 ```js
-import Header from './components/Header.js';
-import Nav from './components/Nav.js';
-import Footer from './components/Footer.js';
+import Header from './components/layout/Header.js';
+import Nav from './components/layout/Nav.js';
+import Footer from './components/layout/Footer.js';
 ```
 
-src/components/Header.js
+src/components/layout/Header.js
 ```js
 function Header(props) {
   console.log(props);
@@ -281,7 +289,7 @@ src/App.js
 ```
 * `props`: 설명, `Properties`의 줄임말
 
-## React Router DOM
+## React Router DOM (7.18.1)
 https://reacttraining.com/react-router
 
 ### 설치
@@ -290,33 +298,47 @@ npm install react-router-dom
 ```
 
 ### Router 만들기
+src/index.js
+```js
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import Users from './pages/Users.js';
+import Search from './pages/Search.js';
+
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: [
+        { path: '/users', element: <Users /> },
+        { path: '/search', element: <Search /> },
+        {
+          index: true,
+          element: <Navigate replace to="/users" />
+        }
+      ]
+    }
+  ]
+);
+```
+```diff
+- <App />
++ <RouterProvider router={router} />
+```
+
 src/App.js
 ```js
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Users from './components/contents/Users.js';
-import Search from './components/contents/Search.js';
+import { Outlet } from 'react-router-dom';
 ```
 ```diff
 - <div>
 -   <h3>Users</h3>
 -   <p>Contents</p>
 - </div>
++ <Outlet />
 ```
-```js
-<BrowserRouter>
-  <Routes>
-    <Route path="/users" element={<Users />} />
-    <Route path="/search" element={<Search />} />
-    <Route path="*" element={<Navigate replace to="/users" />} />
-  </Routes>
-</BrowserRouter>
-```
-<!--
-<Route exact={true} path="/users" render={props => <Users {...props} testProps={true} />} />
-render는 render={Users} 이렇게 사용할 수 없다.
--->
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 function Users() {
   return (
@@ -330,33 +352,17 @@ function Users() {
 export default Users;
 ```
 
-src/components/contents/Search.js (동일)
+src/pages/Search.js (동일)
 
 **주소 창에서 router 바꾸어 보기**
 
-src/components/Nav.js
+src/components/layout/Nav.js
 ```js
 import { NavLink } from 'react-router-dom';
 
 <li><h2><NavLink to="users" className={({ isActive }) => isActive ? 'active' : ''}>Users</NavLink></h2></li>
 <li><h2><NavLink to="search" className={({ isActive }) => isActive ? 'active' : ''}>Search</NavLink></h2></li>
 ```
-**You should not use `<Link>` outside a `<Router>` 설명**
-
-<!-- history.push 자식으로 넘기기
-```js
-<A1 {...props}></A1>
-
-function A1(props) {
-  return (
-    <button onClick={() => {props.history.push('/b')}}>
-      A1
-    </button>
-  );
-}
-``` -->
-
-<!-- **BrowserRouter와 HashRouter 차이점**: BrowserRouter 사용 할 경우 IE9 이전 브라우저에서 오류가 발생 해서 HashRouter를 써야함 -->
 
 **React.StrictMode 설명**
 
@@ -372,7 +378,7 @@ Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽�
 
 Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한다.
 
-## Zustand 설치
+## Zustand 설치 (5.0.14)
 https://github.com/pmndrs/zustand
 ```sh
 npm install zustand
@@ -391,11 +397,33 @@ export const usersStore = create(() => ({
   }
 }));
 ```
+* <details><summary>TS: (state: UsersStore)</summary>
+
+  ```ts
+  interface User {
+    name: string
+    age: string | number
+  }
+
+  interface UsersStore {
+    users: User[]
+    user: User
+  }
+  
+  export const usersStore = create<UsersStore>(() => ({
+    users: [],
+    user: {
+      name: '',
+      age: ''
+    }
+  }));
+  ```
+</details>
 
 ## Users Component Zustand Store 주입
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
-import { usersStore } from '../../stores/usersStore.js';
+import { usersStore } from '../stores/usersStore.js';
 
 function Users() {
   const usersState = usersStore((state) => state);
@@ -442,6 +470,56 @@ function Users() {
 export default Users;
 ```
 
+### 상대 경로 절대 경로로 수정하기
+jsconfig.json
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  }
+}
+```
+* <details><summary>TS: tsconfig.app.json 파일이 있는 경우</summary>
+
+  * `tsconfig.json`에 넣지 말고 `baseUrl`도 없다.
+
+  tsconfig.app.json
+  ```ts
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+  ```
+</details>
+
+* <details><summary>Vite</summary>
+
+  * `jsconfig.json` 설정이 있어야 `VSCode`에서 오류 없다.
+
+  vite.config.js 
+  ```js
+  import path from 'path'
+
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  }
+  ```
+</details>
+
+```diff
+- import { usersState } from '../stores/usersStore.js';
++ import { usersState } from 'stores/usersStore.js';
+또는
++ import { usersState } from '@/stores/usersStore.js';
+```
+* `npm start` 재시작
+
 ## Users Store CRUD
 ### Create
 src/stores/usersStore.js
@@ -464,42 +542,33 @@ export const usersActions = {
 ```
 * `전개 구조` 설명 하기
 * `action` 안에서 `state` 사용 `usersStore.getState().user`
-* <details><summary>TS: (state: UsersStore)</summary>
-
-  ```ts
-  interface User {
-    name: string
-    age: string | number
-  }
-  interface UsersStore {
-    users: User[]
-    user: User
-  }
-  ```
-</details>
 
 ### Zustand 특징
 * `useState`와 다르게 동일한 객체를 `set` 해도 랜더링 가능
 * `redux`와 다르게 `state`가 readonly 아님, 하지만 렌더링은 무조건 `set` 사용
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
-- import { usersStore } from '../../stores/usersStore.js';
-+ import { usersStore, usersActions } from '../../stores/usersStore.js';
+- import { usersStore } from '../stores/usersStore.js';
++ import { usersStore, usersActions } from '../stores/usersStore.js';
 ```
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
   onChange={(event) => {
-    user.name = event.target.value;
-    usersActions.userSet(user);
+    usersActions.userSet({
+      ...user,
+      name: event.target.value
+    });
   }}
 />
 <input
   type="text" placeholder="Age" value={user.age}
   onChange={(event) => {
-    user.age = event.target.value;
-    usersActions.userSet(user);
+    usersActions.userSet({
+      ...user,
+      age: event.target.value
+    });
   }}
 />
 <button onClick={() => {
@@ -526,7 +595,7 @@ usersRead: () => {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 import { useEffect } from 'react';
 
@@ -575,7 +644,7 @@ usersDelete: (index) => {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <button>Delete</button>
 ```
@@ -604,7 +673,7 @@ usersUpdate: (index, user) => {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <td>{user.name}</td>
 - <td>{user.age}</td>
@@ -614,8 +683,9 @@ src/components/contents/Users.js
   <input
     type="text" placeholder="Name" value={user.name}
     onChange={(event) => {
-      user.name = event.target.value;
-      usersActions.usersSet(users);
+      const users = [...usersState.users]
+      users[index].name = event.target.value
+      usersActions.usersSet(users)
     }}
   />
 </td>
@@ -623,8 +693,9 @@ src/components/contents/Users.js
   <input
     type="text" placeholder="Age" value={user.age}
     onChange={(event) => {
-      user.age = event.target.value;
-      usersActions.usersSet(users);
+      const users = [...usersState.users]
+      users[index].age = event.target.value
+      usersActions.usersSet(users)
     }}
   />
 </td>
@@ -650,38 +721,25 @@ node index.js
 Ctrl + c
 ```
 
-## Axios 서버 연동
+## Axios 서버 연동 (1.18.1)
 https://github.com/axios/axios
 ```sh
 npm install axios
-```
-
-### Axios common 에러 처리
-src/stores/common.js
-```js
-export const axiosError = (error) => {
-  console.error(error.response || error.message || error);
-};
 ```
 
 ### Read
 src/stores/usersStore.js
 ```js
 import axios from 'axios';
-import { axiosError } from './common.js';
 ```
 ```diff
 - usersRead: () => {
 ```
 ```js
 usersRead: async () => {
-  try {
-    const response = await axios.get('http://localhost:3100/api/v1/users');
-    console.log('Done usersRead', response);
-    usersActions.usersSet(response.data.users);
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.get('http://localhost:3100/api/v1/users');
+  console.log('Done usersRead', response);
+  usersActions.usersSet(response.data.users);
 },
 ```
 
@@ -692,13 +750,9 @@ src/stores/usersStore.js
 ```
 ```js
 usersCreate: async (user) => {
-  try {
-    const response = await axios.post('http://localhost:3100/api/v1/users', user);
-    console.log('Done usersCreate', response);
-    usersActions.usersRead();
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.post('http://localhost:3100/api/v1/users', user);
+  console.log('Done usersCreate', response);
+  usersActions.usersRead();
 },
 ```
 
@@ -709,13 +763,9 @@ src/stores/usersStore.js
 ```
 ```js
 usersDelete: async (index) => {
-  try {
-    const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
-    console.log('Done usersDelete', response);
-    usersActions.usersRead();
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
+  console.log('Done usersDelete', response);
+  usersActions.usersRead();
 },
 ```
 
@@ -726,13 +776,9 @@ src/stores/usersStore.js
 ```
 ```js
 usersUpdate: async (index, user) => {
-  try {
-    const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
-    console.log('Done usersUpdate', response);
-    usersActions.usersRead();
-  } catch(error) {
-    axiosError(error);
-  }
+  const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
+  console.log('Done usersUpdate', response);
+  usersActions.usersRead();
 }
 ```
 
@@ -741,27 +787,22 @@ src/stores/searchStore.js
 ```js
 import { usersActions } from './usersStore.js';
 import axios from 'axios';
-import { axiosError } from './common.js';
 
 export const searchActions = {
   searchRead: async (q) => {
-    try {
-      const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
-      console.log('Done searchRead', response);
-      usersActions.usersSet(response.data.users);
-    } catch(error) {
-      axiosError(error);
-    }
+    const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
+    console.log('Done searchRead', response);
+    usersActions.usersSet(response.data.users);
   }
 };
 ```
 
 ### Search Component Zustand Store 주입
-src/components/contents/Search.js
+src/pages/Search.js
 ```js
 import { useEffect } from 'react';
-import { usersStore } from '../../stores/usersStore.js';
-import { searchActions } from '../../stores/searchStore.js';
+import { usersStore } from '../stores/usersStore.js';
+import { searchActions } from '../stores/searchStore.js';
 
 function Search() {
   const users = usersStore((state) => state).users;
@@ -807,7 +848,7 @@ export default Search;
 ```
 
 ## SearchBar Component에서만 사용 가능한 state값 적용
-src/components/contents/Search.js
+src/pages/Search.js
 ```diff
 - import { useEffect } from 'react';
 + import { useState, useEffect } from 'react';
@@ -844,7 +885,7 @@ function SearchBar(props) {
 ```
 
 ## Search Component 쿼리스트링 변경
-src/components/contents/Search.js
+src/pages/Search.js
 ```js
 import { useNavigate } from 'react-router-dom';
 ```
@@ -888,12 +929,35 @@ useEffect(() => {
 - const [ q, setQ ] = useState('');
 + const [ q, setQ ] = useState(props.q);
 ```
+`새로고침`, `뒤로가기` 해보기
+
+```diff
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
+```
+`새로고침`, `뒤로가기`, `검색` 해보기
+`key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
 
 ## Proxy 설정
 package.json
 ```json
 "proxy": "http://localhost:3100"
 ```
+
+* <details><summary>Vite</summary>
+
+  ```js
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3100',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  }
+  ```
+</details>
 
 모든 파일 수정
 ```diff
@@ -906,33 +970,4 @@ package.json
 npm start
 ```
 
-<!-- ## Express에 build된 파일 넣기
-package.json
-```json
-"build": "react-scripts build && rm -fr ../express/public && mv build ../express/public",
-``` -->
-
-<!-- ## React for IE11
-```sh
-npm install react-app-polyfill
-```
-
-package.json
-```diff
-"browserslist": {
-  "development": [
-+   "ie 11",
-```
-
-src/index.js
-```js
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
-``` -->
-
 # 수고 하셨습니다.
-
-<!--
-예전 라이프 사이클(Life cycle)
-https://coding-hyeok.tistory.com/5
--->
