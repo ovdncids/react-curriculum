@@ -1,5 +1,6 @@
 # Prettier
 ## 기본 동작 원리
+* https://prettier.io/docs/install
 * https://www.daleseo.com/js-prettier
 ```sh
 # 예상 포맷 적용 결과가 출력 됨
@@ -284,10 +285,12 @@ npm run fix
   "trailingComma": "none",
   "insertFinalNewline": true,
   "sortImports": true,
-  "singleAttributePerLine": true,
+  "singleAttributePerLine": false,
   "bracketSameLine": false
 }
 ```
+* `Prettier`와 비슷하지만 `sortImports`, `sortPackageJson` 등의 유용한 기능이 있다.
+* `singleAttributePerLine`은 Tag 속성을 무조건 한줄씩 사용한다. (false이면 길이가 printWidth보다 크면 한줄씩)
 
 # React Native
 * https://github.com/ovdncids/react-native-curriculum/blob/master/ESLint.md
