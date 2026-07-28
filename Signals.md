@@ -198,7 +198,7 @@ useEffect(() => {
   ));
 })}
 ```
-* [Signals 특징](Signals-Basic.md)
+* [Signals 특징](SignalsBasic.md)
 
 ### Delete
 src/stores/usersStore.js
