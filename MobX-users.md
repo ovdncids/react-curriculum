@@ -437,9 +437,8 @@ axios.patch('http://localhost:3100/api/v1/users/' + index, user).then((response)
 src/stores/SearchStore.js
 ```js
 import { makeAutoObservable } from 'mobx';
-import { usersStore } from './UsersStore.js';
 import axios from 'axios';
-import { axiosError } from './common.js';
+import { usersStore } from './UsersStore';
 
 export default class SearchStore {
   constructor() {
@@ -451,8 +450,6 @@ export default class SearchStore {
     axios.get(url).then((response) => {
       console.log('Done searchRead', response);
       usersStore.users = response.data.users;
-    }).catch((error) => {
-      axiosError(error);
     });
   }
 }
@@ -463,18 +460,20 @@ export const searchStore = new SearchStore();
 ### Search Store 등록
 src/index.js
 ```js
-import { searchStore } from './stores/SearchStore';
-
-searchStore={searchStore}
+import { searchStore } from './stores/SearchStore.js';
+```
+```diff
+- { path: '/search', element: <Search /> },
++ { path: '/search', element: <Search usersStore={usersStore} searchStore={searchStore} /> },
 ```
 
 ### Search Component MobX Store 주입
 src/pages/Search.js
 ```js
 import { useEffect } from 'react';
-import { inject, observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 
-function Search(props) {
+const Search = observer((props) => {
   const { usersStore, searchStore } = props;
   const { users } = usersStore;
   useEffect(() => {
@@ -511,10 +510,28 @@ function Search(props) {
       </div>
     </div>
   );
-}
+})
 
-export default inject('usersStore', 'searchStore')(observer(Search));
+export default Search;
 ```
+
+* <details><summary>TS: Property 'usersStore' does not exist on type '{}'.ts(2339)</summary>
+
+  ```diff
+  - const Users = observer((props) => {
+  ```
+  ```ts
+  import type UsersStore from '@/stores/UsersStore';
+  import type SearchStore from '@/stores/SearchStore';
+
+  interface Props = {
+    usersStore: UsersStore
+    searchStore: SearchStore
+  }
+  
+  const Search = observer((props: Props) => {
+  ```
+</details>
 
 ## Search Component에서만 사용 가능한 state값 적용
 src/pages/Search.js
