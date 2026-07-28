@@ -198,7 +198,7 @@ useEffect(() => {
   ));
 })}
 ```
-* [Signals 특징](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md)
+* [Signals 특징](Signals-Basic.md)
 
 ### Delete
 src/stores/usersStore.js
