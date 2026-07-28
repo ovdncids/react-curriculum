@@ -361,7 +361,7 @@ import { usersState } from 'stores/usersStore.js';
 ## Vite
 vite.config.js 
 ```js
-import path from 'path'
+import path from 'path';
 
 resolve: {
   alias: {
