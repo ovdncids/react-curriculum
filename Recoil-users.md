@@ -1,4 +1,4 @@
-# Recoil users
+# Recoil (React@18까지만 지원)
 * https://recoiljs.org
 
 ## Recoil 설치
