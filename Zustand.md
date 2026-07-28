@@ -43,7 +43,7 @@ export const usersStore = create(() => ({
 ## Users Component Zustand Store 주입
 src/pages/Users.js
 ```js
-import { usersStore } from '../stores/usersStore.js';
+import { usersStore } from '@/stores/usersStore.js';
 
 function Users() {
   const usersState = usersStore((state) => state);
@@ -122,8 +122,8 @@ export const usersActions = {
 
 src/pages/Users.js
 ```diff
-- import { usersStore } from '../stores/usersStore.js';
-+ import { usersStore, usersActions } from '../stores/usersStore.js';
+- import { usersStore } from '@/stores/usersStore.js';
++ import { usersStore, usersActions } from '@/stores/usersStore.js';
 ```
 ```js
 <input
@@ -374,8 +374,8 @@ export const searchActions = {
 src/pages/Search.js
 ```js
 import { useEffect } from 'react';
-import { usersStore } from '../stores/usersStore.js';
-import { searchActions } from '../stores/searchStore.js';
+import { usersStore } from '@/stores/usersStore.js';
+import { searchActions } from '@/stores/searchStore.js';
 
 function Search() {
   const users = usersStore((state) => state).users;
