@@ -279,7 +279,7 @@ node index.js
 Ctrl + c
 ```
 
-## Axios 서버 연동
+## Axios 서버 연동 (1.18.1)
 https://github.com/axios/axios
 ```sh
 npm install axios
