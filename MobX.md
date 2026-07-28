@@ -1,5 +1,6 @@
 # MobX
-https://github.com/mobxjs/mobx
+* https://mobx.js.org/installation.html
+* https://github.com/mobxjs/mobx
 
 ## MobX 설치 (mobx@6.16.1, mobx-react-lite@4.1.1)
 ```sh
