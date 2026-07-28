@@ -1,9 +1,9 @@
 # MobX
 https://github.com/mobxjs/mobx
 
-## MobX 설치
+## MobX 설치 (mobx@6.16.1, mobx-react-lite@4.1.1)
 ```sh
-npm install mobx mobx-react
+npm install mobx mobx-react-lite
 ```
 
 ## Users Store 생성
@@ -42,30 +42,36 @@ tsconfig.json
 }
 ``` -->
 
+* <details><summary>TS: (state: UsersStore)</summary>
+
+  ```ts
+  interface User {
+    name: string
+    age: string | number
+  }
+
+  users: User[] = [];
+  user: User = {
+  ```
+</details>
+
 **Users Store 등록**
 
 src/index.js
 ```js
-import { Provider } from 'mobx-react';
 import { usersStore } from './stores/UsersStore.js';
 ```
 ```diff
-- <App />
-```
-```js
-<Provider
-  usersStore={usersStore}
->
-  <App />
-</Provider>
+- { path: '/users', element: <Users /> },
++ { path: '/users', element: <Users usersStore={usersStore} /> },
 ```
 
 ### Users Component MobX Store 주입
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 
-function Users(props) {
+const Users = observer((props) => {
   const { usersStore } = props;
   const { user } = usersStore;
   console.log(props, user);
@@ -104,22 +110,26 @@ function Users(props) {
       </div>
     </div>
   );
-}
+})
 
-export default inject('usersStore')(observer(Users));
+export default Users;
 ```
 
-**enforceActions 설명**
+* <details><summary>TS: Property 'usersStore' does not exist on type '{}'.ts(2339)</summary>
+
+  ```diff
+  - const Users = observer((props) => {
+  ```
+  ```ts
+  import type UsersStore from '../stores/UsersStore';
+
+  const Users = observer((props: { usersStore: UsersStore }) => {
+  ```
+</details>
 
 **useProxies 설명**
 
-src/stores/UsersStore.js (enforceActions 주석 풀기)
-```js
-enforceActions: 'never'
-```
-
-**render에 대한 설명**
-
+<!--
 **debugger 설명**
 ```js
 debugger;
@@ -139,6 +149,10 @@ package.json
 ```js
 debugger; // eslint-disable-line no-debugger
 ```
+-->
+
+### 상대 경로 절대 경로로 수정하기
+* [Alias](ESLint_Prettier_Alias.md#alias)
 
 ## Users Store CRUD
 ### Create
@@ -153,7 +167,7 @@ usersCreate(user) {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 <input
   type="text" placeholder="Name" value={user.name}
@@ -165,6 +179,13 @@ src/components/contents/Users.js
 />
 <button onClick={() => usersStore.usersCreate(user)}>Create</button>
 ```
+**enforceActions 설명**
+src/stores/UsersStore.js (enforceActions 주석 풀기)
+```js
+enforceActions: 'never'
+```
+
+**render에 대한 설명**
 
 ### Read
 src/stores/UsersStore.js
@@ -181,7 +202,7 @@ usersRead() {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 import { useEffect } from 'react';
 ```
@@ -240,7 +261,7 @@ usersDelete(index) {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <button>Delete</button>
 ```
@@ -257,7 +278,7 @@ usersUpdate(index, user) {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <td>{user.name}</td>
 - <td>{user.age}</td>
@@ -463,10 +484,10 @@ searchStore={searchStore}
 ```
 
 ### Search Component MobX Store 주입
-src/components/contents/Search.js
+src/pages/Search.js
 ```js
 import { useEffect } from 'react';
-import { inject, observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react-lite';
 
 function Search(props) {
   const { usersStore, searchStore } = props;
@@ -511,7 +532,7 @@ export default inject('usersStore', 'searchStore')(observer(Search));
 ```
 
 ## Search Component에서만 사용 가능한 state값 적용
-src/components/contents/Search.js
+src/pages/Search.js
 ```diff
 - import { useEffect } from 'react';
 + import { useState, useEffect } from 'react';
@@ -541,7 +562,7 @@ const searchRead = (event) => {
 ```
 
 ## Search Component 쿼리스트링 변경
-src/components/contents/Search.js
+src/pages/Search.js
 ```diff
 - function Search(props) {
 ```
