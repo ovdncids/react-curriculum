@@ -1,5 +1,5 @@
 # Only ESLint in Next.js (Javascript & Typescript)
-* ❕ ESLint는 React 문법 위주로 사용하고 포맷 관련은 Prettier나 Oxfmt을 사용 하자.
+* ❕ ESLint는 React 문법 위주로 사용하고, 포맷 관련은 Prettier나 Oxfmt을 사용 하자.
 
 .eslintrc.json
 ```json
