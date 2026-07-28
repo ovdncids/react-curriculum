@@ -293,4 +293,4 @@ npm run fix
 * `singleAttributePerLine`은 Tag 속성을 무조건 한줄씩 사용한다. (false이면 길이가 printWidth보다 크면 한줄씩)
 
 # React Native
-* https://github.com/ovdncids/react-native-curriculum/blob/master/ESLint.md
+* https://github.com/ovdncids/react-native-curriculum/blob/master/Alias_ESLint.md#eslint
