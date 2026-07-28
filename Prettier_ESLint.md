@@ -291,6 +291,19 @@ npm run fix
 ```
 * `Prettier`와 비슷하지만 `sortImports`, `sortPackageJson` 등의 유용한 기능이 있다.
 * `singleAttributePerLine`은 Tag 속성을 무조건 한줄씩 사용한다. (false이면 길이가 printWidth보다 크면 한줄씩)
+* Oxlint가 아직 `eslint-plugin-react-hooks` 지원하지 않으므로 ESLint와 Oxfmt 조합이 효과적이다.
+
+package.json
+```json
+"scripts": {
+  "lint": "eslint .",
+  "lint:fix": "eslint --fix .",
+  "fmt": "oxfmt --check",
+  "fmt:fix": "oxfmt",
+  "check": "npm run lint && npm run fmt",
+  "fix": "npm run lint:fix && npm run fmt:fix"
+}
+```
 
 # React Native
 * https://github.com/ovdncids/react-native-curriculum/blob/master/Alias_ESLint.md#eslint
