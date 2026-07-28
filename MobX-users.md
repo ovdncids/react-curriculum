@@ -476,8 +476,10 @@ import { observer } from 'mobx-react-lite';
 const Search = observer((props) => {
   const { usersStore, searchStore } = props;
   const { users } = usersStore;
+  const q = '';
+  console.log(q, users);
   useEffect(() => {
-    searchStore.searchRead('');
+    searchStore.searchRead(q);
   }, [searchStore]);
   return (
     <div>
@@ -540,27 +542,34 @@ src/pages/Search.js
 + import { useState, useEffect } from 'react';
 ```
 ```js
-const [ q, setQ ] = useState('');
-const searchRead = (event) => {
-  event.preventDefault();
-  searchStore.searchRead(q);
-};
+function SearchBar(props) {
+  const [q, setQ] = useState('');
+  console.log('SearchBar', props.q);
+  return (
+    <div>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        props.searchStore.searchRead(q);
+      }}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
+  );
+}
 ```
 ```diff
-- <form>
--   <input type="text" placeholder="Search" />
--   <button>Search</button>
-- </form>
-```
-```js
-<form onSubmit={(event) => {searchRead(event)}}>
-  <input
-    type="text" placeholder="Search"
-    value={q}
-    onChange={(event) => {setQ(event.target.value)}}
-  />
-  <button>Search</button>
-</form>
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
++ <SearchBar q={q} searchStore={searchStore} />
 ```
 
 ## Search Component 쿼리스트링 변경
@@ -569,38 +578,57 @@ src/pages/Search.js
 - function Search(props) {
 ```
 ```js
-import { useLocation, useNavigate } from 'react-router-dom';
-
-function Search(props) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
-  const _q = searchParams.get('q') || '';
-  console.log(_q);
+import { useNavigate } from 'react-router-dom';
 ```
 ```diff
-- searchStore.searchRead(q);
+- function SearchBar(props) {
+```
+```js
+function SearchBar(props) {
+  const navigate = useNavigate();
+```
+```diff
+- props.searchStore.searchRead(q);
 + navigate('/search?q=' + q);
+```
+```diff
+- <SearchBar q={q} searchStore={searchStore} />
++ <SearchBar q={q} />
 ```
 `검색`, `뒤로가기` 해보기
 
 ## Search Component 새로고침 적용
 ```diff
-- useEffect(() => {
--   searchStore.searchRead('');
-- }, [searchStore]);
+- import { useNavigate } from 'react-router-dom';
++ import { useNavigate, useLocation } from 'react-router-dom';
+```
+```diff
+- const q = '';
 ```
 ```js
-useEffect(() => {
-  searchStore.searchRead(_q);
-  setQ(_q);
-}, [searchStore, _q]);
+const location = useLocation();
+const searchParams = new URLSearchParams(location.search);
+const q = searchParams.get('q') || '';
 ```
-* ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
-* <details><summary>정답</summary>
+* `검색`, `새로고침` 해보기
 
-  ```diff
-  - const [ q, setQ ] = useState('');
-  + const [ q, setQ ] = useState(_q);
-  ```
-</details>
+```diff
+useEffect(() => {
+  searchStore.searchRead(q);
+- }, [searchStore]);
++ }, [searchStore, q]);
+```
+* `검색`, `새로고침` 해보기
+
+```diff
+- const [q, setQ] = useState('');
++ const [q, setQ] = useState(props.q);
+```
+* `새로고침`, `뒤로가기` 해보기
+
+```diff
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
+```
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
