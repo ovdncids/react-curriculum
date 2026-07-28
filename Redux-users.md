@@ -1,42 +1,28 @@
 # Redux users
 * https://redux-toolkit.js.org
 
-## Redux Tookit 설치
+## Redux Tookit 설치 (react-redux@9.3.0, @reduxjs/toolkit@2.12.0)
 ```sh
 npm install react-redux @reduxjs/toolkit
 ```
-
-### 상대 경로 절대 경로로 수정하기
-jsconfig.json
-```json
-{
-  "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"]
-    }
-  }
-}
-```
-* TS: tsconfig.json
-* ❕ `import { usersState } from 'store/users/usersSlice.js';` 이런식으로 사용한다.
 
 ## Users 리듀서 생성
 src/store/users/usersSlice.js
 ```js
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  users: [],
+  user: {
+    name: '',
+    age: '',
+  }
+};
+
 export const usersSlice = createSlice({
   name: '$users',
-  initialState: {
-    users: [],
-    user: {
-      name: '',
-      age: ''
-    }
-  },
-  reducers: {
-  }
+  initialState,
+  reducers: {}
 });
 
 export const usersState = (state) => state.$users;
@@ -44,7 +30,24 @@ export const usersActions = usersSlice.actions;
 
 export default usersSlice.reducer;
 ```
-* [Typescript](https://github.com/ovdncids/angular-curriculum/blob/master/Typescript.md#redux-initialstate)
+* <details><summary>TS: (state: UsersState)</summary>
+
+  ```ts
+  interface User {
+    name: string
+    age: string | number
+  }
+  
+  interface UsersState {
+    users: User[]
+    user: User
+  }
+  
+  const initialState: UsersState = {
+
+  export const usersState = (state: { $users: UsersState }) => state.$users;
+  ```
+</details>
 
 ## Users 리듀서 등록
 src/store/index.js
@@ -75,13 +78,13 @@ import store from './store/index.js';
 ```
 
 ### Users Component Redux Store 주입
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 import { useSelector } from 'react-redux';
-import { usersState } from 'store/users/usersSlice.js';
+import { usersState } from '../store/users/usersSlice.js';
 
 function Users() {
-  const user = {...useSelector(usersState).user};
+  const user = useSelector(usersState).user;
   console.log(user);
   return (
     <div>
@@ -123,6 +126,9 @@ function Users() {
 export default Users;
 ```
 
+### 상대 경로 절대 경로로 수정하기
+* [Alias](ESLint_Prettier_Alias.md#alias)
+
 **Redux DevTools 설치**
 
 https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
@@ -141,16 +147,16 @@ reducers: {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - import { useSelector } from 'react-redux';
-- import { usersState } from 'store/users/usersSlice.js';
+- import { usersState } from '@/store/users/usersSlice.js';
 
 - function Users() {
 ```
 ```js
 import { useSelector, useDispatch } from 'react-redux';
-import { usersState, usersActions } from 'store/users/usersSlice.js';
+import { usersState, usersActions } from '@/store/users/usersSlice.js';
 
 function Users() {
   const dispatch = useDispatch();
@@ -159,15 +165,19 @@ function Users() {
 <input
   type="text" placeholder="Name" value={user.name}
   onChange={(event) => {
-    user.name = event.target.value;
-    dispatch(usersActions.userSet(user));
+    dispatch(usersActions.userSet({
+      ...user,
+      name: event.target.value
+    }));
   }}
 />
 <input
   type="text" placeholder="Age" value={user.age}
   onChange={(event) => {
-    user.age = event.target.value;
-    dispatch(usersActions.userSet(user));
+    dispatch(usersActions.userSet({
+      ...user,
+      age: event.target.value
+    }));
   }}
 />
 <button onClick={() => dispatch(usersActions.usersCreate(user))}>Create</button>
@@ -187,7 +197,7 @@ usersRead: (state) => {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
 import { useEffect } from 'react';
 
@@ -239,7 +249,7 @@ usersDelete(state, action) {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <button>Delete</button>
 ```
@@ -258,7 +268,7 @@ usersUpdate: (state, action) => {
 }
 ```
 
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - <td>{user.name}</td>
 - <td>{user.age}</td>
@@ -291,7 +301,7 @@ src/components/contents/Users.js
 ```
 
 ## 스토어 state 주의 사항
-src/components/contents/Users.js
+src/pages/Users.js
 ```diff
 - const users = JSON.parse(JSON.stringify(useSelector(usersState).users));
 + const users = useSelector(usersState).users;
@@ -356,9 +366,9 @@ export const usersThunks = {
 ```
 
 ## Redux에서 Users Thunk로 액션 수정하기
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
-import { usersThunks } from 'store/users/usersThunks.js';
+import { usersThunks } from '@/store/users/usersThunks.js';
 ```
 ```diff
 - dispatch(usersActions.usersRead());
@@ -523,7 +533,7 @@ src/store/users/usersSlice.js
 src/store/search/searchThunks.js
 ```js
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { usersActions } from 'store/users/usersSlice.js';
+import { usersActions } from '@/store/users/usersSlice.js';
 import axios from 'axios';
 import { axiosError } from '../common.js';
 
@@ -617,9 +627,9 @@ sagaMiddleware.run(function* () {
 ```
 
 ## Redux에서 Users Saga로 액션 수정하기
-src/components/contents/Users.js
+src/pages/Users.js
 ```js
-import { usersSaga } from 'store/users/usersSaga.js';
+import { usersSaga } from '@/store/users/usersSaga.js';
 ```
 ```diff
 - dispatch(usersActions.usersRead());
@@ -760,7 +770,7 @@ src/store/search/searchSaga.js
 ```js
 import { put, takeEvery, call } from 'redux-saga/effects';
 import { createAction } from '@reduxjs/toolkit';
-import { usersActions } from 'store/users/usersSlice.js';
+import { usersActions } from '@/store/users/usersSlice.js';
 import axios from 'axios';
 import { axiosError } from '../common.js';
 
@@ -795,13 +805,13 @@ import { searchTakeEvery } from './search/searchSaga.js';
 </details>
 
 ### Search Component Redux Store 주입
-src/components/contents/Search.js
+src/pages/Search.js
 ```js
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { usersState } from 'store/users/usersSlice.js';
-import { searchThunks } from 'store/search/searchThunks.js';
-// import { searchSaga } from 'store/search/searchSaga.js';
+import { usersState } from '@/store/users/usersSlice.js';
+import { searchThunks } from '@/store/search/searchThunks.js';
+// import { searchSaga } from '@/store/search/searchSaga.js';
 
 function Search() {
   const dispatch = useDispatch();
@@ -848,7 +858,7 @@ export default Search;
 ```
 
 ## Search Component에서만 사용 가능한 state값 적용
-src/components/contents/Search.js
+src/pages/Search.js
 ```diff
 - import { useEffect } from 'react';
 + import { useState, useEffect } from 'react';
@@ -880,7 +890,7 @@ const searchRead = () => {
 ```
 
 ### Search Component 쿼리스트링 변경
-src/components/contents/Search.js
+src/pages/Search.js
 ```diff
 - function Search() {
 ```
