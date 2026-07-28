@@ -180,9 +180,11 @@ src/pages/Users.js
 <button onClick={() => usersStore.usersCreate(user)}>Create</button>
 ```
 **enforceActions 설명**
-src/stores/UsersStore.js (enforceActions 주석 풀기)
-```js
-enforceActions: 'never'
+
+src/stores/UsersStore.js
+```diff
+- // enforceActions: 'never'
++ enforceActions: 'never'
 ```
 
 **render에 대한 설명**
@@ -314,25 +316,16 @@ node index.js
 Ctrl + c
 ```
 
-## Axios 서버 연동
+## Axios 서버 연동 (1.18.1)
 https://github.com/axios/axios
 ```sh
 npm install axios
-```
-
-### Axios common 에러 처리
-src/stores/common.js
-```js
-export const axiosError = (error) => {
-  console.error(error.response || error.message || error);
-};
 ```
 
 ### Read
 src/stores/UsersStore.js
 ```js
 import axios from 'axios';
-import { axiosError } from './common.js';
 ```
 ```diff
 usersRead() {
@@ -349,8 +342,6 @@ usersRead() {
 axios.get('http://localhost:3100/api/v1/users').then((response) => {
   console.log('Done usersRead', response);
   this.users = response.data.users;
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
@@ -411,8 +402,6 @@ usersCreate(user) {
 axios.post('http://localhost:3100/api/v1/users', user).then((response) => {
   console.log('Done usersCreate', response);
   this.usersRead();
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
@@ -427,8 +416,6 @@ usersDelete(index) {
 axios.delete('http://localhost:3100/api/v1/users/' + index).then((response) => {
   console.log('Done usersDelete', response);
   this.usersRead();
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
@@ -443,8 +430,6 @@ usersUpdate(index, user) {
 axios.patch('http://localhost:3100/api/v1/users/' + index, user).then((response) => {
   console.log('Done usersUpdate', response);
   this.usersRead();
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
