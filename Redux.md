@@ -33,7 +33,7 @@ export default usersSlice.reducer;
 * <details><summary>TS: (state: UsersState)</summary>
 
   ```ts
-  interface User {
+  export interface User {
     name: string
     age: string | number
   }
@@ -52,21 +52,25 @@ export default usersSlice.reducer;
 ## Users 리듀서 등록
 src/store/index.js
 ```js
+import { useDispatch } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import usersReducer from './users/usersSlice.js';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     $users: usersReducer
   }
 });
+
+export const useAppDispatch = () => useDispatch();
+export default store;
 ```
 
 ## 스토어를 Provider에 등록
 src/index.js
 ```js
 import { Provider } from 'react-redux';
-import store from './store/index.js';
+import store from './store';
 ```
 ```diff
 - <App />
@@ -149,17 +153,16 @@ reducers: {
 
 src/pages/Users.js
 ```diff
-- import { useSelector } from 'react-redux';
 - import { usersState } from '@/store/users/usersSlice.js';
 
 - function Users() {
 ```
 ```js
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch } from '@/store'
 import { usersState, usersActions } from '@/store/users/usersSlice.js';
 
 function Users() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 ```
 ```js
 <input
@@ -350,7 +353,7 @@ export const usersThunks = {
   ),
   usersRead: createAsyncThunk(
     'usersRead',
-    (payload, thunkAPI) => {
+    (_payload, thunkAPI) => {
       thunkAPI.dispatch(usersActions.usersRead());
     }
   ),
@@ -390,45 +393,29 @@ import { usersThunks } from '@/store/users/usersThunks.js';
 ```
 
 ### Typescript 오류
-#### Argument of type 'AsyncThunkAction<void, void, {}>' is not assignable to parameter of type 'AnyAction'
+#### Argument of type 'AsyncThunkAction<void, void, AsyncThunkConfig>' is not assignable to parameter of type 'UnknownAction'.
+src/store/index.ts
 ```diff
-- const dispatch = useDispatch();
-+ const dispatch = useDispatch<any>();
-```
-or
-```diff
-- export default configureStore({
-+ export const store = configureStore({
-
-export type StoreDispatch = typeof store.dispatch;
-```
-```diff
-- const dispatch = useDispatch();
-+ const dispatch = useDispatch<StoreDispatch>();
+- export const useAppDispatch = () => useDispatch()
++ export const useAppDispatch = () => useDispatch<typeof store.dispatch>()
 ```
 
-#### Expected 0 arguments, but got 1.
+#### Argument of type 'User' is not assignable to parameter of type 'undefined'.
+src/store/users/usersThunks.ts
 ```diff
 - usersCreate: createAsyncThunk(
-+ usersCreate: createAsyncThunk<void | any, object>(
-# 첫번째 인자는 `return`될 타입을 뜻하고, 두번째 인자 넘겨 받은 타입을 뜻 한다.
++ usersCreate: createAsyncThunk<void, User>(
+# 첫번째 인자는 `return`될 타입을 뜻하고 (현재 함수 안에 return 없음), 두번째 인자 넘겨 받은 타입을 뜻 한다.
+
+- usersDelete: createAsyncThunk(
++ usersDelete: createAsyncThunk<void, number>(
+
+- usersUpdate: createAsyncThunk(
++ usersUpdate: createAsyncThunk<void, { index: number; user: User }>(
 ```
 
 ## Backend Server
-* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
-```sh
-# BE 서버 실행 방법
-npm install
-node index.js
-# 터미널 종료
-Ctrl + c
-```
-
-## Axios 서버 연동
-https://github.com/axios/axios
-```sh
-npm install axios
-```
+* [Axios 서버 연동](BackendServer.md)
 
 ### Axios common 에러 처리
 src/store/common.js
