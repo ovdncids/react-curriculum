@@ -203,8 +203,7 @@ import { useEffect } from 'react';
 
 function Users() {
   ...
-  const users = JSON.parse(JSON.stringify(useSelector(usersState).users));
-  // const users = Object.assign([], useSelector(usersState).users);
+  const users = useSelector(usersState).users;
   useEffect(() => {
     dispatch(usersActions.userSet({
       name: '',
@@ -235,11 +234,6 @@ function Users() {
   </tr>
 ))}
 ```
-<!--
-useState에서 users를 만들는 경우에는
-const users = Object.assign([], useSelector(usersState).users);
-사용해도 된다.
--->
 
 ### Delete
 src/store/users/usersSlice.js
@@ -278,8 +272,9 @@ src/pages/Users.js
   <input
     type="text" placeholder="Name" value={user.name}
     onChange={(event) => {
-      user.name = event.target.value;
-      dispatch(usersActions.usersSet(users));
+      dispatch(usersActions.usersSet(
+        users.map((user, i) => i === index ? { ...user, name: event.target.value } : user)
+      ));
     }}
   />
 </td>
@@ -287,8 +282,9 @@ src/pages/Users.js
   <input
     type="text" placeholder="Age" value={user.age}
     onChange={(event) => {
-      user.age = event.target.value;
-      dispatch(usersActions.usersSet(users));
+      dispatch(usersActions.usersSet(
+        users.map((user, i) => i === index ? { ...user, age: event.target.value } : user)
+      ));
     }}
   />
 </td>
@@ -303,8 +299,13 @@ src/pages/Users.js
 ## 스토어 state 주의 사항
 src/pages/Users.js
 ```diff
-- const users = JSON.parse(JSON.stringify(useSelector(usersState).users));
-+ const users = useSelector(usersState).users;
+- dispatch(usersActions.usersSet(
+-   users.map((user, i) => i === index ? { ...user, name: event.target.value } : user)
+- ));
+```
+```js
+user.name = event.target.value;
+dispatch(usersActions.usersSet(users));
 // dispatch 전에 리덕스의 state 값이 바뀐다면 dispatch 할때 오류가 발생한다.
 // 따라서 리덕스의 state 값은 꼭 dispatch에서만 변경해야 한다.
 ```
@@ -313,6 +314,9 @@ src/pages/Users.js
 dispatch로 리덕스의 state 값을 수정 하기 전에 호출될 함수를 사용하게 해준다. 주로 통신을 컴포넌트에서 빼기 위해 사용한다.
 
 ### 비동기 액션을 만드는 이유
+```diff
+- state.users.push(action.payload)
+```
 ```js
 setTimeout(() => {
   state.users.push(action.payload);
