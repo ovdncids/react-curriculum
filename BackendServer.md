@@ -19,4 +19,5 @@ npm install axios
 Zustand.md
 Signals.md
 MobX.md
+Redux.md
 -->
