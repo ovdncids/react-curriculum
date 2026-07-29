@@ -333,7 +333,7 @@ setTimeout(() => {
 ### Redux Thunk VS Redux Saga
 Redux Toolkit Thunk: 설정도 없고, 간단 하고 쉽게 만들 수 있다.
 
-Redux Saga: 설정이 복잡하지만 다양한 기능을 사용할 수 있다. 다양한 기능을 사용하기 위한 러닝 커브가 크다.
+[Redux Saga](Redux-Saga.md): 설정이 복잡하지만 다양한 기능을 사용할 수 있다. 다양한 기능을 사용하기 위한 러닝 커브가 크다.
 
 # Redux Toolkit Thunk (추천)
 
@@ -510,9 +510,8 @@ src/store/users/usersSlice.js
 src/store/search/searchThunks.js
 ```js
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { usersActions } from '@/store/users/usersSlice.js';
 import axios from 'axios';
-import { axiosError } from '../common.js';
+import { usersActions } from '@/store/users/usersSlice.js';
 
 export const searchThunks = {
   searchRead: createAsyncThunk(
@@ -522,281 +521,28 @@ export const searchThunks = {
       axios.get(url).then((response) => {
       console.log('Done searchRead', response);
       thunkAPI.dispatch(usersActions.usersSet(response.data.users));
-      }).catch((error) => {
-        axiosError(error);
       });
     }
   )
 };
 ```
 
-<details><summary>Redux Saga</summary>
-
-## 설치
-```sh
-npm install redux-saga
-```
-
-## Users Saga 미들웨어 만들기
-src/store/users/usersSaga.js
-```js
-import { put, takeEvery } from 'redux-saga/effects';
-import { createAction } from '@reduxjs/toolkit';
-import { usersActions } from './usersSlice.js';
-
-export const usersCreate = createAction('usersCreate', (payload) => {return { payload: payload }});
-export const usersRead = createAction('usersRead', (payload) => {return { payload: payload }});
-export const usersDelete = createAction('usersDelete', (payload) => {return { payload: payload }});
-export const usersUpdate = createAction('usersUpdate', (payload) => {return { payload: payload }});
-
-export function* usersTakeEvery() {
-  yield takeEvery(usersCreate, function* (action) {
-    yield put(usersActions.usersCreate(action.payload));
-  });
-
-  const usersRead$ = function* () {
-    yield put(usersActions.usersRead());
-  };
-  yield takeEvery(usersRead, usersRead$);
-
-  yield takeEvery(usersDelete, function* (action) {
-    yield put(usersActions.usersDelete(action.payload));
-  });
-
-  yield takeEvery(usersUpdate, function* (action) {
-    yield put(usersActions.usersUpdate(action.payload));
-  });
-}
-
-export const usersSaga = {
-  usersCreate,
-  usersRead,
-  usersDelete,
-  usersUpdate
-};
-```
-* `function*`: `Generator function` 설명
-* [function*](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/function*)
-* `put`: 리듀서의 action을 호출함
-* `takeEvery`: 컴포넌트에서 호출할 수 있는 `미들웨어` 함수 등록
-
-## Redux Saga 등록
-src/store/index.js (덮어 씌우기)
-```js
-import { configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
-import { all } from 'redux-saga/effects'
-import usersReducer from './users/usersSlice.js';
-import { usersTakeEvery } from './users/usersSaga.js';
-
-const sagaMiddleware = createSagaMiddleware();
-
-export default configureStore({
-  reducer: {
-    $users: usersReducer
-  },
-  middleware : [ sagaMiddleware ]
-});
-
-sagaMiddleware.run(function* () {
-  yield all([usersTakeEvery()]);
-});
-```
-
-## Redux에서 Users Saga로 액션 수정하기
-src/pages/Users.js
-```js
-import { usersSaga } from '@/store/users/usersSaga.js';
-```
-```diff
-- dispatch(usersActions.usersRead());
-+ dispatch(usersSaga.usersRead());
-```
-```diff
-- <button onClick={() => dispatch(usersActions.usersUpdate({index, user}))}>Update</button>
-- <button onClick={() => dispatch(usersActions.usersDelete(index))}>Delete</button>
-+ <button onClick={() => dispatch(usersSaga.usersUpdate({index, user}))}>Update</button>
-+ <button onClick={() => dispatch(usersSaga.usersDelete(index))}>Delete</button>
-```
-```diff
-- <button onClick={() => dispatch(usersActions.usersCreate(user))}>Create</button>
-+ <button onClick={() => dispatch(usersSaga.usersCreate(user))}>Create</button>
-```
-
-## Backend Server
-* [Download](https://github.com/ovdncids/vue-curriculum/raw/master/download/express-server.zip)
-```sh
-# BE 서버 실행 방법
-npm install
-node index.js
-# 터미널 종료
-Ctrl + c
-```
-
-## Axios 서버 연동
-https://github.com/axios/axios
-```sh
-npm install axios
-```
-
-### Axios common 에러 처리
-src/store/common.js
-```js
-export const axiosError = function(error) {
-  console.error(error.response || error.message || error);
-};
-```
-
-### Read
-src/store/users/usersSaga.js
-```diff
-- import { put, takeEvery } from 'redux-saga/effects';
-+ import { put, takeEvery, call } from 'redux-saga/effects';
-```
-```js
-import axios from 'axios';
-import { axiosError } from '../common.js';
-```
-```diff
-const usersRead$ = function* () {
-- yield put(usersActions.usersRead());
-```
-```js
-try {
-  const response = yield call(() => axios.get('http://localhost:3100/api/v1/users'));
-  console.log('Done usersRead', response);
-  yield put(usersActions.usersSet(response.data.users));
-} catch(error) {
-  axiosError(error);
-}
-```
-
-### Create
-src/store/users/usersActions.js
-```diff
-yield takeEvery(usersCreate, function* (action) {
-- yield put(usersActions.usersCreate(action.payload))
-```
-```js
-try {
-  const response = yield call(() => axios.post('http://localhost:3100/api/v1/users', action.payload));
-  console.log('Done usersCreate', response);
-  yield usersRead$();
-} catch(error) {
-  axiosError(error);
-}
-```
-
-### Delete
-src/store/users/usersActions.js
-```diff
-yield takeEvery(usersDelete, function* (action) {
-- yield put(usersActions.usersDelete(action.payload));
-````
-```js
-try {
-  const response = yield call(() => axios.delete('http://localhost:3100/api/v1/users/' + action.payload));
-  console.log('Done usersUpdate', response);
-  yield usersRead$();
-} catch(error) {
-  axiosError(error);
-}
-```
-
-### Update
-src/store/users/usersActions.js
-```diff
-yield takeEvery(usersUpdate, function* (action) {
-- yield put(usersActions.usersUpdate(action.payload));
-```
-```js
-try {
-  const response = yield call(() => axios.patch('http://localhost:3100/api/v1/users/' + action.payload.index, action.payload.user));
-  console.log('Done usersUpdate', response);
-  yield usersRead$();
-} catch(error) {
-  axiosError(error);
-}
-```
-
-src/store/users/usersSlice.js
-```diff
-- usersCreate: (state, action) => {
--   state.users.push(action.payload);
-- },
-- usersRead: (state) => {
--   state.users.push({
--     name: '홍길동',
--     age: 20
--   }, {
--     name: '춘향이',
--     age: 16
--   });
-- },
-- usersDelete(state, action) {
--   state.users.splice(action.payload, 1);
-- },
-- usersUpdate: (state, action) => {
--   state.users[action.payload.index] = action.payload.user;
-- }
-```
-
-## Search
-### Search Saga 만들기
-src/store/search/searchSaga.js
-```js
-import { put, takeEvery, call } from 'redux-saga/effects';
-import { createAction } from '@reduxjs/toolkit';
-import { usersActions } from '@/store/users/usersSlice.js';
-import axios from 'axios';
-import { axiosError } from '../common.js';
-
-export const searchRead = createAction('searchRead', payload => {return {payload: payload}});
-
-export function* searchTakeEvery() {
-  yield takeEvery(searchRead, function* (action) {
-    try {
-      const response = yield call(() => axios.get('http://localhost:3100/api/v1/search?q=' + action.payload));
-      console.log('Done searchRead', response);
-      yield put(usersActions.usersSet(response.data.users));
-    } catch(error) {
-      axiosError(error);
-    }
-  });
-}
-
-export const searchSaga = {
-  searchRead
-};
-```
-
-### Search Saga을 Redux에 등록
-src/store/index.js
-```js
-import { searchTakeEvery } from './search/searchSaga.js';
-```
-```diff
-- yield all([usersTakeEvery()]);
-+ yield all([usersTakeEvery(), searchTakeEvery()]);
-```
-</details>
-
 ### Search Component Redux Store 주입
 src/pages/Search.js
 ```js
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { usersState } from '@/store/users/usersSlice.js';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '@/store';
 import { searchThunks } from '@/store/search/searchThunks.js';
-// import { searchSaga } from '@/store/search/searchSaga.js';
+import { usersState } from '@/store/users/usersSlice.js';
 
 function Search() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const users = useSelector(usersState).users;
-  console.log(users);
+  const q = '';
+  console.log(q, users);
   useEffect(() => {
-    dispatch(searchThunks.searchRead(''));
-    // dispatch(searchSaga.searchRead(''));
+    dispatch(searchThunks.searchRead(q));
   }, [dispatch]);
   return (
     <div>
@@ -841,88 +587,89 @@ src/pages/Search.js
 + import { useState, useEffect } from 'react';
 ```
 ```js
-const [ q, setQ ] = useState('');
-const searchRead = () => {
-  dispatch(searchThunks.searchRead(q));
-};
+function SearchBar(props) {
+  const dispatch = useAppDispatch();
+  const [ q, setQ ] = useState('');
+  console.log('SearchBar', props.q);
+  return (
+    <div>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        dispatch(searchThunks.searchRead(q));
+      }}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
+  );
+}
 ```
 ```diff
-- <form>
--   <input type="text" placeholder="Search" />
--   <button>Search</button>
-- </form>
-```
-```js
-<form onSubmit={(event) => {
-  event.preventDefault();
-  searchRead();
-}}>
-  <input
-    type="text" placeholder="Search"
-    value={q}
-    onChange={(event) => {setQ(event.target.value)}}
-  />
-  <button>Search</button>
-</form>
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
++ <SearchBar q={q} />
 ```
 
 ### Search Component 쿼리스트링 변경
 src/pages/Search.js
+```js
+import { useNavigate } from 'react-router-dom';
+```
 ```diff
-- function Search() {
+- function SearchBar(props) {
 ```
 ```js
-import { useLocation, useNavigate } from 'react-router-dom';
-
-function Search() {
-  const location = useLocation();
+function SearchBar(props) {
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
-  const _q = searchParams.get('q') || '';
-  console.log(_q);
 ```
 ```diff
+- const dispatch = useAppDispatch();
+
 - dispatch(searchThunks.searchRead(q));
 + navigate('/search?q=' + q);
 ```
-`검색`, `뒤로가기` 해보기
+* `검색`, `뒤로가기` 해보기
 
 ### Search Component 새로고침 적용
 ```diff
-- useEffect(() => {
--   dispatch(searchThunks.searchRead(''));
-- }, [dispatch]);
+- import { useNavigate } from 'react-router-dom';
++ import { useNavigate, useLocation } from 'react-router-dom';
+```
+```diff
+- const q = '';
 ```
 ```js
-useEffect(() => {
-  dispatch(searchThunks.searchRead(_q));
-  setQ(_q);
-}, [dispatch, _q]);
+const location = useLocation();
+const searchParams = new URLSearchParams(location.search);
+const q = searchParams.get('q') || '';
 ```
-* ❔ `새로고침`하면 렌더링이 3번 되고 있다. 랜더링이 2번 되게 하려면 (한줄 수정)
-* <details><summary>정답</summary>
+* `검색`, `새로고침` 해보기
 
-  ```diff
-  - const [ q, setQ ] = useState('');
-  + const [ q, setQ ] = useState(_q);
-  ```
-</details>
-
-## Proxy 설정
-package.json
-```json
-"proxy": "http://localhost:3100"
-```
-
-모든 파일 수정
 ```diff
-- http://localhost:3100/api
-+ /api
+useEffect(() => {
+  searchActions.searchRead(q);
+- }, []);
++ }, [q]);
 ```
+* `검색`, `새로고침` 해보기
 
-당황 하지 말고 다시 실행
-```sh
-npm start
+```diff
+- const [ q, setQ ] = useState('');
++ const [ q, setQ ] = useState(props.q);
 ```
+* `새로고침`, `뒤로가기` 해보기
 
-# 수고 하셨습니다.
+```diff
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
+```
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
