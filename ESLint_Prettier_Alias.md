@@ -286,7 +286,9 @@ rules 추가
   "bracketSpacing": true,
   "trailingComma": "none",
   "insertFinalNewline": true,
-  "sortImports": true,
+  "sortImports": {
+    "newlinesBetween": false
+  },
   "singleAttributePerLine": false,
   "bracketSameLine": false
 }
