@@ -1,4 +1,4 @@
-# Redux users
+# Redux
 * https://redux-toolkit.js.org
 
 ## Redux Tookit 설치 (react-redux@9.3.0, @reduxjs/toolkit@2.12.0)
