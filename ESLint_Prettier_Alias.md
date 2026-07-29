@@ -304,6 +304,9 @@ package.json
   "fmt:fix": "oxfmt",
   "check": "npm run lint && npm run fmt",
   "fix": "npm run lint:fix && npm run fmt:fix"
+},
+"lint-staged": {
+  "*": "oxfmt --no-error-on-unmatched-pattern"
 }
 ```
 
