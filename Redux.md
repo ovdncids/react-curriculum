@@ -62,6 +62,7 @@ const store = configureStore({
   }
 });
 
+// useAppDispatch는 Typescript에서 사용
 export const useAppDispatch = () => useDispatch();
 export default store;
 ```
@@ -417,19 +418,10 @@ src/store/users/usersThunks.ts
 ## Backend Server
 * [Axios 서버 연동](BackendServer.md)
 
-### Axios common 에러 처리
-src/store/common.js
-```js
-export const axiosError = function(error) {
-  console.error(error.response || error.message || error);
-};
-```
-
 ### Read
 src/store/users/usersThunks.js
 ```js
 import axios from 'axios';
-import { axiosError } from '../common.js';
 ```
 ```diff
 - thunkAPI.dispatch(usersActions.usersRead());
@@ -439,10 +431,9 @@ return axios.get('http://localhost:3100/api/v1/users').then((response) => {
   console.log('Done usersRead', response);
   // thunkAPI.dispatch(usersActions.usersSet(response.data.users));
   return response.data.users;
-}).catch((error) => {
-  axiosError(error);
 });
 ```
+src/store/users/usersSlice.js
 ```js
 reducers: {
   ...
@@ -464,8 +455,6 @@ src/store/users/usersSlice.js
 axios.post('http://localhost:3100/api/v1/users', user).then((response) => {
   console.log('Done usersCreate', response);
   thunkAPI.dispatch(usersThunks.usersRead());
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
@@ -478,8 +467,6 @@ src/store/users/usersSlice.js
 axios.delete('http://localhost:3100/api/v1/users/' + index).then((response) => {
   console.log('Done usersDelete', response);
   thunkAPI.dispatch(usersThunks.usersRead());
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
@@ -492,11 +479,10 @@ src/store/users/usersSlice.js
 axios.patch('http://localhost:3100/api/v1/users/' + payload.index, payload.user).then((response) => {
   console.log('Done usersUpdate', response);
   thunkAPI.dispatch(usersThunks.usersRead());
-}).catch((error) => {
-  axiosError(error);
 });
 ```
 
+### 불필요한 리듀서 삭제
 src/store/users/usersSlice.js
 ```diff
 - usersCreate: (state, action) => {
