@@ -598,6 +598,7 @@ function SearchBar(props) {
       <form onSubmit={(event) => {
         event.preventDefault();
         dispatch(searchThunks.searchRead(q));
+        // dispatch(searchSaga.searchRead(q));
       }}>
         <input
           type="text" placeholder="Search"
