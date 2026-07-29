@@ -534,6 +534,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/store';
 import { searchThunks } from '@/store/search/searchThunks.js';
+// import { searchSaga } from '@/store/search/searchSaga.js';
 import { usersState } from '@/store/users/usersSlice.js';
 
 function Search() {
@@ -543,6 +544,7 @@ function Search() {
   console.log(q, users);
   useEffect(() => {
     dispatch(searchThunks.searchRead(q));
+    // dispatch(searchSaga.searchRead(q));
   }, [dispatch]);
   return (
     <div>
