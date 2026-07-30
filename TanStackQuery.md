@@ -33,13 +33,13 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 function Users() {
-  const result = useQuery({
+  const usersRead = useQuery({
     queryKey: ['usersRead'],
     queryFn: () => {
       return axios.get('http://localhost:3100/api/v1/users');
     }
   });
-  console.log(result);
+  console.log(usersRead);
   return (
     <div>
       <h3>Users</h3>
@@ -82,7 +82,7 @@ export default Users;
 
 ### TanStack Query 상한 상태 설정
 ```js
-const result = useQuery({
+const usersRead = useQuery({
   queryKey: ['usersRead'],
   queryFn: () => {
     return axios.get('http://localhost:3100/api/v1/users');
@@ -94,7 +94,7 @@ const result = useQuery({
   // isStale(상한 상태)로 변하는 시간. 설정 시간 동안은 다시 통신을 요청 하지 않는다.
   staleTime: 1000 * 3
 });
-const { data, isLoading, isStale, status, error } = result;
+const { data, isLoading, isStale, status, error } = usersRead;
 console.log(data, isLoading, isStale);
 ```
 * `undefined true true 'pending' null` 최초 렌더링
@@ -112,7 +112,7 @@ return axios.get('http://localhost:3100/api/v1/users').then((response) => {
   return response.data.users;
 });
 
-const users = result.data || [];
+const users = usersRead.data || [];
 ```
 
 ```diff
@@ -147,8 +147,8 @@ const users = result.data || [];
   }
   ```
   ```diff
-  - queryFn: () => {
-  + queryFn: (): Promise<User[]> => {
+  - const usersRead = useQuery({
+  + const usersRead = useQuery<User[]>({
   ```
 </details>
 
@@ -249,7 +249,7 @@ const usersDelete = useMutation({
 ## Update
 src/pages/Users.js
 ```diff
-- const users = result.data || []
+- const users = usersRead.data || []
 ```
 ```js
 const [users, setUsers] = useState([]);
@@ -320,5 +320,7 @@ const usersUpdate = useMutation({
 
 * `통신 횟수`와 `렌더링 횟수` 비교
 
+### `TanStack Query` 부분을 `src/hooks/useUsers.js` 파일로 만들기
 
-### `axios` 부분을 `src/services/usersService.js` 파일로 만들기
+### 상대 경로 절대 경로로 수정하기
+* [Alias](ESLint_Prettier_Alias.md#alias)
