@@ -319,7 +319,6 @@ Zustand.md
 Signals.md
 MobX.md
 Redux.md
-Redux-Saga.md
 TanStackQuery.md
 -->
 
