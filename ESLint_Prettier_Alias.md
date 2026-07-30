@@ -313,6 +313,16 @@ package.json
 ```
 
 # Alias
+<!--
+* 사용 하는 곳
+Zustand.md
+Signals.md
+MobX.md
+Redux.md
+Redux-Saga.md
+TanStackQuery.md
+-->
+
 ## CRA
 ```sh
 npm install -D @craco/craco
