@@ -92,7 +92,9 @@ const usersRead = useQuery({
   // 탭 이동 또는 최소화 상태에서 다시 focus 되면 다시 통신을 요청 한다. (기본 true)
   refetchOnWindowFocus: true,
   // isStale(상한 상태)로 변하는 시간. 설정 시간 동안은 다시 통신을 요청 하지 않는다.
-  staleTime: 1000 * 3
+  staleTime: 1000 * 3,
+  // 데이터 변형
+  select: (data) => data
 });
 const { data, isLoading, isStale, status, error } = usersRead;
 console.log(data, isLoading, isStale);
@@ -104,51 +106,43 @@ console.log(data, isLoading, isStale);
 ## Users CRUD
 ### Read
 src/pages/Users.js
-```diff
-- return axios.get('http://localhost:3100/api/v1/users');
+```js
+function UsersRows({ users }) {
+  return (
+    <tbody>
+      {users.map((user, index) => (
+        <tr key={index}>
+          <td>{user.name}</td>
+          <td>{user.age}</td>
+          <td>
+            <button>Update</button>
+            <button>Delete</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  );
+}
 ```
 ```js
-return axios.get('http://localhost:3100/api/v1/users').then((response) => {
-  return response.data.users;
-});
-
-const users = usersRead.data || [];
+const users = usersRead.data?.data.users || [];
 ```
-
 ```diff
-- <tr>
--   <td>홍길동</td>
--   <td>20</td>
--   <td>
--     <button>Update</button>
--     <button>Delete</button>
--   </td>
-- </tr>
-```
-```js
-{users.map((user, index) => (
-  <tr key={index}>
-    <td>{user.name}</td>
-    <td>{user.age}</td>
-    <td>
-      <button>Update</button>
-      <button>Delete</button>
-    </td>
-  </tr>
-))}
+- <tbody> 부분 삭제
++ <UsersRows users={users} />
 ```
 
 * <details><summary>TS: response</summary>
 
   ```ts
-  interface User {
+  export interface User {
     name: string
     age: string | number
   }
   ```
   ```diff
   - const usersRead = useQuery({
-  + const usersRead = useQuery<User[]>({
+  + const usersRead = useQuery<{ data: { users: User[] } }>({
   ```
 </details>
 
@@ -157,51 +151,62 @@ src/pages/Users.js
 ```js
 import { useState } from 'react';
 
-const [user, setUser] = useState({
-  name: '',
-  age: ''
-});
+function UsersCreate() {
+  const [user, setUser] = useState({
+    name: '',
+    age: ''
+  });
+  return (
+    <div>
+      <h4>Create</h4>
+      <input
+        type="text" placeholder="Name" value={user.name}
+        onChange={(event) => {
+          setUser({
+            ...user,
+            name: event.target.value
+          });
+        }}
+      />
+      <input
+        type="text" placeholder="Age" value={user.age}
+        onChange={(event) => {
+          setUser({
+            ...user,
+            age: event.target.value
+          });
+        }}
+      />
+      <button>Create</button>
+    </div>
+  );
+}
 ```
 ```diff
-- <input type="text" placeholder="Name" />
+- <div> <h4>Create</h4> 부분 삭제
 - <input type="text" placeholder="Age" />
 ```
-```js
-<input
-  type="text" placeholder="Name" value={user.name}
-  onChange={(event) => {
-    setUser({
-      ...user,
-      name: event.target.value
-    });
-  }}
-/>
-<input
-  type="text" placeholder="Age" value={user.age}
-  onChange={(event) => {
-    setUser({
-      ...user,
-      age: event.target.value
-    });
-  }}
-/>
-```
+
 * `Input box` 수정 해보기
 
+```diff
+- import { useQuery } from '@tanstack/react-query'
+```
 ```js
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-const queryClient = useQueryClient();
-const usersCreate = useMutation({
-  mutationFn: (user) => {
-    return axios.post('http://localhost:3100/api/v1/users', user)
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({
-      queryKey: ['usersRead']
-    });
-  }
-});
+// function UsersCreate() {
+  const queryClient = useQueryClient();
+  const usersCreate = useMutation({
+    mutationFn: (user) => {
+      return axios.post('http://localhost:3100/api/v1/users', user)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['usersRead']
+      });
+    }
+  });
 ```
 ```diff
 - <button>Create</button>
