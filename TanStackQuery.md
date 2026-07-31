@@ -258,7 +258,7 @@ src/pages/Users.js
 ```
 ```js
 function UsersRows(props) {
-  console.warn(props);
+  console.log('UsersRows', props);
   const [users, setUsers] = useState(props.users);
 ```
 ```diff
@@ -287,7 +287,7 @@ function UsersRows(props) {
   />
 </td>
 ```
-* `console.warn(props);`에서 정상적으로 `users`가 변경되지만 화면에 다시 그려지지 않는다.
+* `console.log('UsersRows', props);`에서 정상적으로 `users`가 변경되지만 화면에 다시 그려지지 않는다.
 
 ```diff
 - <UsersRows users={users} />
@@ -326,9 +326,79 @@ const usersUpdate = useMutation({
 
 * `통신 횟수`와 `렌더링 횟수` 비교
 
-### `TanStack Query` 사용자 Hook 만들기
+### TanStack Query 사용자 Hook 만들기
 src/hooks/useUsers.js
 ```js
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+
+export function useUsers() {
+  const queryClient = useQueryClient();
+  const usersRead = useQuery({
+    queryKey: ['usersRead'],
+    queryFn: () => {
+      return axios.get('http://localhost:3100/api/v1/users');
+    },
+    // 통신중에 오류가 발생하면 재시도 회수
+    retry: 0,
+    // 탭 이동 또는 최소화 상태에서 다시 focus 되면 다시 통신을 요청 한다. (기본 true)
+    refetchOnWindowFocus: true,
+    // isStale(상한 상태)로 변하는 시간. 설정 시간 동안은 다시 통신을 요청 하지 않는다.
+    staleTime: 1000 * 3,
+    // 데이터 변형
+    select: (data) => data
+  });
+  const usersCreate = useMutation({
+    mutationFn: (user) => {
+      return axios.post('http://localhost:3100/api/v1/users', user)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['usersRead']
+      });
+    }
+  });
+  const usersDelete = useMutation({
+    mutationFn: (index: number) => {
+      return axios.delete('http://localhost:3100/api/v1/users/' + index);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['usersRead']
+      })
+    }
+  });
+  const usersUpdate = useMutation({
+    mutationFn: ({index, user}) => {
+      return axios.patch('http://localhost:3100/api/v1/users/' + index, user);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['usersRead']
+      })
+    }
+  });
+  return {
+    usersRead,
+    usersCreate,
+    usersDelete,
+    usersUpdate
+  };
+}
+```
+
+src/pages/Users.js
+```diff
+- import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+- import axios from 'axios';
++ import { useUsers } from '../hooks/useUsers';
+```
+```diff
+- const queryClient = useQueryClient();
+- const usersDelete = useMutation({
+```
+```js
+const { usersUpdate, usersDelete } = useUsers();
 ```
 
 ### 상대 경로 절대 경로로 수정하기
