@@ -254,19 +254,13 @@ const usersDelete = useMutation({
 ## Update
 src/pages/Users.js
 ```diff
-- const users = usersRead.data || []
+- function UsersRows({ users }) {
 ```
 ```js
-const [users, setUsers] = useState([]);
+function UsersRows(props) {
+  console.warn(props);
+  const [users, setUsers] = useState(props.users);
 ```
-```diff
-- return response.data.users;
-```
-```js
-setUsers(response.data.users);
-return response.data.users;
-```
-
 ```diff
 - <td>{user.name}</td>
 - <td>{user.age}</td>
@@ -293,6 +287,13 @@ return response.data.users;
   />
 </td>
 ```
+* `console.warn(props);`에서 정상적으로 `users`가 변경되지만 화면에 다시 그려지지 않는다.
+
+```diff
+- <UsersRows users={users} />
++ <UsersRows key={usersRead.dataUpdatedAt} users={users} />
+```
+* `key`가 변경되면 강제 리마운트된다. (useEffect를 쓰고 싶지 않을때 효과적)
 * `Input box` 수정 해보기
 
 ```js
@@ -325,7 +326,10 @@ const usersUpdate = useMutation({
 
 * `통신 횟수`와 `렌더링 횟수` 비교
 
-### `TanStack Query` 부분을 `src/hooks/useUsers.js` 파일로 만들기
+### `TanStack Query` 사용자 Hook 만들기
+src/hooks/useUsers.js
+```js
+```
 
 ### 상대 경로 절대 경로로 수정하기
 * [Alias](ESLint_Prettier_Alias.md#alias)
