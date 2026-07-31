@@ -320,7 +320,7 @@ const usersUpdate = useMutation({
 
   ```diff
   - mutationFn: ({index, user}) => {
-  + mutationFn: ({index, user}: { index: number, user: User }) => {
+  + mutationFn: ({index, user}: { index: number; user: User }) => {
   ```
 </details>
 
@@ -394,12 +394,41 @@ src/pages/Users.js
 + import { useUsers } from '../hooks/useUsers';
 ```
 ```diff
+function Users() {
+- const usersRead = useQuery<{ data: { users: User[] } }>({
+- ...
+- });
+  const usersHook = useUsers();
+  const { usersRead } = usersHook;
+```
+```diff
+- <UsersRows key={usersRead.dataUpdatedAt} users={users} />
++ <UsersRows key={usersRead.dataUpdatedAt} users={users} usersHook={usersHook} />
+```
+```diff
+function UsersRows(props) {
 - const queryClient = useQueryClient();
 - const usersDelete = useMutation({
+- ...
+- });
 ```
 ```js
-const { usersUpdate, usersDelete } = useUsers();
+const { usersUpdate, usersDelete } = props.usersHook;
 ```
+* `<UsersCreate />` 적용하기
+
+* <details><summary>TS: Property 'usersHook' does not exist on type '{ users: User[]; }'.ts(2339)</summary>
+
+  src/hooks/useUsers.js
+  ```ts
+  export type UsersHook = ReturnType<typeof useUsers>
+  ```
+  src/pages/Users.js
+  ```diff
+  - function UsersRows(props: { users: User[] }) {
+  + function UsersRows(props: { users: User[]; usersHook: UsersHook }) {
+  ```
+</details>
 
 ### 상대 경로 절대 경로로 수정하기
 * [Alias](ESLint_Prettier_Alias.md#alias)
