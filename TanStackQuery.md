@@ -326,7 +326,7 @@ const usersUpdate = useMutation({
 
 * `통신 횟수`와 `렌더링 횟수` 비교
 
-### TanStack Query 사용자 Hook 만들기
+### TanStack Query Users 커스텀 훅 만들기
 src/hooks/useUsers.js
 ```js
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
@@ -432,3 +432,166 @@ const { usersUpdate, usersDelete } = props.usersHook;
 
 ### 상대 경로 절대 경로로 수정하기
 * [Alias](ESLint_Prettier_Alias.md#alias)
+
+### TanStack Query Search 커스텀 훅 만들기
+src/hooks/useUsers.js
+```js
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+export function useSearch(q) {
+  const searchRead = useQuery({
+    queryKey: ['searchRead', q],
+    queryFn: () => {
+      return axios.get('http://localhost:3100/api/v1/search?q=' + q);
+    }
+  });
+  return {
+    searchRead
+  };
+}
+```
+
+src/pages/Search.js
+```js
+import { useSearch } from '@/hooks/useSearch';
+
+function Search() {
+  const q = '';
+  const searchHook = useSearch(q);
+  const { searchRead } = searchHook;
+  const { data, isLoading, isStale, status, error } = searchRead;
+  console.log(data, isLoading, isStale, status, error);
+  const users = searchRead.data?.data.users || [];
+  return (
+    <div>
+      <h3>Search</h3>
+      <hr className="d-block" />
+      <div>
+        <form>
+          <input type="text" placeholder="Search" />
+          <button>Search</button>
+        </form>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <table className="table-search">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+          {users.map((user, index) => (
+            <tr key={index}>
+              <td>{user.name}</td>
+              <td>{user.age}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default Search;
+```
+
+## Search Component에서만 사용 가능한 state값 적용
+src/pages/Search.js
+```js
+import { useState } from 'react';
+
+function SearchBar(props) {
+  const [ q, setQ ] = useState('');
+  console.log('SearchBar', props.q);
+  return (
+    <div>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        props.setQ(q);
+      }}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
+  );
+}
+```
+```diff
+- const q = '';
++ const [ q, setQ ] = useState('');
+```
+```diff
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
++ <SearchBar q={q} setQ={setQ} />
+```
+
+* <details><summary>TS: Parameter 'props' implicitly has an 'any' type.ts(7006)</summary>
+
+  ```diff
+  - function SearchBar(props) {
+  + function SearchBar(props: { q: string; setQ: (q: string) => void }) {
+  ```
+</details>
+
+### Search Component 쿼리스트링 변경
+src/pages/Search.js
+```js
+import { useNavigate } from 'react-router-dom';
+```
+```diff
+- function SearchBar(props) {
+```
+```js
+function SearchBar(props) {
+  const navigate = useNavigate();
+```
+```diff
+- props.setQ(q);
++ navigate('/search?q=' + q);
+```
+* `검색`, `뒤로가기` 해보기
+
+### Search Component 새로고침 적용
+```diff
+- import { useNavigate } from 'react-router-dom';
++ import { useNavigate, useLocation } from 'react-router-dom';
+```
+```diff
+- const [q, setQ] = useState('');
+```
+```js
+const location = useLocation();
+const searchParams = new URLSearchParams(location.search);
+const q = searchParams.get('q') || '';
+```
+```diff
+- <SearchBar q={q} setQ={setQ} />
++ <SearchBar q={q} />
+```
+* `검색`, `새로고침` 해보기
+
+```diff
+- const [ q, setQ ] = useState('');
++ const [ q, setQ ] = useState(props.q);
+```
+* `새로고침`, `뒤로가기` 해보기
+
+```diff
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
+```
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
