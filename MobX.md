@@ -568,9 +568,6 @@ src/pages/Search.js
 ```js
 import { useNavigate } from 'react-router-dom';
 ```
-```diff
-- function SearchBar(props) {
-```
 ```js
 function SearchBar(props) {
   const navigate = useNavigate();
