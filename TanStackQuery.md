@@ -190,7 +190,7 @@ function UsersCreate() {
 ```
 ```diff
 - <div>
--   <h4>Create</h4> 부분 삭제
+-   <h4>Create</h4>
 -   ...
 - </div>
 + <UsersCreate />
