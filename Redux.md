@@ -627,15 +627,10 @@ src/pages/Search.js
 import { useNavigate } from 'react-router-dom';
 ```
 ```diff
-- function SearchBar(props) {
-```
-```js
-function SearchBar(props) {
-  const navigate = useNavigate();
+- const dispatch = useAppDispatch();
++ const navigate = useNavigate();
 ```
 ```diff
-- const dispatch = useAppDispatch();
-
 - dispatch(searchThunks.searchRead(q));
 + navigate('/search?q=' + q);
 ```
