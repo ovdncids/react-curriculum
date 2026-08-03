@@ -90,7 +90,8 @@ import { usersState } from '../store/users/usersSlice.js';
 
 function Users() {
   const user = useSelector(usersState).user;
-  console.log(user);
+  const users = useSelector(usersState).users;
+  console.log(user, users);
   return (
     <div>
       <h3>Users</h3>
@@ -207,7 +208,6 @@ import { useEffect } from 'react';
 
 function Users() {
   ...
-  const users = useSelector(usersState).users;
   useEffect(() => {
     dispatch(usersActions.userSet({
       name: '',
