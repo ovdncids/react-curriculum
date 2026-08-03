@@ -5,7 +5,7 @@
 
 ## TanStack Query 설치 (@tanstack/react-query@5.101.4)
 ```sh
-npm install react-query
+npm i @tanstack/react-query
 ```
 
 ## Backend Server
@@ -97,7 +97,7 @@ const usersRead = useQuery({
   select: (data) => data
 });
 const { data, isLoading, isStale, status, error } = usersRead;
-console.log(data, isLoading, isStale);
+console.log(data, isLoading, isStale, status, error);
 ```
 * `undefined true true 'pending' null` 최초 렌더링
 * `{데이터} false false 'success' null` 데이터 받고 렌더링
@@ -128,7 +128,9 @@ function UsersRows({ users }) {
 const users = usersRead.data?.data.users || [];
 ```
 ```diff
-- <tbody> 부분 삭제
+- <tbody>
+-    ...
+- </tbody>
 + <UsersRows users={users} />
 ```
 
@@ -139,6 +141,10 @@ const users = usersRead.data?.data.users || [];
     name: string
     age: string | number
   }
+  ```
+  ```diff
+  - function UsersRows({ users }) {
+  + function UsersRows({ users }: { users: User[] }) {
   ```
   ```diff
   - const usersRead = useQuery({
@@ -183,8 +189,11 @@ function UsersCreate() {
 }
 ```
 ```diff
-- <div> <h4>Create</h4> 부분 삭제
-- <input type="text" placeholder="Age" />
+- <div>
+-   <h4>Create</h4> 부분 삭제
+-   ...
+- </div>
++ <UsersCreate />
 ```
 
 * `Input box` 수정 해보기
@@ -230,6 +239,7 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 ## Delete
 src/pages/Users.js
 ```js
+const queryClient = useQueryClient();
 const usersDelete = useMutation({
   mutationFn: (index: number) => {
     return axios.delete('http://localhost:3100/api/v1/users/' + index);
@@ -359,7 +369,7 @@ export function useUsers() {
     }
   });
   const usersDelete = useMutation({
-    mutationFn: (index: number) => {
+    mutationFn: (index) => {
       return axios.delete('http://localhost:3100/api/v1/users/' + index);
     },
     onSuccess: () => {
@@ -407,6 +417,7 @@ function Users() {
 ```
 ```diff
 function UsersRows(props) {
+  const [users, setUsers] = useState(props.users)
 - const queryClient = useQueryClient();
 - const usersDelete = useMutation({
 - ...
@@ -415,8 +426,6 @@ function UsersRows(props) {
 ```js
 const { usersUpdate, usersDelete } = props.usersHook;
 ```
-* `<UsersCreate />` 적용하기
-
 * <details><summary>TS: Property 'usersHook' does not exist on type '{ users: User[]; }'.ts(2339)</summary>
 
   src/hooks/useUsers.js
@@ -430,11 +439,13 @@ const { usersUpdate, usersDelete } = props.usersHook;
   ```
 </details>
 
+* `<UsersCreate />` 적용하기
+
 ### 상대 경로 절대 경로로 수정하기
 * [Alias](ESLint_Prettier_Alias.md#alias)
 
 ### TanStack Query Search 커스텀 훅 만들기
-src/hooks/useUsers.js
+src/hooks/useSearch.js
 ```js
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -551,11 +562,8 @@ src/pages/Search.js
 ```js
 import { useNavigate } from 'react-router-dom';
 ```
-```diff
-- function SearchBar(props) {
-```
 ```js
-function SearchBar(props) {
+// function SearchBar(props) {
   const navigate = useNavigate();
 ```
 ```diff
@@ -570,6 +578,7 @@ function SearchBar(props) {
 + import { useNavigate, useLocation } from 'react-router-dom';
 ```
 ```diff
+function Search() {
 - const [q, setQ] = useState('');
 ```
 ```js
@@ -584,8 +593,8 @@ const q = searchParams.get('q') || '';
 * `검색`, `새로고침` 해보기
 
 ```diff
-- const [ q, setQ ] = useState('');
-+ const [ q, setQ ] = useState(props.q);
+- const [q, setQ] = useState('');
++ const [q, setQ] = useState(props.q);
 ```
 * `새로고침`, `뒤로가기` 해보기
 
