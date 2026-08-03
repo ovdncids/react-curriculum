@@ -415,7 +415,7 @@ src/pages/Search.js
 ```
 ```js
 function SearchBar(props) {
-  const [ q, setQ ] = useState('');
+  const [q, setQ] = useState('');
   console.log('SearchBar', props.q);
   return (
     <div>
@@ -486,8 +486,8 @@ useEffect(() => {
 * `검색`, `새로고침` 해보기
 
 ```diff
-- const [ q, setQ ] = useState('');
-+ const [ q, setQ ] = useState(props.q);
+- const [q, setQ] = useState('');
++ const [q, setQ] = useState(props.q);
 ```
 * `새로고침`, `뒤로가기` 해보기
 
