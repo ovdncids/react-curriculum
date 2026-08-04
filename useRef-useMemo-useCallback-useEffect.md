@@ -259,7 +259,26 @@ useEffect(() => {
 * ❕ [Signals](https://github.com/ovdncids/react-curriculum/blob/master/Signals.md)를 사용하면 `useState`의 리렌더링 개념과 반대로 리렌더 해야할 부분만 `useComputed`(`useMemo`의 반대)로 리렌더링 시킬 수 있다.
 * `Signals`와 `React hook form` 조합도 좋다.
 
-# React Compilier@1.0.0 (react@19.2.7, vite@8.1.5)
+# React Compilier@1.0.0 (react@19.2.7, vite@8.1.5, eslint-plugin-react-hooks@7.1.1)
 * https://react.dev/learn/react-compiler/installation
 * https://www.youtube.com/watch?v=H65OPzq_5OU
 * `useMemo` 자동 적용
+
+## 설치 (babel-plugin-react-compiler@1.0.0, @rolldown/plugin-babel@0.2.3)
+```sh
+npm install -D babel-plugin-react-compiler@latest
+npm install -D @rolldown/plugin-babel
+```
+vite.config.ts
+```ts
+import babel from '@rolldown/plugin-babel'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+
+// export default defineConfig({
+  plugins: [
+    react(),
+    babel({
+      presets: [reactCompilerPreset()]
+    })
+  ]
+```
