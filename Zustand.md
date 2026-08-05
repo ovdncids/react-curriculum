@@ -43,7 +43,7 @@ export const usersStore = create(() => ({
 ## Users Component Zustand Store 주입
 src/pages/Users.js
 ```js
-import { usersStore } from '@/stores/usersStore.js';
+import { usersStore } from '../stores/usersStore.js';
 
 function Users() {
   const usersState = usersStore((state) => state);
