@@ -90,7 +90,7 @@ export default Users;
 
 ## Users Atoms CRUD
 ### Create
-src/stores/usersAtoms.js
+src/atoms/usersAtoms.js
 ```js
 export const usersActions = {
   usersCreate: atom(null, (get, set, user) =>
@@ -142,7 +142,7 @@ const [, usersCreate] = useAtom(usersActions.usersCreate);
 ```
 
 ### Read
-src/stores/usersAtoms.js
+src/atoms/usersAtoms.js
 ```js
 usersRead: atom(null, (_get, set) =>
   set(usersAtoms.users, [
@@ -196,7 +196,7 @@ useEffect(() => {
 ```
 
 ### Delete
-src/stores/usersAtoms.js
+src/atoms/usersAtoms.js
 ```js
 usersDelete: atom(null, (get, set, index) => {
   const users = [...get(usersAtoms.users)];
@@ -221,7 +221,7 @@ const [, usersDelete] = useAtom(usersActions.usersDelete);
 * `전개 구조` 설명 하기
 
 ### Update
-src/stores/usersAtoms.js
+src/atoms/usersAtoms.js
 ```js
 usersUpdate: atom(null, (get, set, index, user) => {
   const users = [...get(usersAtoms.users)];
@@ -273,3 +273,58 @@ const [, usersUpdate] = useAtom(usersActions.usersUpdate);
 
 ## Backend Server
 * [Axios 서버 연동](BackendServer.md)
+
+### Read
+src/atoms/usersAtoms.js
+```js
+import axios from 'axios';
+```
+```diff
+- usersRead: atom(null, (_get, set) =>
+```
+```js
+usersRead: atom(null, async (_get, set) => {
+  const response = await axios.get('http://localhost:3100/api/v1/users');
+  console.log('Done usersRead', response);
+  set(usersAtoms.users, response.data.users);
+}),
+```
+
+### Create
+src/atoms/usersAtoms.js
+```diff
+- usersCreate: atom(null, (get, set, user) =>
+```
+```js
+usersCreate: atom(null, async (_get, set, user) => {
+  const response = await axios.post('http://localhost:3100/api/v1/users', user);
+  console.log('Done usersCreate', response);
+  set(usersActions.usersRead);
+}),
+```
+
+### Delete
+src/atoms/usersAtoms.js
+```diff
+- usersDelete: atom(null, (get, set, index) => {
+```
+```js
+usersDelete: atom(null, async (_get, set, index) => {
+  const response = await axios.delete('http://localhost:3100/api/v1/users/' + index);
+  console.log('Done usersDelete', response);
+  set(usersActions.usersRead);
+}),
+```
+
+### Update
+src/atoms/usersAtoms.js
+```diff
+- usersUpdate: atom(null, (get, set, index, user) => {
+```
+```js
+usersUpdate: atom(null, async (_get, set, index, user) => {
+  const response = await axios.patch('http://localhost:3100/api/v1/users/' + index, user);
+  console.log('Done usersUpdate', response);
+  set(usersActions.usersRead);
+})
+```
