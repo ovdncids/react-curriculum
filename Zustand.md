@@ -345,8 +345,8 @@ usersUpdate: async (index, user) => {
 ## Search Store 만들기
 src/stores/searchStore.js
 ```js
-import { usersActions } from './usersStore.js';
 import axios from 'axios';
+import { usersActions } from './usersStore.js';
 
 export const searchActions = {
   searchRead: async (q) => {
