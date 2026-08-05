@@ -7,6 +7,7 @@ MobX.md
 Redux.md
 Redux-Saga.md
 TanStackQuery.md
+Jotai.md
 -->
 
 * [Download](download/express-server.zip)
