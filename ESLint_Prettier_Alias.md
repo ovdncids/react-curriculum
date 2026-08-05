@@ -320,6 +320,7 @@ Signals.md
 MobX.md
 Redux.md
 TanStackQuery.md
+Jotai.md
 -->
 
 ## CRA
