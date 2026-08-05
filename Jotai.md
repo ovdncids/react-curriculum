@@ -328,3 +328,163 @@ usersUpdate: atom(null, async (_get, set, index, user) => {
   set(usersActions.usersRead);
 })
 ```
+
+## Search Atoms 만들기
+src/atoms/searchAtoms.js
+```js
+import axios from 'axios';
+import { atom } from 'jotai';
+import { usersAtoms } from './usersAtoms.js';
+
+export const searchActions = {
+  searchRead: atom(null, async (_get, set, q: string) => {
+    const response = await axios.get('http://localhost:3100/api/v1/search?q=' + q);
+    console.log('Done searchRead', response);
+    set(usersAtoms.users, response.data.users);
+  })
+};
+```
+
+### Search Component Jotai Atoms 주입
+src/pages/Search.js
+```js
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { searchActions } from '@/atoms/searchAtoms.js';
+import { usersAtoms } from '@/atoms/usersAtoms.js';
+
+function Search() {
+  const [users] = useAtom(usersAtoms.users)
+  const [, searchRead] = useAtom(searchActions.searchRead)
+  const q = '';
+  console.log(q, users);
+  useEffect(() => {
+    searchRead(q);
+  }, [searchRead]);
+  return (
+    <div>
+      <h3>Search</h3>
+      <hr className="d-block" />
+      <div>
+        <form>
+          <input type="text" placeholder="Search" />
+          <button>Search</button>
+        </form>
+      </div>
+      <hr className="d-block" />
+      <div>
+        <table className="table-search">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+          {users.map((user, index) => (
+            <tr key={index}>
+              <td>{user.name}</td>
+              <td>{user.age}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default Search;
+```
+
+## SearchBar Component에서만 사용 가능한 state값 적용
+src/pages/Search.js
+```diff
+- import { useEffect } from 'react';
++ import { useState, useEffect } from 'react';
+```
+```js
+function SearchBar(props) {
+  const [q, setQ] = useState('');
+  const [, searchRead] = useAtom(searchActions.searchRead);
+  console.log('SearchBar', props.q);
+  return (
+    <div>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        searchRead(q);
+      }}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={event => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
+  );
+}
+```
+```diff
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
++ <SearchBar q={q} />
+```
+
+## Search Component 쿼리스트링 변경
+src/pages/Search.js
+```js
+import { useNavigate } from 'react-router-dom';
+```
+```js
+function SearchBar(props) {
+  const navigate = useNavigate();
+```
+```diff
+- const [, searchRead] = useAtom(searchActions.searchRead);
+```
+```diff
+- searchActions.searchRead(q);
++ navigate('/search?q=' + q);
+```
+* `검색`, `뒤로가기` 해보기
+
+## Search Component 새로고침 적용
+```diff
+- import { useNavigate } from 'react-router-dom';
++ import { useNavigate, useLocation } from 'react-router-dom';
+```
+```diff
+- const q = '';
+```
+```js
+const location = useLocation();
+const searchParams = new URLSearchParams(location.search);
+const q = searchParams.get('q') || '';
+```
+* `검색`, `새로고침` 해보기
+
+```diff
+useEffect(() => {
+  searchRead(q);
+- }, []);
++ }, [q]);
+```
+* `검색`, `새로고침` 해보기
+
+```diff
+- const [q, setQ] = useState('');
++ const [q, setQ] = useState(props.q);
+```
+* `새로고침`, `뒤로가기` 해보기
+
+```diff
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
+```
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
