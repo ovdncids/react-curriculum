@@ -378,15 +378,17 @@ Component가 사용하는 글로벌 함수 또는 변수라고 생각하면 쉽�
 
 Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한다.
 
-* [Zustand](Zustand.md)
+* [Jotai](Jotai.md)
 
-* [Signals](Signals.md)
+* [TanStack Query](TanStackQuery.md)
+
+* [Zustand](Zustand.md)
 
 * [MobX](MobX.md)
 
 * [Redux](Redux.md)
 
-* [Jotai](Jotai.md)
+* [Signals](Signals.md)
 
 ## Proxy 설정
 package.json
