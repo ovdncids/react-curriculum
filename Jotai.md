@@ -39,7 +39,7 @@ export const usersAtoms = {
 src/pages/Users.js
 ```js
 import { useAtom } from 'jotai';
-import { usersAtom } from '../atoms/usersAtoms.js';
+import { usersAtoms } from '../atoms/usersAtoms.js';
 
 function Users() {
   const [user] = useAtom(usersAtoms.user);
@@ -471,8 +471,8 @@ const q = searchParams.get('q') || '';
 ```diff
 useEffect(() => {
   searchRead(q);
-- }, []);
-+ }, [q]);
+- }, [searchRead])
++ }, [searchRead, q])
 ```
 * `검색`, `새로고침` 해보기
 
