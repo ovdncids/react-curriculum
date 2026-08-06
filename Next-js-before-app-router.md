@@ -1,5 +1,5 @@
 # Next.js (12.3.0)
-* `13.4` 이전 버전, `App Router` 이전 형식
+* `13.4` 이전 버전, `App Router` 이전의 `Pages Router` 형식
 
 ## Install
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
