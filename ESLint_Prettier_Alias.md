@@ -150,6 +150,7 @@ VSCode 재시작
 ```
 * `.prettierrc` 파일을 수정 하면, 바로 다음 저장 부터 포맷이 자동으로 변경된다.
 
+<!--
 # gts (Google TypeScript Style)
 * https://github.com/google/gts
 * https://jhyeok.com/gts-and-husky
@@ -225,7 +226,9 @@ package.json
 
 ## npm run fix
 * `lint` 설정이 맞지 않는 부분을 가능한 것만 자동으로 수정 해준다.
+-->
 
+<!--
 # husky
 * https://typicode.github.io/husky
 * `Git hooks`를 편하게 설정 할 수 있다.
@@ -254,6 +257,7 @@ npm run prepare
 npx husky add .husky/pre-commit "npm run lint"
 ```
 * `.husky/pre-commit` 파일이 생성된다. 이제 부터 `git commit` 마다 `npm run lint`가 먼저 실행 된다.
+-->
 
 ## husky@9.1.7 + lint-staged@16.2.7
 <!--
@@ -262,18 +266,18 @@ Next-js.md
 -->
 ```sh
 npm install -D husky lint-staged
-npx husky init
 
-# .husky/pre-commit (1줄로 끝)
-npx lint-staged
+# .husky/pre-commit 파일을 생성하고 git commit 할때 .husky/pre-commit 파일 안에 명령을 실행해서 에러가 없으면 git commit 완료 시킨다.
+npx husky init
 
 # package.json
   "lint-staged": {
     "*.{js,jsx,mjs,ts,tsx}": "eslint --fix"
+    // "*": "oxfmt --no-error-on-unmatched-pattern"
   }
 
-# eslint.config.mjs
-rules 추가
+# git staged된 파일중 *.{js,jsx,mjs,ts,tsx} 형식만 eslint --fix 실행한다.
+npx lint-staged
 ```
 
 # Oxlint@1.75.0, Oxfmt@0.60.0
