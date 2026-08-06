@@ -1,4 +1,4 @@
-# Recoil (React@18까지만 지원)
+# Recoil (React@18까지만 지원, Jotai와 비슷한 Atom 개념)
 * https://recoiljs.org
 
 ## Recoil 설치
