@@ -273,8 +273,16 @@ rules 추가
 ```
 
 # Oxlint@1.75.0, Oxfmt@0.60.0
+<!--
+* 사용 하는 곳
+Next-js.md
+-->
 * [Oxlint - 빠른 린트](https://www.oxcjs.com/ko/guide/usage/linter/quickstart.html)
 * [Oxfmt - Format](https://www.oxcjs.com/ko/guide/usage/formatter/quickstart.html)
+
+```sh
+npm install -D oxfmt
+```
 
 .oxfmtrc.json
 ```json
