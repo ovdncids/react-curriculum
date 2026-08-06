@@ -369,7 +369,7 @@ export async function POST(request) {
   })
 }
 ```
-* TS: `request: NextRequest`
+* TS: `request: Request` 또는 `request: NextRequest`
 
 services/usersServices.js
 ```js
@@ -509,7 +509,8 @@ app/api/users/[index]/route.js
 import { NextResponse } from 'next/server'
 
 export async function DELETE(_, context) {
-  global.users.splice(context.params.index, 1)
+  const { index } = context.params
+  global.users.splice(index, 1)
   return NextResponse.json({
     result: 'Deleted'
   })
@@ -521,6 +522,11 @@ export async function DELETE(
   _: Request,
   context: { params: { index: number } }
 ) {
+
+// 16버전부터 context.params는 Promise 형식으로 변경됨
+context: { params: Promise<{ index: number }> }
+
+const { index } = await context.params
 ```
 
 services/usersServices.js
@@ -567,7 +573,8 @@ export default Delete
 app/api/users/[index]/route.js
 ```js
 export async function PATCH(request, context) {
-  global.users[context.params.index] = await request.json()
+  const { index } = context.params
+  global.users[index] = await request.json()
   return NextResponse.json({
     result: 'Updated'
   })
@@ -604,7 +611,7 @@ app/users/page.js
 <Update key={index} index={index} user={user} />
 ```
 
-app/users/update.js
+app/users/update.js 또는 app/users/row.js
 ```js
 'use client'
 import { useState } from 'react'
@@ -621,7 +628,7 @@ const Update = (props) => {
     router.refresh()
   }
   return (
-    <tr key={index}>
+    <tr>
       <td>
         <input
           type="text" placeholder="Name" value={user.name}
@@ -654,6 +661,7 @@ const Update = (props) => {
 
 export default Update
 ```
+<!--
 * ❕ `useEffect` 적용해서 `SSR` 비교
 ```js
 const [user, setUser] = useState({
@@ -665,6 +673,7 @@ useEffect(() => {
   setUser(props.user)
 }, [])
 ```
+-->
 
 * <details><summary>react-hook-form</summary>
 
@@ -695,7 +704,7 @@ useEffect(() => {
       }
     }
     return (
-      <tr key={index}>
+      <tr>
         <td>
           <input type="text" placeholder="Name"
             {...register('name', {
