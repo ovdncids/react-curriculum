@@ -386,6 +386,8 @@ Component에 변경된 사항을 다시 그리기 위해서 Store를 사용 한�
 
 * [Redux](Redux.md)
 
+* [Jotai](Jotai.md)
+
 ## Proxy 설정
 package.json
 ```json
