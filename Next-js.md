@@ -1,11 +1,14 @@
-# Next.js
+# Next.js (13.4, 16.3.0)
+* `13.4` 이후 버전, `App Router` 형식
 
 ## Install
 * https://nextjs.org/learn/basics/create-nextjs-app/setup
 ```sh
-npx create-next-app@latest
+npx create-next-app@latest next-js-study --yes
+# next@16.3.0, react@19.2.9, typescript@5.9.3, eslint@9.39.5, tailwindcss@4.3.3
 # npx create-next-app@13.5.6 (node 16버전으로 사용할 수 있는 latest 버전)
 ```
+<!--
 ```sh
 Would you like to use TypeScript? No / Yes
 Would you like to use ESLint? Yes
@@ -14,14 +17,20 @@ Would you like to use `src/` directory? No
 Would you like to use App Router? (recommended) Yes
 Would you like to customize the default import alias? No
 ```
+-->
 
 ## 실행
 ```sh
-cd {프로젝트명}
+cd next-js-study
 code .
 npm run dev
 ```
 
+## [Oxfmt](ESLint_Prettier_Alias.md#oxlint1750-oxfmt0600)
+
+## [husky + lint-staged](ESLint_Prettier_Alias.md#husky917--lint-staged1627)
+
+<!-- 13.4
 * TS: `tsconfig.json` 오류
 ```diif
 - "moduleResolution": "bundler",
@@ -39,6 +48,10 @@ npm run dev
   }
   ```
 * [GTS (Typescript)](https://github.com/ovdncids/react-curriculum/blob/master/Prettier_ESLint.md#gts-google-typescript-style)
+-->
+
+
+
 
 ## Markup + Layout
 app/globals.css
@@ -299,7 +312,22 @@ export async function GET() {
 }
 ```
 * http://localhost:3000/api/users
-* TS: `declare global { var users: User[] }`
+
+* <details><summary>TS: Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.ts(7017)</summary>
+
+  types/Users.ts
+  ```ts
+  export interface User {
+    name: string
+    age: string | number
+  }
+  ```
+
+  app/api/users/route.ts
+  ```ts
+  declare global { var users: User[] }
+  ```
+</details>
 
 services/usersServices.js
 ```js
@@ -311,6 +339,7 @@ export const usersServices = {
 }
 ```
 * ❕ `http://localhost:3000/api/users`는 서버 사이드이므로 `Endpoint`를 절대 경로로 넣어야 한다.
+* TS: `usersRead: async (): Promise<User[]> => {`
 
 app/users/page.js
 ```js
