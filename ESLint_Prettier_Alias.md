@@ -228,6 +228,54 @@ package.json
 * `lint` 설정이 맞지 않는 부분을 가능한 것만 자동으로 수정 해준다.
 -->
 
+# Oxlint@1.75.0, Oxfmt@0.60.0
+<!--
+* 사용 하는 곳
+Next-js.md
+-->
+* [Oxlint - 빠른 린트](https://www.oxcjs.com/ko/guide/usage/linter/quickstart.html)
+* [Oxfmt - Format](https://www.oxcjs.com/ko/guide/usage/formatter/quickstart.html)
+
+```sh
+npm install -D oxfmt
+```
+
+.oxfmtrc.json
+```json
+{
+  "printWidth": 88,
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "trailingComma": "none",
+  "insertFinalNewline": true,
+  "sortImports": {
+    "newlinesBetween": false
+  },
+  "singleAttributePerLine": false,
+  "bracketSameLine": false
+}
+```
+* `Prettier`와 비슷하지만 `sortImports`, `sortPackageJson` 등의 유용한 기능이 있다.
+* `singleAttributePerLine`은 Tag 속성을 무조건 한줄씩 사용한다. (false이면 길이가 printWidth보다 크면 한줄씩)
+* Oxlint가 아직 `eslint-plugin-react-hooks` 지원하지 않으므로 ESLint와 Oxfmt 조합이 효과적이다.
+
+package.json
+```json
+"scripts": {
+  "lint": "eslint .",
+  "lint:fix": "eslint --fix .",
+  "fmt": "oxfmt --check",
+  "fmt:fix": "oxfmt",
+  "check": "npm run lint && npm run fmt",
+  "fix": "npm run lint:fix && npm run fmt:fix"
+},
+"lint-staged": {
+  "*": "oxfmt --no-error-on-unmatched-pattern"
+}
+```
+
 <!--
 # husky
 * https://typicode.github.io/husky
@@ -278,54 +326,6 @@ npx husky init
 
 # git staged된 파일중 *.{js,jsx,mjs,ts,tsx} 형식만 eslint --fix 실행한다.
 npx lint-staged
-```
-
-# Oxlint@1.75.0, Oxfmt@0.60.0
-<!--
-* 사용 하는 곳
-Next-js.md
--->
-* [Oxlint - 빠른 린트](https://www.oxcjs.com/ko/guide/usage/linter/quickstart.html)
-* [Oxfmt - Format](https://www.oxcjs.com/ko/guide/usage/formatter/quickstart.html)
-
-```sh
-npm install -D oxfmt
-```
-
-.oxfmtrc.json
-```json
-{
-  "printWidth": 88,
-  "tabWidth": 2,
-  "semi": false,
-  "singleQuote": true,
-  "bracketSpacing": true,
-  "trailingComma": "none",
-  "insertFinalNewline": true,
-  "sortImports": {
-    "newlinesBetween": false
-  },
-  "singleAttributePerLine": false,
-  "bracketSameLine": false
-}
-```
-* `Prettier`와 비슷하지만 `sortImports`, `sortPackageJson` 등의 유용한 기능이 있다.
-* `singleAttributePerLine`은 Tag 속성을 무조건 한줄씩 사용한다. (false이면 길이가 printWidth보다 크면 한줄씩)
-* Oxlint가 아직 `eslint-plugin-react-hooks` 지원하지 않으므로 ESLint와 Oxfmt 조합이 효과적이다.
-
-package.json
-```json
-"scripts": {
-  "lint": "eslint .",
-  "lint:fix": "eslint --fix .",
-  "fmt": "oxfmt --check",
-  "fmt:fix": "oxfmt",
-  "check": "npm run lint && npm run fmt",
-  "fix": "npm run lint:fix && npm run fmt:fix"
-},
-"lint-staged": {
-  "*": "oxfmt --no-error-on-unmatched-pattern"
-}
 ```
 
 # Alias
