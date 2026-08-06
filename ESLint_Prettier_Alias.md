@@ -256,6 +256,10 @@ npx husky add .husky/pre-commit "npm run lint"
 * `.husky/pre-commit` 파일이 생성된다. 이제 부터 `git commit` 마다 `npm run lint`가 먼저 실행 된다.
 
 ## husky@9.1.7 + lint-staged@16.2.7
+<!--
+* 사용 하는 곳
+Next-js.md
+-->
 ```sh
 npm install -D husky lint-staged
 npx husky init
