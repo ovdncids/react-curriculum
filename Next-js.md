@@ -30,6 +30,15 @@ npm run dev
 
 ## [husky + lint-staged](ESLint_Prettier_Alias.md#husky917--lint-staged1627)
 
+## Typescript
+package.json
+```json
+"scripts": {
+  "tsc": "tsc --noEmit",
+  "check": "npm run tsc && npm run lint && npm run fmt",
+  "fix": "npm run tsc && npm run lint:fix && npm run fmt:fix",
+```
+
 <!-- 13.4
 * TS: `tsconfig.json` 오류
 ```diif
@@ -49,9 +58,6 @@ npm run dev
   ```
 * [GTS (Typescript)](https://github.com/ovdncids/react-curriculum/blob/master/Prettier_ESLint.md#gts-google-typescript-style)
 -->
-
-
-
 
 ## Markup + Layout
 app/globals.css
@@ -155,8 +161,8 @@ import Nav from './nav'
 app/nav.js
 ```js
 'use client'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const Nav = () => {
   const pathname = usePathname()
@@ -336,7 +342,12 @@ export const usersServices = {
 }
 ```
 * ❕ `http://localhost:3000/api/users`는 서버 사이드이므로 `Endpoint`를 절대 경로로 넣어야 한다.
-* TS: `usersRead: async (): Promise<User[]> => {`
+* TS:
+```ts
+import type { User } from '@/types/Users'
+
+usersRead: async (): Promise<User[]> => {
+```
 
 app/users/page.js
 ```js
@@ -398,6 +409,53 @@ import Create from './create'
 ```
 
 app/users/create.js
+```js
+'use client'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { usersServices } from '@/services/usersServices'
+
+const Create = () => {
+  const router = useRouter()
+  const [user, setUser] = useState({
+    name: '',
+    age: ''
+  })
+  const usersCreate = async () => {
+    await usersServices.usersCreate(user)
+    router.refresh()
+  }
+  return (
+    <div>
+      <h4>Create</h4>
+      <input
+        type="text" placeholder="Name" value={user.name}
+        onChange={(event) => {
+          setUser({
+            ...user,
+            name: event.target.value
+          })
+        }}
+      />
+      <input
+        type="text" placeholder="Age" value={user.age}
+        onChange={(event) => {
+          setUser({
+            ...user,
+            age: event.target.value
+          })
+        }}
+      />
+      <button onClick={() => {
+        usersCreate()
+      }}>Create</button>
+    </div>
+  )
+}
+
+export default Create
+```
+* ❕ `'use client'` 빼보기
 * <details><summary>react-hook-form</summary>
 
   ```sh
@@ -449,56 +507,7 @@ app/users/create.js
   
   export default Create
   ```
-
 </details>
-
-```js
-'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { usersServices } from '@/services/usersServices'
-
-const Create = () => {
-  const router = useRouter()
-  const [user, setUser] = useState({
-    name: '',
-    age: ''
-  })
-  const usersCreate = async () => {
-    await usersServices.usersCreate(user)
-    router.refresh()
-  }
-  return (
-    <div>
-      <h4>Create</h4>
-      <input
-        type="text" placeholder="Name" value={user.name}
-        onChange={(event) => {
-          setUser({
-            ...user,
-            name: event.target.value
-          })
-        }}
-      />
-      <input
-        type="text" placeholder="Age" value={user.age}
-        onChange={(event) => {
-          setUser({
-            ...user,
-            age: event.target.value
-          })
-        }}
-      />
-      <button onClick={() => {
-        usersCreate()
-      }}>Create</button>
-    </div>
-  )
-}
-
-export default Create
-```
-* ❕ `'use client'` 빼보기
 
 ### Delete
 app/api/users/[index]/route.js
@@ -555,7 +564,7 @@ app/users/delete.js
 import { useRouter } from 'next/navigation'
 import { usersServices } from '@/services/usersServices'
 
-const Delete = ({index}) => {
+const Delete = ({ index }) => {
   const router = useRouter()
   return (
     <button onClick={async () => {
@@ -610,11 +619,11 @@ app/users/page.js
 <Update key={index} index={index} user={user} />
 ```
 
-app/users/update.js 또는 app/users/row.js
+app/users/update.js (또는 app/users/row.js)
 ```js
 'use client'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { usersServices } from '@/services/usersServices'
 import Delete from './delete'
 
@@ -758,7 +767,7 @@ const mysql2Pool = async () => {
       user: 'user',
       password: 'password'
     })
-    const [rows, fields] = await mysql2Pool.execute(`
+    const [rows] = await mysql2Pool.execute(`
       select 'MySQL Connected' as Result
     `)
     console.log(rows)
@@ -812,7 +821,13 @@ export async function GET() {
 
   const [rows] = await mysql.execute<UserRow[]>(`
   ```
-  
+
+  app/users/create.tsx
+  ```tsx
+  const [user, setUser] = useState({
+    userPk: 0,
+  ```
+
   mysql2@3 버전 이후는 자동 추론
   ```diff
   - import { RowDataPacket, FieldPacket } from 'mysql2/promise'
@@ -839,14 +854,8 @@ export async function POST(request) {
 }
 ```
 
-* TS: app/users/create.tsx
-```tsx
-const [user, setUser] = useState({
-  userPk: 0,
-```
-
 ### Delete
-pages/api/users/[index].js to pages/api/users/[userPk].js
+pages/api/users/[index]/route.js to pages/api/users/[userPk]/route.js
 ```js
 import mysql2Pool from '@/libraries/mysql2Pool'
 
@@ -876,7 +885,7 @@ app/users/update.js
 ```
 
 ### Update
-pages/api/users/[userPk].js
+pages/api/users/[userPk]/route.js
 ```js
 export async function PATCH(request, context) {
   const { userPk } = await context.params
@@ -894,12 +903,18 @@ export async function PATCH(request, context) {
 }
 ```
 
+app/users/page.js
+```diff
+- <Update key={index} index={index} user={user} />
++ <Update key={user.userPk} user={user} />
+```
+
 app/users/update.js
 ```diff
+- const { index } = props
+
 - await usersServices.usersUpdate(index, user)
-```
-```js
-await usersServices.usersUpdate(user.userPk, user)
++ await usersServices.usersUpdate(user.userPk, user)
 ```
 
 services/usersServices.js
@@ -946,7 +961,7 @@ app/search/page.js
 import { searchServices } from '@/services/searchServices'
 
 const Search = async (request) => {
-  const q = request.searchParams.q || ''
+  const q = (await request.searchParams).q || ''
   const users = await searchServices.searchRead(q)
   return (
     <div>
@@ -987,10 +1002,13 @@ export default Search
 * http://localhost:3000/search?q=홍
 * `검색`, `뒤로가기` 해보기
 * TS:
-```tsx
+app/search/page.ts
+```ts
 request: { searchParams: Promise<{ q: string }> }
-
-const q = (await request.searchParams).q || ''
+```
+services/searchServices.ts
+```ts
+searchRead: async (q: string): Promise<User[]> => {
 ```
 
 ### Search 검색
@@ -1013,8 +1031,8 @@ import SearchBar from './search-bar'
 app/search/search-bar.js
 ```js
 'use client'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const SearchBar = (props) => {
   const router = useRouter()
