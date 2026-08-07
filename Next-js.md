@@ -984,10 +984,14 @@ const Search = async (request) => {
 export default Search
 ```
 * https://nextjs.org/docs/app/api-reference/file-conventions/page
-* TS: request: { searchParams: Promise<{ q: string }> }
-* TS: const q = (await request.searchParams).q || ''
 * http://localhost:3000/search?q=홍
 * `검색`, `뒤로가기` 해보기
+* TS:
+```tsx
+request: { searchParams: Promise<{ q: string }> }
+
+const q = (await request.searchParams).q || ''
+```
 
 ### Search 검색
 app/search/page.js
@@ -995,12 +999,10 @@ app/search/page.js
 import SearchForm from './search-form'
 ```
 ```diff
-- <div>
--   <form>
--     <input type="text" placeholder="Search" />
--     <button>Search</button>
--   </form>
-- </div>
+- <form>
+-   <input type="text" placeholder="Search" />
+-   <button>Search</button>
+- </form>
 ```
 ```js
 <SearchForm q={q} />
@@ -1020,16 +1022,14 @@ const SearchForm = (props) => {
     router.push('?q=' + q)
   }
   return (
-    <div>
-      <form onSubmit={searchRead}>
-        <input
-          type="text" placeholder="Search"
-          value={q}
-          onChange={(event) => {setQ(event.target.value)}}
-        />
-        <button>Search</button>
-      </form>
-    </div>
+    <form onSubmit={searchRead}>
+      <input
+        type="text" placeholder="Search"
+        value={q}
+        onChange={(event) => {setQ(event.target.value)}}
+      />
+      <button>Search</button>
+    </form>
   )
 }
 
