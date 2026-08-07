@@ -996,25 +996,27 @@ const q = (await request.searchParams).q || ''
 ### Search 검색
 app/search/page.js
 ```js
-import SearchForm from './search-form'
+import SearchBar from './search-bar'
 ```
 ```diff
-- <form>
--   <input type="text" placeholder="Search" />
--   <button>Search</button>
-- </form>
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
 ```
 ```js
-<SearchForm q={q} />
+<SearchBar q={q} />
 ```
 
-app/search/search-form.js
+app/search/search-bar.js
 ```js
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const SearchForm = (props) => {
+const SearchBar = (props) => {
   const router = useRouter()
   const [q, setQ] = useState(props.q)
   const searchRead = (event) => {
@@ -1022,25 +1024,27 @@ const SearchForm = (props) => {
     router.push('?q=' + q)
   }
   return (
-    <form onSubmit={searchRead}>
-      <input
-        type="text" placeholder="Search"
-        value={q}
-        onChange={(event) => {setQ(event.target.value)}}
-      />
-      <button>Search</button>
-    </form>
+    <div>
+      <form onSubmit={searchRead}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={(event) => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
   )
 }
 
-export default SearchForm
+export default SearchBar
 ```
 * TS: `event: { preventDefault: () => void }`
 * `검색`, `새로고침`, `뒤로가기` 해보기
 
 ```diff
-- <SearchForm q={q} />
-+ <SearchForm key={q} q={q} />
+- <SearchBar q={q} />
++ <SearchBar key={q} q={q} />
 ```
 * `새로고침`, `뒤로가기`, `검색` 해보기
 * `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
