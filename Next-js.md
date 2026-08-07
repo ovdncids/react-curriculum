@@ -312,7 +312,6 @@ export async function GET() {
 }
 ```
 * http://localhost:3000/api/users
-
 * <details><summary>TS: Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.ts(7017)</summary>
 
   types/Users.ts
@@ -735,7 +734,7 @@ useEffect(() => {
 </details>
 
 ## MySQL CRUD
-### MySQL2 연결
+### MySQL2 연결 (3.23.2)
 * [MariaDB 설치](https://github.com/ovdncids/mysql-curriculum/blob/master/Install.md)
 * [npm install mysql2](https://github.com/sidorares/node-mysql2)
 * [Next.js with Library](https://www.simplenextjs.com/posts/next-mysql)
@@ -775,14 +774,13 @@ export default mysql2Pool
 import mysql2, { Connection } from 'mysql2/promise'
 
 declare global {
-  var mysql2Connection: Connection
+  var mysql2Pool: Connection
 }
 ```
 
 ### Read
 app/api/users/route.js
 ```js
-import { NextResponse } from 'next/server'
 import mysql2Pool from '@/libraries/mysql2Pool'
 
 export async function GET() {
@@ -795,20 +793,30 @@ export async function GET() {
   console.log(rows)
   return NextResponse.json(rows)
 }
-
-export async function POST(request) {
-  global.users.push(await request.json())
-  return NextResponse.json({
-    result: 'Created'
-  })
-}
 ```
-* TS:
-```ts
-import { RowDataPacket, FieldPacket } from 'mysql2/promise'
+* <details><summary>TS: Type 명시</summary>
 
-const [rows, _]: [RowDataPacket[], FieldPacket[]] = await mysql.execute(`
-```
+  app/api/users/route.ts
+  ```ts
+  import type { RowDataPacket } from 'mysql2/promise'
+
+  export interface User extends RowDataPacket {
+    userPk: number
+    name: string
+    age: number
+  }
+
+  const [rows] = await mysql.execute<User[]>(`
+  ```
+  
+  mysql2@3 버전 이후는 자동 추론
+  ```ts
+  import { RowDataPacket, FieldPacket } from 'mysql2/promise'
+  
+  const [rows, _]: [RowDataPacket[], FieldPacket[]] = await mysql.execute(`
+  ```
+
+</details>
 
 ### Create
 app/api/users/route.js
@@ -833,11 +841,12 @@ pages/api/users/[index].js to pages/api/users/[userPk].js
 import mysql2Pool from '@/libraries/mysql2Pool'
 
 export async function DELETE(_, context) {
+  const { userPk } = context.params
   const mysql = await mysql2Pool()
   const [rows] = await mysql.execute(`
     delete from users
     where user_pk = ?
-  `, [context.params.userPk])
+  `, [userPk])
   console.log(rows)
   return NextResponse.json({
     result: 'Deleted'
@@ -845,7 +854,7 @@ export async function DELETE(_, context) {
 }
 ```
 
-app/users/delete.js
+app/users/delete.js, services/usersServices.js
 * `index`를 `userPk`로 바꾸기 
 
 app/users/update.js
@@ -860,13 +869,14 @@ app/users/update.js
 pages/api/users/[userPk].js
 ```js
 export async function PATCH(request, context) {
+  const { userPk } = await context.params
   const user = await request.json()
   const mysql = await mysql2Pool()
   const [rows] = await mysql.execute(`
     update users
     set name = ?, age = ?
     where user_pk = ?
-  `, [user.name, user.age, context.params.userPk])
+  `, [user.name, user.age, userPk])
   console.log(rows)
   return NextResponse.json({
     result: 'Updated'
