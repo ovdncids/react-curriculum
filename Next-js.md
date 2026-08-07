@@ -56,10 +56,6 @@ npm run dev
 ## Markup + Layout
 app/globals.css
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 * {
   margin: 0;
   font-family: -apple-system,BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -324,6 +320,8 @@ export async function GET() {
 
   app/api/users/route.ts
   ```ts
+  import type { User } from '@/types/Users'
+
   declare global { var users: User[] }
   ```
 </details>
@@ -519,13 +517,15 @@ export async function DELETE(_, context) {
 ```ts
 export async function DELETE(
   _: Request,
-  context: { params: { index: number } }
+  context: { params: { index: string } }
 ) {
 
-// 16버전부터 context.params는 Promise 형식으로 변경됨
-context: { params: Promise<{ index: number }> }
+// 16 버전부터 context.params는 Promise 형식으로 변경됨
+// { index: number} 이면 `npx tsc` 명령에서 오류 발생
+context: { params: Promise<{ index: string }> }
 
 const { index } = await context.params
+global.users.splice(parseInt(index), 1)
 ```
 
 services/usersServices.js
@@ -794,26 +794,30 @@ export async function GET() {
   return NextResponse.json(rows)
 }
 ```
-* <details><summary>TS: Type 명시</summary>
+* <details><summary>TS: User Type 명시</summary>
 
+  types/Users.ts
+  ```ts
+  export interface User {
+    userPk: number
+    name: string
+    age: string | number
+  }
+  ```
   app/api/users/route.ts
   ```ts
   import type { RowDataPacket } from 'mysql2/promise'
 
-  export interface User extends RowDataPacket {
-    userPk: number
-    name: string
-    age: number
-  }
+  interface UserRow extends User, RowDataPacket {}
 
-  const [rows] = await mysql.execute<User[]>(`
+  const [rows] = await mysql.execute<UserRow[]>(`
   ```
   
   mysql2@3 버전 이후는 자동 추론
-  ```ts
-  import { RowDataPacket, FieldPacket } from 'mysql2/promise'
+  ```diff
+  - import { RowDataPacket, FieldPacket } from 'mysql2/promise'
   
-  const [rows, _]: [RowDataPacket[], FieldPacket[]] = await mysql.execute(`
+  - const [rows, _]: [RowDataPacket[], FieldPacket[]] = await mysql.execute(`
   ```
 
 </details>
@@ -833,6 +837,12 @@ export async function POST(request) {
     result: 'Created'
   })
 }
+```
+
+* TS: app/users/create.tsx
+```tsx
+const [user, setUser] = useState({
+  userPk: 0,
 ```
 
 ### Delete
@@ -895,6 +905,8 @@ await usersServices.usersUpdate(user.userPk, user)
 services/usersServices.js
 * `index`를 `userPk`로 바꾸기 
 
+#### 불필요한 Mock global.users 삭제
+
 ## API Search
 app/api/search/route.js
 ```js
@@ -902,7 +914,9 @@ import { NextResponse } from 'next/server'
 import mysql2Pool from '@/libraries/mysql2Pool'
 
 export async function GET(request) {
-  const q = request.nextUrl.searchParams.get('q')
+  // const q = request.nextUrl.searchParams.get('q')
+  const searchParams = new URLSearchParams(request.url.split('?')[1])
+  const q = searchParams.get('q') || ''
   const mysql = await mysql2Pool()
   const [rows] = await mysql.execute(`
     select
@@ -970,7 +984,8 @@ const Search = async (request) => {
 export default Search
 ```
 * https://nextjs.org/docs/app/api-reference/file-conventions/page
-* TS: request: { searchParams: { q: string } }
+* TS: request: { searchParams: Promise<{ q: string }> }
+* TS: const q = (await request.searchParams).q || ''
 * http://localhost:3000/search?q=홍
 * `검색`, `뒤로가기` 해보기
 
@@ -980,10 +995,12 @@ app/search/page.js
 import SearchForm from './search-form'
 ```
 ```diff
-- <form>
--   <input type="text" placeholder="Search" />
--   <button>Search</button>
-- </form>
+- <div>
+-   <form>
+-     <input type="text" placeholder="Search" />
+-     <button>Search</button>
+-   </form>
+- </div>
 ```
 ```js
 <SearchForm q={q} />
@@ -1003,30 +1020,30 @@ const SearchForm = (props) => {
     router.push('?q=' + q)
   }
   return (
-    <form onSubmit={searchRead}>
-      <input
-        type="text" placeholder="Search"
-        value={q}
-        onChange={(event) => {setQ(event.target.value)}}
-      />
-      <button>Search</button>
-    </form>
+    <div>
+      <form onSubmit={searchRead}>
+        <input
+          type="text" placeholder="Search"
+          value={q}
+          onChange={(event) => {setQ(event.target.value)}}
+        />
+        <button>Search</button>
+      </form>
+    </div>
   )
 }
 
 export default SearchForm
 ```
-* TS: `event: React.FormEvent<HTMLFormElement>`
-* `검색`, `뒤로가기` 해보기
-* ❔ `뒤로가기` 하면 검색창이 변하지 않는다. `useEffect`를 사용해서 검색창이 변하게 하려면
-* <details><summary>정답</summary>
+* TS: `event: { preventDefault: () => void }`
+* `검색`, `새로고침`, `뒤로가기` 해보기
 
-  ```js
-  useEffect(() => {
-    setQ(props.q)
-  }, [props.q])
-  ```
-</details>
+```diff
+- <SearchForm q={q} />
++ <SearchForm key={q} q={q} />
+```
+* `새로고침`, `뒤로가기`, `검색` 해보기
+* `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
 
 ## 환경 설정
 * https://github.com/ovdncids/react-curriculum/blob/master/Next-js.md#환경-설정
@@ -1174,8 +1191,8 @@ app.prepare().then(() => {
 #### http to https
 middleware.ts
 ```ts
-import {NextResponse} from 'next/server'
-import type {NextRequest} from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   if (
