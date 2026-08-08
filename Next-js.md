@@ -1072,7 +1072,7 @@ export default SearchBar
 ```sh
 npm install -D babel-plugin-react-compiler
 ```
-next.config.ts
+next.config.mjs 또는 next.config.ts
 ```ts
 import type { NextConfig } from 'next'
 
