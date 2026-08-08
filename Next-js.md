@@ -1067,6 +1067,36 @@ export default SearchBar
 * `새로고침`, `뒤로가기`, `검색` 해보기
 * `key`는 `q`가 수정되면 새로운 컴포넌트를 생성한다.
 
+## reactCompiler (1.0.0)
+* https://nextjs.org/docs/app/api-reference/config/next-config-js/reactCompiler
+```sh
+npm install -D babel-plugin-react-compiler
+```
+next.config.ts
+```ts
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
+  reactCompiler: true
+}
+
+export default nextConfig
+```
+
+app/users/update.js
+```diff
+const Update = (props) => {
++ 'use no memo'
+```
+* `useMemo`가 자동으로 설정되는 `Delete` 컴포넌트의 부모 컴포넌트인 `Update` 컴포넌트에 `'use no memo'`를 넣어야 해제 가능하다.
+* `// 'use no memo'` 주석 처리하면 다시 자동으로 `useMemo`가 `Delete` 컴포넌트에 설정된다.
+
+app/users/delete.js
+```diff
+const Delete = ({ userPk }) => {
++ console.log('Delete', userPk)
+```
+
 ## 환경 설정
 * https://github.com/ovdncids/react-curriculum/blob/master/Next-js.md#환경-설정
 
