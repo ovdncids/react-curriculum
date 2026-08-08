@@ -456,7 +456,7 @@ const Create = () => {
 export default Create
 ```
 * ❕ `'use client'` 빼보기
-* <details><summary>react-hook-form</summary>
+* <details><summary>react-hook-form (7.85.0)</summary>
 
   ```sh
   npm install react-hook-form
@@ -475,15 +475,10 @@ export default Create
         age: ''
       }
     })
-    const { register, formState, formState: {errors} } = userForm
-    const userFormSubmit = userForm.handleSubmit(() => {})
+    const { register, formState: {errors}, handleSubmit } = userForm
     const usersCreate = async () => {
-      userForm.clearErrors()
-      await userFormSubmit()
-      if (Object.keys(formState.errors).length === 0) {
-        await usersServices.usersCreate(userForm.getValues())
-        router.refresh()
-      }
+      await usersServices.usersCreate(userForm.getValues())
+      router.refresh()
     }
     return (
       <div>
@@ -498,9 +493,9 @@ export default Create
           {...register('age', {
             required: true
           })}
-          className={!!errors.name ? 'error' : ''}
+          className={!!errors.age ? 'error' : ''}
         />
-        <button onClick={usersCreate}>Create</button>
+        <button onClick={handleSubmit(usersCreate)}>Create</button>
       </div>
     )
   }
@@ -685,9 +680,6 @@ useEffect(() => {
 
 * <details><summary>react-hook-form</summary>
 
-  ```sh
-  npm install react-hook-form
-  ```
   ```js
   'use client'
   import { useRouter } from 'next/navigation'
@@ -696,20 +688,14 @@ useEffect(() => {
   import Delete from './delete'
   
   const Update = (props) => {
-    const { index } = props
     const router = useRouter()
     const userForm = useForm({
       defaultValues: {...props.user}
     })
-    const { register, formState, formState: {errors} } = userForm
-    const userFormSubmit = userForm.handleSubmit(() => {})
-    const usersUpdate = async () => {
-      userForm.clearErrors()
-      await userFormSubmit()
-      if (Object.keys(formState.errors).length === 0) {
-        await usersServices.usersUpdate(index, userForm.getValues())
-        router.refresh()
-      }
+    const { register, formState: {errors}, handleSubmit } = userForm
+    const usersUpdate = async (user) => {
+      await usersServices.usersUpdate(index, user)
+      router.refresh()
     }
     return (
       <tr>
@@ -726,11 +712,11 @@ useEffect(() => {
             {...register('age', {
               required: true
             })}
-            className={!!errors.name ? 'error' : ''}
+            className={!!errors.age ? 'error' : ''}
           />
         </td>
         <td>
-          <button onClick={usersUpdate}>Update</button>
+          <button onClick={handleSubmit(usersUpdate)}>Update</button>
           <Delete index={index} />
         </td>
       </tr>
